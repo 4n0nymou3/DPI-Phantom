@@ -96,8 +96,8 @@
       "settings": {
         "fragment": {
           "packets": "tlshello",
-          "length": "1-20",
-          "interval": "0-2"
+          "length": "1-25",
+          "interval": "0-3"
         }
       },
       "streamSettings": {
@@ -111,9 +111,9 @@
       "protocol": "freedom",
       "settings": {
         "fragment": {
-          "packets": "1-5",
-          "length": "80-750",
-          "interval": "0-5"
+          "packets": "1-6",
+          "length": "100-900",
+          "interval": "0-6"
         }
       },
       "streamSettings": {
@@ -128,9 +128,9 @@
       "settings": {
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-3",
-          "length": "1-25",
-          "interval": "1-8"
+          "packets": "1-4",
+          "length": "1-30",
+          "interval": "1-10"
         }
       },
       "streamSettings": {
@@ -145,9 +145,9 @@
       "settings": {
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-2",
-          "length": "1-12",
-          "interval": "2-10"
+          "packets": "1-3",
+          "length": "1-15",
+          "interval": "2-12"
         }
       },
       "streamSettings": {
@@ -162,9 +162,26 @@
       "settings": {
         "domainStrategy": "ForceIP",
         "fragment": {
+          "packets": "1-2",
+          "length": "1-8",
+          "interval": "3-15"
+        }
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "ultra-fragment-5"
+        }
+      }
+    },
+    {
+      "tag": "ultra-fragment-5",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "ForceIP",
+        "fragment": {
           "packets": "1-1",
           "length": "1-5",
-          "interval": "3-12"
+          "interval": "5-20"
         }
       }
     },
@@ -192,7 +209,11 @@
           {"type": "rand", "packet": "610-760", "delay": "1-5"}, {"type": "rand", "packet": "810-960", "delay": "3-8"},
           {"type": "rand", "packet": "90-290", "delay": "1-2"}, {"type": "rand", "packet": "340-490", "delay": "2-4"},
           {"type": "rand", "packet": "540-690", "delay": "1-3"}, {"type": "rand", "packet": "740-890", "delay": "3-6"},
-          {"type": "rand", "packet": "180-380", "delay": "1-4"}, {"type": "rand", "packet": "430-580", "delay": "2-7"}
+          {"type": "rand", "packet": "180-380", "delay": "1-4"}, {"type": "rand", "packet": "430-580", "delay": "2-7"},
+          {"type": "rand", "packet": "30-180", "delay": "1-2"}, {"type": "rand", "packet": "280-430", "delay": "2-4"},
+          {"type": "rand", "packet": "480-630", "delay": "1-3"}, {"type": "rand", "packet": "680-830", "delay": "3-6"},
+          {"type": "rand", "packet": "130-330", "delay": "1-4"}, {"type": "rand", "packet": "380-530", "delay": "2-7"},
+          {"type": "rand", "packet": "630-780", "delay": "1-5"}, {"type": "rand", "packet": "830-980", "delay": "3-8"}
         ]
       }
     },
@@ -220,7 +241,11 @@
           {"type": "rand", "packet": "600-750", "delay": "1-5"}, {"type": "rand", "packet": "800-950", "delay": "3-8"},
           {"type": "rand", "packet": "70-270", "delay": "1-2"}, {"type": "rand", "packet": "320-470", "delay": "2-4"},
           {"type": "rand", "packet": "520-670", "delay": "1-3"}, {"type": "rand", "packet": "720-870", "delay": "3-6"},
-          {"type": "rand", "packet": "170-370", "delay": "1-4"}, {"type": "rand", "packet": "420-570", "delay": "2-7"}
+          {"type": "rand", "packet": "170-370", "delay": "1-4"}, {"type": "rand", "packet": "420-570", "delay": "2-7"},
+          {"type": "rand", "packet": "20-170", "delay": "1-2"}, {"type": "rand", "packet": "270-420", "delay": "2-4"},
+          {"type": "rand", "packet": "470-620", "delay": "1-3"}, {"type": "rand", "packet": "670-820", "delay": "3-6"},
+          {"type": "rand", "packet": "120-320", "delay": "1-4"}, {"type": "rand", "packet": "370-520", "delay": "2-7"},
+          {"type": "rand", "packet": "620-770", "delay": "1-5"}, {"type": "rand", "packet": "820-970", "delay": "3-8"}
         ]
       }
     },
@@ -230,15 +255,17 @@
       "settings": {
         "domainStrategy": "ForceIPv4",
         "fragment": {
-          "packets": "1-4",
-          "length": "5-25",
-          "interval": "0-2"
+          "packets": "1-5",
+          "length": "3-30",
+          "interval": "0-3"
         },
         "noises": [
           {"type": "rand", "packet": "100-500", "delay": "1-5"}, {"type": "rand", "packet": "600-1000", "delay": "2-8"},
           {"type": "rand", "packet": "200-600", "delay": "1-4"}, {"type": "rand", "packet": "700-1100", "delay": "3-9"},
           {"type": "rand", "packet": "150-450", "delay": "1-3"}, {"type": "rand", "packet": "550-950", "delay": "2-6"},
-          {"type": "rand", "packet": "300-700", "delay": "1-5"}, {"type": "rand", "packet": "800-1200", "delay": "3-10"}
+          {"type": "rand", "packet": "300-700", "delay": "1-5"}, {"type": "rand", "packet": "800-1200", "delay": "3-10"},
+          {"type": "rand", "packet": "80-380", "delay": "1-4"}, {"type": "rand", "packet": "480-880", "delay": "2-7"},
+          {"type": "rand", "packet": "250-550", "delay": "1-3"}, {"type": "rand", "packet": "650-1050", "delay": "3-8"}
         ]
       }
     },
@@ -248,15 +275,17 @@
       "settings": {
         "domainStrategy": "ForceIPv6",
         "fragment": {
-          "packets": "1-4",
-          "length": "5-25",
-          "interval": "0-2"
+          "packets": "1-5",
+          "length": "3-30",
+          "interval": "0-3"
         },
         "noises": [
           {"type": "rand", "packet": "80-480", "delay": "1-5"}, {"type": "rand", "packet": "580-980", "delay": "2-8"},
           {"type": "rand", "packet": "180-580", "delay": "1-4"}, {"type": "rand", "packet": "680-1080", "delay": "3-9"},
           {"type": "rand", "packet": "130-430", "delay": "1-3"}, {"type": "rand", "packet": "530-930", "delay": "2-6"},
-          {"type": "rand", "packet": "280-680", "delay": "1-5"}, {"type": "rand", "packet": "780-1180", "delay": "3-10"}
+          {"type": "rand", "packet": "280-680", "delay": "1-5"}, {"type": "rand", "packet": "780-1180", "delay": "3-10"},
+          {"type": "rand", "packet": "60-360", "delay": "1-4"}, {"type": "rand", "packet": "460-860", "delay": "2-7"},
+          {"type": "rand", "packet": "230-530", "delay": "1-3"}, {"type": "rand", "packet": "630-1030", "delay": "3-8"}
         ]
       }
     }
