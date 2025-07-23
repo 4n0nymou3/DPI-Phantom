@@ -13,5 +13,5 @@ This repository contains an advanced, server-less V2Ray/Xray configuration desig
 ## Usage
 
 1.  Copy the content of the `phantom.json` file.
-2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, Nekoray).
+2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, MahsaNG).
 3.  Ensure your client's `geoip.dat` and `geosite.dat` files are up to date.
