@@ -1,5 +1,5 @@
 {
-  "remarks": "👽 Anonymous Phantom",
+  "remarks": " Anonymous Phantom",
   "log": {
     "loglevel": "warning",
     "dnsLog": false,
@@ -98,177 +98,19 @@
       "settings": {
         "fragment": {
           "packets": "tlshello",
-          "length": "1-65",
-          "interval": "0-12"
+          "length": "1-50",
+          "interval": "0-8"
         },
         "noises": [
-          {"type": "rand", "packet": "20-80", "delay": "1-3"}, 
-          {"type": "rand", "packet": "90-180", "delay": "1-5"},
-          {"type": "rand", "packet": "200-400", "delay": "2-8"},
-          {"type": "rand", "packet": "450-750", "delay": "3-12"},
-          {"type": "rand", "packet": "35-125", "delay": "1-4"},
-          {"type": "rand", "packet": "160-320", "delay": "2-7"},
-          {"type": "rand", "packet": "380-680", "delay": "3-10"},
-          {"type": "rand", "packet": "720-1020", "delay": "4-15"},
-          {"type": "rand", "packet": "50-150", "delay": "1-6"},
-          {"type": "rand", "packet": "250-550", "delay": "2-9"},
-          {"type": "rand", "packet": "600-900", "delay": "3-13"},
-          {"type": "rand", "packet": "950-1250", "delay": "5-18"}
+          {"type": "rand", "packet": "40-120", "delay": "1-4"}, 
+          {"type": "rand", "packet": "200-350", "delay": "2-7"},
+          {"type": "rand", "packet": "80-180", "delay": "1-3"},
+          {"type": "rand", "packet": "300-500", "delay": "3-9"}
         ]
       },
       "streamSettings": {
         "sockopt": {
           "dialerProxy": "ultra-fragment-1"
-        }
-      }
-    },
-    {
-      "tag": "phantom-social-media",
-      "protocol": "freedom",
-      "settings": {
-        "fragment": {
-          "packets": "1-10",
-          "length": "40-120",
-          "interval": "0-6"
-        },
-        "noises": [
-          {"type": "rand", "packet": "100-300", "delay": "1-4"}, 
-          {"type": "rand", "packet": "350-650", "delay": "2-7"},
-          {"type": "rand", "packet": "700-1000", "delay": "3-10"},
-          {"type": "rand", "packet": "150-450", "delay": "1-5"},
-          {"type": "rand", "packet": "500-800", "delay": "2-8"},
-          {"type": "rand", "packet": "850-1150", "delay": "4-12"},
-          {"type": "rand", "packet": "200-500", "delay": "1-6"},
-          {"type": "rand", "packet": "550-850", "delay": "3-9"},
-          {"type": "rand", "packet": "900-1200", "delay": "4-14"},
-          {"type": "rand", "packet": "75-275", "delay": "1-3"},
-          {"type": "rand", "packet": "320-620", "delay": "2-6"},
-          {"type": "rand", "packet": "670-970", "delay": "3-11"}
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-2"
-        }
-      }
-    },
-    {
-      "tag": "phantom-video-streaming",
-      "protocol": "freedom",
-      "settings": {
-        "fragment": {
-          "packets": "1-12",
-          "length": "80-200",
-          "interval": "0-5"
-        },
-        "noises": [
-          {"type": "rand", "packet": "500-1200", "delay": "1-6"}, 
-          {"type": "rand", "packet": "1300-2000", "delay": "2-10"},
-          {"type": "rand", "packet": "300-800", "delay": "1-4"},
-          {"type": "rand", "packet": "900-1600", "delay": "2-8"},
-          {"type": "rand", "packet": "1700-2400", "delay": "3-12"},
-          {"type": "rand", "packet": "600-1300", "delay": "1-7"},
-          {"type": "rand", "packet": "1400-2100", "delay": "2-9"},
-          {"type": "rand", "packet": "400-1000", "delay": "1-5"},
-          {"type": "rand", "packet": "1100-1800", "delay": "3-11"},
-          {"type": "rand", "packet": "1900-2600", "delay": "4-15"},
-          {"type": "rand", "packet": "250-750", "delay": "1-3"},
-          {"type": "rand", "packet": "800-1500", "delay": "2-7"}
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-3"
-        }
-      }
-    },
-    {
-      "tag": "phantom-messaging",
-      "protocol": "freedom",
-      "settings": {
-        "fragment": {
-          "packets": "1-6",
-          "length": "20-90",
-          "interval": "0-8"
-        },
-        "noises": [
-          {"type": "rand", "packet": "80-250", "delay": "1-4"}, 
-          {"type": "rand", "packet": "300-600", "delay": "2-7"},
-          {"type": "rand", "packet": "650-950", "delay": "3-9"},
-          {"type": "rand", "packet": "120-380", "delay": "1-5"},
-          {"type": "rand", "packet": "420-720", "delay": "2-8"},
-          {"type": "rand", "packet": "770-1070", "delay": "3-11"},
-          {"type": "rand", "packet": "60-220", "delay": "1-3"},
-          {"type": "rand", "packet": "270-470", "delay": "2-6"},
-          {"type": "rand", "packet": "520-820", "delay": "3-10"},
-          {"type": "rand", "packet": "180-480", "delay": "1-6"},
-          {"type": "rand", "packet": "530-830", "delay": "2-9"},
-          {"type": "rand", "packet": "880-1180", "delay": "4-13"}
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-4"
-        }
-      }
-    },
-    {
-      "tag": "phantom-gaming",
-      "protocol": "freedom",
-      "settings": {
-        "fragment": {
-          "packets": "1-4",
-          "length": "10-60",
-          "interval": "0-3"
-        },
-        "noises": [
-          {"type": "rand", "packet": "30-120", "delay": "1-2"}, 
-          {"type": "rand", "packet": "140-280", "delay": "1-4"},
-          {"type": "rand", "packet": "300-500", "delay": "2-6"},
-          {"type": "rand", "packet": "50-180", "delay": "1-3"},
-          {"type": "rand", "packet": "200-400", "delay": "1-5"},
-          {"type": "rand", "packet": "450-650", "delay": "2-7"},
-          {"type": "rand", "packet": "70-200", "delay": "1-3"},
-          {"type": "rand", "packet": "220-420", "delay": "2-5"},
-          {"type": "rand", "packet": "470-670", "delay": "3-8"},
-          {"type": "rand", "packet": "90-250", "delay": "1-4"},
-          {"type": "rand", "packet": "280-480", "delay": "2-6"},
-          {"type": "rand", "packet": "520-720", "delay": "3-9"}
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-5"
-        }
-      }
-    },
-    {
-      "tag": "phantom-web-browsing",
-      "protocol": "freedom",
-      "settings": {
-        "fragment": {
-          "packets": "1-8",
-          "length": "30-100",
-          "interval": "0-10"
-        },
-        "noises": [
-          {"type": "rand", "packet": "150-400", "delay": "1-5"}, 
-          {"type": "rand", "packet": "450-750", "delay": "2-8"},
-          {"type": "rand", "packet": "800-1100", "delay": "3-11"},
-          {"type": "rand", "packet": "200-500", "delay": "1-6"},
-          {"type": "rand", "packet": "550-850", "delay": "2-9"},
-          {"type": "rand", "packet": "900-1200", "delay": "3-12"},
-          {"type": "rand", "packet": "100-350", "delay": "1-4"},
-          {"type": "rand", "packet": "400-700", "delay": "2-7"},
-          {"type": "rand", "packet": "750-1050", "delay": "3-10"},
-          {"type": "rand", "packet": "250-550", "delay": "1-7"},
-          {"type": "rand", "packet": "600-900", "delay": "2-10"},
-          {"type": "rand", "packet": "950-1250", "delay": "4-14"}
-        ]
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-6"
         }
       }
     },
@@ -285,15 +127,7 @@
           {"type": "rand", "packet": "100-400", "delay": "1-5"}, 
           {"type": "rand", "packet": "500-800", "delay": "2-8"},
           {"type": "rand", "packet": "150-300", "delay": "1-4"},
-          {"type": "rand", "packet": "600-1000", "delay": "3-10"},
-          {"type": "rand", "packet": "80-250", "delay": "1-3"},
-          {"type": "rand", "packet": "350-650", "delay": "2-7"},
-          {"type": "rand", "packet": "700-1100", "delay": "3-12"},
-          {"type": "rand", "packet": "200-450", "delay": "1-6"},
-          {"type": "rand", "packet": "550-900", "delay": "2-9"},
-          {"type": "rand", "packet": "950-1300", "delay": "4-14"},
-          {"type": "rand", "packet": "120-380", "delay": "1-5"},
-          {"type": "rand", "packet": "420-720", "delay": "2-8"}
+          {"type": "rand", "packet": "600-1000", "delay": "3-10"}
         ]
       },
       "streamSettings": {
@@ -318,13 +152,7 @@
           {"type": "rand", "packet": "120-280", "delay": "1-5"},
           {"type": "rand", "packet": "350-600", "delay": "3-12"},
           {"type": "rand", "packet": "80-160", "delay": "1-3"},
-          {"type": "rand", "packet": "400-700", "delay": "4-14"},
-          {"type": "rand", "packet": "180-380", "delay": "1-7"},
-          {"type": "rand", "packet": "450-750", "delay": "2-10"},
-          {"type": "rand", "packet": "800-1200", "delay": "3-15"},
-          {"type": "rand", "packet": "90-290", "delay": "1-4"},
-          {"type": "rand", "packet": "320-520", "delay": "2-8"},
-          {"type": "rand", "packet": "570-870", "delay": "3-11"}
+          {"type": "rand", "packet": "400-700", "delay": "4-14"}
         ]
       },
       "streamSettings": {
@@ -351,11 +179,7 @@
           {"type": "rand", "packet": "50-110", "delay": "1-4"},
           {"type": "rand", "packet": "320-520", "delay": "4-15"},
           {"type": "rand", "packet": "70-170", "delay": "2-8"},
-          {"type": "rand", "packet": "380-580", "delay": "5-18"},
-          {"type": "rand", "packet": "130-330", "delay": "1-9"},
-          {"type": "rand", "packet": "410-610", "delay": "3-14"},
-          {"type": "rand", "packet": "60-160", "delay": "1-5"},
-          {"type": "rand", "packet": "220-420", "delay": "2-11"}
+          {"type": "rand", "packet": "380-580", "delay": "5-18"}
         ]
       },
       "streamSettings": {
@@ -384,9 +208,7 @@
           {"type": "rand", "packet": "75-145", "delay": "2-9"},
           {"type": "rand", "packet": "300-400", "delay": "5-20"},
           {"type": "rand", "packet": "35-85", "delay": "1-6"},
-          {"type": "rand", "packet": "200-300", "delay": "3-14"},
-          {"type": "rand", "packet": "150-250", "delay": "2-10"},
-          {"type": "rand", "packet": "350-450", "delay": "4-16"}
+          {"type": "rand", "packet": "200-300", "delay": "3-14"}
         ]
       },
       "streamSettings": {
@@ -641,97 +463,6 @@
         "ip": [
           "geoip:private",
           "geoip:ir"
-        ]
-      },
-      {
-        "outboundTag": "phantom-social-media",
-        "domain": [
-          "domain:facebook.com",
-          "domain:instagram.com",
-          "domain:twitter.com",
-          "domain:x.com",
-          "domain:tiktok.com",
-          "domain:snapchat.com",
-          "domain:linkedin.com",
-          "domain:pinterest.com",
-          "domain:reddit.com",
-          "domain:tumblr.com",
-          "domain:discord.com",
-          "domain:telegram.org",
-          "domain:whatsapp.com",
-          "full:web.whatsapp.com",
-          "full:web.telegram.org",
-          "full:t.me"
-        ]
-      },
-      {
-        "outboundTag": "phantom-video-streaming",
-        "domain": [
-          "domain:youtube.com",
-          "domain:youtu.be",
-          "domain:netflix.com",
-          "domain:twitch.tv",
-          "domain:vimeo.com",
-          "domain:dailymotion.com",
-          "domain:hulu.com",
-          "domain:amazon.com",
-          "domain:primevideo.com",
-          "domain:disneyplus.com",
-          "domain:hbo.com",
-          "domain:hbomax.com",
-          "domain:aparat.com",
-          "domain:namava.ir",
-          "full:www.youtube.com",
-          "full:m.youtube.com"
-        ]
-      },
-      {
-        "outboundTag": "phantom-messaging",
-        "domain": [
-          "domain:telegram.org",
-          "domain:whatsapp.com",
-          "domain:signal.org",
-          "domain:viber.com",
-          "domain:skype.com",
-          "domain:zoom.us",
-          "domain:meet.google.com",
-          "domain:teams.microsoft.com",
-          "full:web.whatsapp.com",
-          "full:web.telegram.org",
-          "full:t.me"
-        ],
-        "port": "443,993,995,465,587"
-      },
-      {
-        "outboundTag": "phantom-gaming",
-        "domain": [
-          "domain:steam.com",
-          "domain:steampowered.com",
-          "domain:epicgames.com",
-          "domain:battle.net",
-          "domain:ea.com",
-          "domain:origin.com",
-          "domain:ubisoft.com",
-          "domain:riotgames.com",
-          "domain:leagueoflegends.com",
-          "domain:valorant-api.com",
-          "domain:minecraft.net",
-          "domain:mojang.com"
-        ]
-      },
-      {
-        "outboundTag": "phantom-web-browsing",
-        "domain": [
-          "domain:google.com",
-          "domain:bing.com",
-          "domain:yahoo.com",
-          "domain:duckduckgo.com",
-          "domain:wikipedia.org",
-          "domain:github.com",
-          "domain:stackoverflow.com",
-          "domain:medium.com",
-          "domain:wordpress.com",
-          "domain:blogger.com"
         ]
       },
       {
