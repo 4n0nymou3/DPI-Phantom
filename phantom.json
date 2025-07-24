@@ -724,8 +724,18 @@
         "port": "1935,8080,8443,9735,3478,5349"
       },
       {
-        "outboundTag": "direct",
-        "network": "udp"
+        "outboundTag": "phantom-udp-v6",
+        "network": "udp",
+        "ip": [
+          "::/0"
+        ]
+      },
+      {
+        "outboundTag": "phantom-udp-v4",
+        "network": "udp",
+        "ip": [
+          "0.0.0.0/0"
+        ]
       },
       {
         "outboundTag": "phantom-tlshello",
