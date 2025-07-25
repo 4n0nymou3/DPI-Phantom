@@ -16,23 +16,37 @@
         "2001:4188:2:600:10:10:34:36"
       ],
       "dns.cloudflare.com": "cloudflare.com",
-      "dns.google.com": "google.com"
+      "dns.google.com": "google.com",
+      "dns.quad9.net": "quad9.net",
+      "dns.opendns.com": "opendns.com",
+      "dns.adguard.com": "adguard.com"
     },
     "servers": [
       "https://dns.cloudflare.com/dns-query",
       "https://dns.google.com/dns-query",
+      "https://dns.quad9.net/dns-query",
+      "https://dns.opendns.com/dns-query",
+      "https://dns.adguard.com/dns-query",
+      "https://1.1.1.1/dns-query",
+      "https://8.8.8.8/dns-query",
+      "https://9.9.9.9/dns-query",
       {
         "address": "localhost",
         "domains": [
           "geosite:private",
           "geosite:category-ir",
           "full:cloudflare.com",
-          "full:google.com"
+          "full:google.com",
+          "full:quad9.net",
+          "full:opendns.com",
+          "full:adguard.com"
         ]
       }
     ],
     "tag": "dns-query",
-    "disableFallback": true
+    "disableFallback": true,
+    "queryStrategy": "UseIPv4",
+    "disableCache": false
   },
   "inbounds": [
     {
@@ -62,6 +76,22 @@
       },
       "settings": {
         "udp": true
+      }
+    },
+    {
+      "tag": "http-in",
+      "port": 10809,
+      "protocol": "http",
+      "sniffing": {
+        "enabled": true,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "routeOnly": false,
+        "metadataOnly": false
       }
     }
   ],
@@ -99,8 +129,8 @@
         "padding": true,
         "fragment": {
           "packets": "tlshello",
-          "length": "1-45",
-          "interval": "0-12"
+          "length": "1-65",
+          "interval": "0-20"
         }
       },
       "streamSettings": {
@@ -115,9 +145,9 @@
       "settings": {
         "padding": true,
         "fragment": {
-          "packets": "1-12",
-          "length": "40-1400",
-          "interval": "0-18"
+          "packets": "1-15",
+          "length": "20-1400",
+          "interval": "0-25"
         }
       },
       "streamSettings": {
@@ -133,9 +163,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-8",
-          "length": "1-75",
-          "interval": "1-20"
+          "packets": "1-12",
+          "length": "1-100",
+          "interval": "1-30"
         }
       },
       "streamSettings": {
@@ -151,9 +181,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-6",
-          "length": "1-40",
-          "interval": "2-25"
+          "packets": "1-10",
+          "length": "1-80",
+          "interval": "2-35"
         }
       },
       "streamSettings": {
@@ -169,9 +199,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-4",
-          "length": "1-25",
-          "interval": "3-30"
+          "packets": "1-8",
+          "length": "1-60",
+          "interval": "3-40"
         }
       },
       "streamSettings": {
@@ -187,9 +217,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-3",
-          "length": "1-15",
-          "interval": "5-35"
+          "packets": "1-6",
+          "length": "1-45",
+          "interval": "5-45"
         }
       },
       "streamSettings": {
@@ -205,9 +235,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-2",
-          "length": "1-10",
-          "interval": "8-45"
+          "packets": "1-5",
+          "length": "1-30",
+          "interval": "8-50"
         }
       },
       "streamSettings": {
@@ -223,9 +253,63 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
+          "packets": "1-4",
+          "length": "1-20",
+          "interval": "10-55"
+        }
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "ultra-fragment-8"
+        }
+      }
+    },
+    {
+      "tag": "ultra-fragment-8",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
+          "packets": "1-3",
+          "length": "1-15",
+          "interval": "12-60"
+        }
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "ultra-fragment-9"
+        }
+      }
+    },
+    {
+      "tag": "ultra-fragment-9",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
+          "packets": "1-2",
+          "length": "1-10",
+          "interval": "15-65"
+        }
+      },
+      "streamSettings": {
+        "sockopt": {
+          "dialerProxy": "ultra-fragment-10"
+        }
+      }
+    },
+    {
+      "tag": "ultra-fragment-10",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
           "packets": "1-1",
-          "length": "1-6",
-          "interval": "10-50"
+          "length": "1-8",
+          "interval": "20-70"
         }
       }
     },
@@ -234,7 +318,12 @@
       "protocol": "freedom",
       "settings": {
         "padding": true,
-        "domainStrategy": "ForceIPv4"
+        "domainStrategy": "ForceIPv4",
+        "fragment": {
+          "packets": "1-5",
+          "length": "1-40",
+          "interval": "0-15"
+        }
       }
     },
     {
@@ -242,7 +331,12 @@
       "protocol": "freedom",
       "settings": {
         "padding": true,
-        "domainStrategy": "ForceIPv6"
+        "domainStrategy": "ForceIPv6",
+        "fragment": {
+          "packets": "1-5",
+          "length": "1-40",
+          "interval": "0-15"
+        }
       }
     },
     {
@@ -252,9 +346,9 @@
         "padding": true,
         "domainStrategy": "ForceIPv4",
         "fragment": {
-          "packets": "1-10",
-          "length": "1-65",
-          "interval": "0-12"
+          "packets": "1-15",
+          "length": "1-85",
+          "interval": "0-18"
         }
       }
     },
@@ -265,9 +359,9 @@
         "padding": true,
         "domainStrategy": "ForceIPv6",
         "fragment": {
-          "packets": "1-10",
-          "length": "1-65",
-          "interval": "0-12"
+          "packets": "1-15",
+          "length": "1-85",
+          "interval": "0-18"
         }
       }
     },
@@ -278,9 +372,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-8",
-          "length": "8-120",
-          "interval": "1-15"
+          "packets": "1-12",
+          "length": "8-150",
+          "interval": "1-20"
         }
       }
     },
@@ -291,9 +385,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-6",
-          "length": "5-80",
-          "interval": "1-12"
+          "packets": "1-8",
+          "length": "5-100",
+          "interval": "1-18"
         }
       }
     },
@@ -304,9 +398,48 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-5",
-          "length": "3-60",
+          "packets": "1-7",
+          "length": "3-80",
+          "interval": "1-15"
+        }
+      }
+    },
+    {
+      "tag": "phantom-social-media",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
+          "packets": "1-10",
+          "length": "10-120",
+          "interval": "1-12"
+        }
+      }
+    },
+    {
+      "tag": "phantom-web-ports",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
+          "packets": "1-6",
+          "length": "5-90",
           "interval": "1-10"
+        }
+      }
+    },
+    {
+      "tag": "phantom-gaming",
+      "protocol": "freedom",
+      "settings": {
+        "padding": true,
+        "domainStrategy": "ForceIP",
+        "fragment": {
+          "packets": "1-4",
+          "length": "20-200",
+          "interval": "0-8"
         }
       }
     }
@@ -323,7 +456,8 @@
       {
         "outboundTag": "dns-out",
         "inboundTag": [
-          "socks-in"
+          "socks-in",
+          "http-in"
         ],
         "port": 53
       },
@@ -380,6 +514,42 @@
         "port": 443
       },
       {
+        "outboundTag": "phantom-gaming",
+        "network": "tcp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ],
+        "port": "27015,27016,27017,7777,7778,25565,19132,28910"
+      },
+      {
+        "outboundTag": "phantom-gaming",
+        "network": "udp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ],
+        "port": "27015,27016,27017,7777,7778,25565,19132,28910"
+      },
+      {
+        "outboundTag": "phantom-social-media",
+        "network": "tcp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ],
+        "port": "5222,5223,5228,5242,6667,6697"
+      },
+      {
+        "outboundTag": "phantom-web-ports",
+        "network": "tcp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ],
+        "port": "8000,8001,8008,8888,9000,9001,3000,5000"
+      },
+      {
         "outboundTag": "phantom-email-secure",
         "network": "tcp",
         "ip": [
@@ -411,7 +581,7 @@
           "0.0.0.0/0",
           "::/0"
         ],
-        "port": "1194,1723,500,4500,1701,1812,1813"
+        "port": "1194,1723,500,4500,1701,1812,1813,51820,8080"
       },
       {
         "outboundTag": "phantom-vpn-ports",
@@ -420,7 +590,7 @@
           "0.0.0.0/0",
           "::/0"
         ],
-        "port": "1194,1723,500,4500,1701,1812,1813"
+        "port": "1194,1723,500,4500,1701,1812,1813,51820,8080"
       },
       {
         "outboundTag": "phantom-streaming",
@@ -429,7 +599,7 @@
           "0.0.0.0/0",
           "::/0"
         ],
-        "port": "1935,8080,8443,9735,3478,5349"
+        "port": "1935,8080,8443,9735,3478,5349,554,8554"
       },
       {
         "outboundTag": "phantom-streaming",
@@ -438,7 +608,7 @@
           "0.0.0.0/0",
           "::/0"
         ],
-        "port": "1935,8080,8443,9735,3478,5349"
+        "port": "1935,8080,8443,9735,3478,5349,554,8554"
       },
       {
         "outboundTag": "phantom-udp-v6",
