@@ -45,7 +45,6 @@
     ],
     "tag": "dns-query",
     "disableFallback": true,
-    "queryStrategy": "UseIPv4",
     "disableCache": false
   },
   "inbounds": [
