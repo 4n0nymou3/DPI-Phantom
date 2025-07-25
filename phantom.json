@@ -96,23 +96,12 @@
       "tag": "phantom-tlshello",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "fragment": {
           "packets": "tlshello",
           "length": "1-45",
           "interval": "0-12"
-        },
-        "noises": [
-          {"type": "rand", "packet": "35-115", "delay": "1-6"}, 
-          {"type": "rand", "packet": "180-340", "delay": "2-9"},
-          {"type": "rand", "packet": "65-165", "delay": "1-4"},
-          {"type": "rand", "packet": "280-480", "delay": "3-12"},
-          {"type": "str", "packet": "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n", "delay": "1-3"},
-          {"type": "base64", "packet": "SGVsbG8gV29ybGQ=", "delay": "2-5"},
-          {"type": "rand", "packet": "90-190", "delay": "1-5"},
-          {"type": "rand", "packet": "320-520", "delay": "4-15"},
-          {"type": "str", "packet": "GET / HTTP/1.1\r\nHost: example.com\r\n\r\n", "delay": "1-4"},
-          {"type": "rand", "packet": "150-350", "delay": "2-8"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -124,25 +113,12 @@
       "tag": "ultra-fragment-1",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "fragment": {
           "packets": "1-12",
           "length": "40-1400",
           "interval": "0-18"
-        },
-        "noises": [
-          {"type": "rand", "packet": "80-350", "delay": "1-7"}, 
-          {"type": "rand", "packet": "450-750", "delay": "2-12"},
-          {"type": "rand", "packet": "120-280", "delay": "1-5"},
-          {"type": "rand", "packet": "580-950", "delay": "3-15"},
-          {"type": "str", "packet": "Content-Length: 0\r\n\r\n", "delay": "1-4"},
-          {"type": "base64", "packet": "VGVzdCBEYXRh", "delay": "2-6"},
-          {"type": "rand", "packet": "200-400", "delay": "1-8"},
-          {"type": "rand", "packet": "680-1080", "delay": "4-18"},
-          {"type": "str", "packet": "Connection: keep-alive\r\n", "delay": "1-3"},
-          {"type": "rand", "packet": "320-620", "delay": "2-10"},
-          {"type": "base64", "packet": "UmFuZG9tRGF0YQ==", "delay": "3-9"},
-          {"type": "rand", "packet": "520-820", "delay": "5-20"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -154,28 +130,13 @@
       "tag": "ultra-fragment-2",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-8",
           "length": "1-75",
           "interval": "1-20"
-        },
-        "noises": [
-          {"type": "rand", "packet": "45-180", "delay": "1-8"}, 
-          {"type": "rand", "packet": "220-420", "delay": "2-12"},
-          {"type": "rand", "packet": "90-250", "delay": "1-6"},
-          {"type": "rand", "packet": "320-580", "delay": "3-16"},
-          {"type": "str", "packet": "Accept: */*\r\n", "delay": "1-4"},
-          {"type": "base64", "packet": "RnJhZ21lbnQ=", "delay": "2-7"},
-          {"type": "rand", "packet": "140-340", "delay": "1-9"},
-          {"type": "rand", "packet": "480-780", "delay": "4-20"},
-          {"type": "str", "packet": "User-Agent: Mozilla/5.0\r\n", "delay": "1-5"},
-          {"type": "rand", "packet": "70-270", "delay": "2-11"},
-          {"type": "base64", "packet": "Tm9pc2VEYXRh", "delay": "3-12"},
-          {"type": "rand", "packet": "380-680", "delay": "5-25"},
-          {"type": "str", "packet": "Cache-Control: no-cache\r\n", "delay": "1-6"},
-          {"type": "rand", "packet": "160-360", "delay": "2-14"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -187,30 +148,13 @@
       "tag": "ultra-fragment-3",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-6",
           "length": "1-40",
           "interval": "2-25"
-        },
-        "noises": [
-          {"type": "rand", "packet": "30-120", "delay": "1-10"}, 
-          {"type": "rand", "packet": "150-300", "delay": "2-15"},
-          {"type": "rand", "packet": "60-160", "delay": "1-7"},
-          {"type": "rand", "packet": "220-420", "delay": "3-18"},
-          {"type": "str", "packet": "Pragma: no-cache\r\n", "delay": "1-5"},
-          {"type": "base64", "packet": "TGF5ZXIz", "delay": "2-8"},
-          {"type": "rand", "packet": "80-180", "delay": "1-6"},
-          {"type": "rand", "packet": "280-480", "delay": "4-22"},
-          {"type": "str", "packet": "Accept-Encoding: gzip\r\n", "delay": "1-4"},
-          {"type": "rand", "packet": "40-140", "delay": "2-12"},
-          {"type": "base64", "packet": "UGFja2V0", "delay": "3-15"},
-          {"type": "rand", "packet": "200-400", "delay": "5-28"},
-          {"type": "str", "packet": "Accept-Language: en-US\r\n", "delay": "1-7"},
-          {"type": "rand", "packet": "100-200", "delay": "2-16"},
-          {"type": "base64", "packet": "VHJhZmZpYw==", "delay": "4-20"},
-          {"type": "rand", "packet": "320-520", "delay": "6-35"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -222,33 +166,13 @@
       "tag": "ultra-fragment-4",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-4",
           "length": "1-25",
           "interval": "3-30"
-        },
-        "noises": [
-          {"type": "rand", "packet": "20-80", "delay": "1-12"}, 
-          {"type": "rand", "packet": "100-200", "delay": "2-18"},
-          {"type": "rand", "packet": "45-115", "delay": "1-8"},
-          {"type": "rand", "packet": "150-250", "delay": "3-22"},
-          {"type": "str", "packet": "Referer: https://google.com\r\n", "delay": "1-6"},
-          {"type": "base64", "packet": "RGVlcA==", "delay": "2-10"},
-          {"type": "rand", "packet": "60-120", "delay": "1-7"},
-          {"type": "rand", "packet": "180-280", "delay": "4-25"},
-          {"type": "str", "packet": "Origin: https://example.com\r\n", "delay": "1-5"},
-          {"type": "rand", "packet": "25-75", "delay": "2-15"},
-          {"type": "base64", "packet": "RnJhZw==", "delay": "3-18"},
-          {"type": "rand", "packet": "120-220", "delay": "5-32"},
-          {"type": "str", "packet": "DNT: 1\r\n", "delay": "1-4"},
-          {"type": "rand", "packet": "70-170", "delay": "2-20"},
-          {"type": "base64", "packet": "TWVudA==", "delay": "4-28"},
-          {"type": "rand", "packet": "200-300", "delay": "6-40"},
-          {"type": "str", "packet": "Sec-Fetch-Dest: document\r\n", "delay": "1-8"},
-          {"type": "rand", "packet": "35-85", "delay": "2-14"},
-          {"type": "rand", "packet": "240-340", "delay": "7-45"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -260,36 +184,13 @@
       "tag": "ultra-fragment-5",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-3",
           "length": "1-15",
           "interval": "5-35"
-        },
-        "noises": [
-          {"type": "rand", "packet": "15-60", "delay": "1-15"}, 
-          {"type": "rand", "packet": "70-130", "delay": "2-20"},
-          {"type": "rand", "packet": "30-90", "delay": "1-10"},
-          {"type": "rand", "packet": "100-180", "delay": "3-25"},
-          {"type": "str", "packet": "Sec-Fetch-Mode: navigate\r\n", "delay": "1-7"},
-          {"type": "base64", "packet": "VWx0cmE=", "delay": "2-12"},
-          {"type": "rand", "packet": "40-100", "delay": "1-8"},
-          {"type": "rand", "packet": "120-200", "delay": "4-30"},
-          {"type": "str", "packet": "Sec-Fetch-Site: none\r\n", "delay": "1-6"},
-          {"type": "rand", "packet": "20-70", "delay": "2-18"},
-          {"type": "base64", "packet": "RmluYWw=", "delay": "3-22"},
-          {"type": "rand", "packet": "80-160", "delay": "5-35"},
-          {"type": "str", "packet": "Upgrade-Insecure-Requests: 1\r\n", "delay": "1-9"},
-          {"type": "rand", "packet": "50-110", "delay": "2-16"},
-          {"type": "base64", "packet": "TGF5ZXI1", "delay": "4-28"},
-          {"type": "rand", "packet": "140-220", "delay": "6-40"},
-          {"type": "str", "packet": "Te: trailers\r\n", "delay": "1-5"},
-          {"type": "rand", "packet": "35-95", "delay": "2-20"},
-          {"type": "rand", "packet": "160-240", "delay": "7-50"},
-          {"type": "base64", "packet": "RGVlcEZyYWc=", "delay": "5-35"},
-          {"type": "rand", "packet": "25-85", "delay": "1-12"},
-          {"type": "rand", "packet": "180-280", "delay": "8-55"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -301,39 +202,13 @@
       "tag": "ultra-fragment-6",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-2",
           "length": "1-10",
           "interval": "8-45"
-        },
-        "noises": [
-          {"type": "rand", "packet": "10-40", "delay": "1-18"}, 
-          {"type": "rand", "packet": "50-100", "delay": "2-25"},
-          {"type": "rand", "packet": "25-75", "delay": "1-12"},
-          {"type": "rand", "packet": "80-140", "delay": "3-30"},
-          {"type": "str", "packet": "X-Forwarded-For: 127.0.0.1\r\n", "delay": "1-8"},
-          {"type": "base64", "packet": "Rm9yY2U=", "delay": "2-15"},
-          {"type": "rand", "packet": "35-85", "delay": "1-10"},
-          {"type": "rand", "packet": "100-160", "delay": "4-35"},
-          {"type": "str", "packet": "X-Real-IP: 192.168.1.1\r\n", "delay": "1-7"},
-          {"type": "rand", "packet": "15-55", "delay": "2-22"},
-          {"type": "base64", "packet": "SW5lcnQ=", "delay": "3-28"},
-          {"type": "rand", "packet": "60-120", "delay": "5-40"},
-          {"type": "str", "packet": "Via: 1.1 proxy\r\n", "delay": "1-6"},
-          {"type": "rand", "packet": "30-80", "delay": "2-18"},
-          {"type": "base64", "packet": "UHJveHk=", "delay": "4-32"},
-          {"type": "rand", "packet": "90-150", "delay": "6-45"},
-          {"type": "str", "packet": "X-Requested-With: XMLHttpRequest\r\n", "delay": "1-10"},
-          {"type": "rand", "packet": "20-60", "delay": "2-20"},
-          {"type": "rand", "packet": "120-180", "delay": "7-50"},
-          {"type": "base64", "packet": "RmluYWxMYXllcg==", "delay": "5-38"},
-          {"type": "rand", "packet": "40-90", "delay": "1-14"},
-          {"type": "rand", "packet": "140-200", "delay": "8-60"},
-          {"type": "str", "packet": "X-Frame-Options: DENY\r\n", "delay": "1-9"},
-          {"type": "rand", "packet": "28-78", "delay": "2-24"},
-          {"type": "rand", "packet": "160-220", "delay": "9-65"}
-        ]
+        }
       },
       "streamSettings": {
         "sockopt": {
@@ -345,252 +220,94 @@
       "tag": "ultra-fragment-7",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-1",
           "length": "1-6",
           "interval": "10-50"
-        },
-        "noises": [
-          {"type": "rand", "packet": "8-35", "delay": "1-20"}, 
-          {"type": "rand", "packet": "40-80", "delay": "2-30"},
-          {"type": "rand", "packet": "18-58", "delay": "1-15"},
-          {"type": "rand", "packet": "60-110", "delay": "3-35"},
-          {"type": "str", "packet": "Content-Security-Policy: default-src 'self'\r\n", "delay": "1-10"},
-          {"type": "base64", "packet": "RGVlcGVzdA==", "delay": "2-18"},
-          {"type": "rand", "packet": "28-68", "delay": "1-12"},
-          {"type": "rand", "packet": "80-130", "delay": "4-40"},
-          {"type": "str", "packet": "Strict-Transport-Security: max-age=31536000\r\n", "delay": "1-8"},
-          {"type": "rand", "packet": "12-42", "delay": "2-25"},
-          {"type": "base64", "packet": "TGFzdA==", "delay": "3-32"},
-          {"type": "rand", "packet": "50-100", "delay": "5-45"},
-          {"type": "str", "packet": "X-Content-Type-Options: nosniff\r\n", "delay": "1-7"},
-          {"type": "rand", "packet": "22-62", "delay": "2-22"},
-          {"type": "base64", "packet": "RnJhZ21lbnQ3", "delay": "4-38"},
-          {"type": "rand", "packet": "70-120", "delay": "6-50"},
-          {"type": "str", "packet": "Referrer-Policy: strict-origin-when-cross-origin\r\n", "delay": "1-12"},
-          {"type": "rand", "packet": "15-45", "delay": "2-28"},
-          {"type": "rand", "packet": "90-140", "delay": "7-55"},
-          {"type": "base64", "packet": "RmluYWxOb2lzZQ==", "delay": "5-42"},
-          {"type": "rand", "packet": "32-72", "delay": "1-16"},
-          {"type": "rand", "packet": "110-160", "delay": "8-60"},
-          {"type": "str", "packet": "Feature-Policy: geolocation 'none'\r\n", "delay": "1-11"},
-          {"type": "rand", "packet": "25-65", "delay": "2-30"},
-          {"type": "rand", "packet": "130-180", "delay": "9-70"},
-          {"type": "base64", "packet": "VWx0cmFGaW5hbA==", "delay": "6-48"},
-          {"type": "rand", "packet": "38-88", "delay": "1-18"},
-          {"type": "rand", "packet": "150-200", "delay": "10-75"}
-        ]
+        }
       }
     },
     {
       "tag": "phantom-udp-v4",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "ForceIPv4",
-        "noises": [
-          {"type": "rand", "packet": "25-160", "delay": "1-8"}, {"type": "rand", "packet": "180-400", "delay": "2-12"},
-          {"type": "rand", "packet": "40-220", "delay": "1-6"}, {"type": "rand", "packet": "280-550", "delay": "3-15"},
-          {"type": "rand", "packet": "60-260", "delay": "1-5"}, {"type": "rand", "packet": "320-600", "delay": "2-14"},
-          {"type": "rand", "packet": "100-300", "delay": "1-9"}, {"type": "rand", "packet": "380-680", "delay": "3-18"},
-          {"type": "str", "packet": "UDP-TEST-DATA", "delay": "1-4"}, {"type": "rand", "packet": "220-470", "delay": "2-10"},
-          {"type": "base64", "packet": "VURQTm9pc2U=", "delay": "1-7"}, {"type": "rand", "packet": "420-720", "delay": "4-22"},
-          {"type": "rand", "packet": "50-210", "delay": "1-5"}, {"type": "rand", "packet": "300-570", "delay": "3-16"},
-          {"type": "rand", "packet": "80-280", "delay": "1-8"}, {"type": "rand", "packet": "460-760", "delay": "5-25"},
-          {"type": "str", "packet": "PHANTOM-UDP", "delay": "1-6"}, {"type": "rand", "packet": "340-640", "delay": "2-13"},
-          {"type": "base64", "packet": "UGhhbnRvbQ==", "delay": "1-9"}, {"type": "rand", "packet": "520-820", "delay": "6-28"},
-          {"type": "rand", "packet": "30-180", "delay": "1-4"}, {"type": "rand", "packet": "200-450", "delay": "2-11"},
-          {"type": "rand", "packet": "70-270", "delay": "1-7"}, {"type": "rand", "packet": "360-660", "delay": "3-17"},
-          {"type": "str", "packet": "NOISE-PATTERN", "delay": "1-5"}, {"type": "rand", "packet": "440-740", "delay": "4-20"},
-          {"type": "base64", "packet": "UGF0dGVybg==", "delay": "2-12"}, {"type": "rand", "packet": "580-880", "delay": "7-32"},
-          {"type": "rand", "packet": "45-195", "delay": "1-6"}, {"type": "rand", "packet": "250-500", "delay": "2-14"},
-          {"type": "rand", "packet": "85-285", "delay": "1-8"}, {"type": "rand", "packet": "390-690", "delay": "3-19"},
-          {"type": "str", "packet": "FRAGMENT-UDP", "delay": "1-7"}, {"type": "rand", "packet": "480-780", "delay": "5-24"},
-          {"type": "base64", "packet": "RnJhZ21lbnQ=", "delay": "2-15"}, {"type": "rand", "packet": "620-920", "delay": "8-36"},
-          {"type": "rand", "packet": "35-185", "delay": "1-5"}, {"type": "rand", "packet": "210-460", "delay": "2-13"},
-          {"type": "rand", "packet": "65-265", "delay": "1-9"}, {"type": "rand", "packet": "330-630", "delay": "3-21"},
-          {"type": "str", "packet": "ULTRA-NOISE", "delay": "1-8"}, {"type": "rand", "packet": "410-710", "delay": "4-26"},
-          {"type": "base64", "packet": "VWx0cmE=", "delay": "2-16"}, {"type": "rand", "packet": "560-860", "delay": "6-38"},
-          {"type": "rand", "packet": "55-255", "delay": "1-6"}, {"type": "rand", "packet": "270-520", "delay": "2-15"},
-          {"type": "rand", "packet": "95-295", "delay": "1-10"}, {"type": "rand", "packet": "370-670", "delay": "3-23"},
-          {"type": "str", "packet": "DEEP-PACKET", "delay": "1-9"}, {"type": "rand", "packet": "450-750", "delay": "5-28"},
-          {"type": "base64", "packet": "RGVlcA==", "delay": "2-18"}, {"type": "rand", "packet": "600-900", "delay": "7-42"}
-        ]
+        "padding": true,
+        "domainStrategy": "ForceIPv4"
       }
     },
     {
       "tag": "phantom-udp-v6",
       "protocol": "freedom",
       "settings": {
-        "domainStrategy": "ForceIPv6",
-        "noises": [
-          {"type": "rand", "packet": "20-155", "delay": "1-8"}, {"type": "rand", "packet": "175-395", "delay": "2-12"},
-          {"type": "rand", "packet": "35-215", "delay": "1-6"}, {"type": "rand", "packet": "275-545", "delay": "3-15"},
-          {"type": "rand", "packet": "55-255", "delay": "1-5"}, {"type": "rand", "packet": "315-595", "delay": "2-14"},
-          {"type": "rand", "packet": "95-295", "delay": "1-9"}, {"type": "rand", "packet": "375-675", "delay": "3-18"},
-          {"type": "str", "packet": "UDP6-TEST", "delay": "1-4"}, {"type": "rand", "packet": "215-465", "delay": "2-10"},
-          {"type": "base64", "packet": "VURQNg==", "delay": "1-7"}, {"type": "rand", "packet": "415-715", "delay": "4-22"},
-          {"type": "rand", "packet": "45-205", "delay": "1-5"}, {"type": "rand", "packet": "295-565", "delay": "3-16"},
-          {"type": "rand", "packet": "75-275", "delay": "1-8"}, {"type": "rand", "packet": "455-755", "delay": "5-25"},
-          {"type": "str", "packet": "IPV6-PHANTOM", "delay": "1-6"}, {"type": "rand", "packet": "335-635", "delay": "2-13"},
-          {"type": "base64", "packet": "SVB2Ng==", "delay": "1-9"}, {"type": "rand", "packet": "515-815", "delay": "6-28"},
-          {"type": "rand", "packet": "25-175", "delay": "1-4"}, {"type": "rand", "packet": "195-445", "delay": "2-11"},
-          {"type": "rand", "packet": "65-265", "delay": "1-7"}, {"type": "rand", "packet": "355-655", "delay": "3-17"},
-          {"type": "str", "packet": "V6-NOISE", "delay": "1-5"}, {"type": "rand", "packet": "435-735", "delay": "4-20"},
-          {"type": "base64", "packet": "Vk5vaXNl", "delay": "2-12"}, {"type": "rand", "packet": "575-875", "delay": "7-32"},
-          {"type": "rand", "packet": "40-190", "delay": "1-6"}, {"type": "rand", "packet": "245-495", "delay": "2-14"},
-          {"type": "rand", "packet": "80-280", "delay": "1-8"}, {"type": "rand", "packet": "385-685", "delay": "3-19"},
-          {"type": "str", "packet": "IPV6-FRAG", "delay": "1-7"}, {"type": "rand", "packet": "475-775", "delay": "5-24"},
-          {"type": "base64", "packet": "RnJhZzY=", "delay": "2-15"}, {"type": "rand", "packet": "615-915", "delay": "8-36"},
-          {"type": "rand", "packet": "30-180", "delay": "1-5"}, {"type": "rand", "packet": "205-455", "delay": "2-13"},
-          {"type": "rand", "packet": "60-260", "delay": "1-9"}, {"type": "rand", "packet": "325-625", "delay": "3-21"},
-          {"type": "str", "packet": "V6-ULTRA", "delay": "1-8"}, {"type": "rand", "packet": "405-705", "delay": "4-26"},
-          {"type": "base64", "packet": "VjZVbHRyYQ==", "delay": "2-16"}, {"type": "rand", "packet": "555-855", "delay": "6-38"},
-          {"type": "rand", "packet": "50-250", "delay": "1-6"}, {"type": "rand", "packet": "265-515", "delay": "2-15"},
-          {"type": "rand", "packet": "90-290", "delay": "1-10"}, {"type": "rand", "packet": "365-665", "delay": "3-23"},
-          {"type": "str", "packet": "DEEP-V6", "delay": "1-9"}, {"type": "rand", "packet": "445-745", "delay": "5-28"},
-          {"type": "base64", "packet": "RGVlcFY2", "delay": "2-18"}, {"type": "rand", "packet": "595-895", "delay": "7-42"}
-        ]
+        "padding": true,
+        "domainStrategy": "ForceIPv6"
       }
     },
     {
       "tag": "phantom-quic-v4",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIPv4",
         "fragment": {
           "packets": "1-10",
           "length": "1-65",
           "interval": "0-12"
-        },
-        "noises": [
-          {"type": "rand", "packet": "60-380", "delay": "1-10"}, {"type": "rand", "packet": "450-1150", "delay": "2-18"},
-          {"type": "rand", "packet": "120-580", "delay": "1-8"}, {"type": "rand", "packet": "650-1350", "delay": "3-22"},
-          {"type": "rand", "packet": "90-480", "delay": "1-6"}, {"type": "rand", "packet": "550-1250", "delay": "2-15"},
-          {"type": "rand", "packet": "180-680", "delay": "1-12"}, {"type": "rand", "packet": "750-1450", "delay": "4-25"},
-          {"type": "str", "packet": "QUIC-V4-PHANTOM", "delay": "1-5"}, {"type": "rand", "packet": "420-1020", "delay": "2-12"},
-          {"type": "base64", "packet": "UVVJQzQ=", "delay": "1-8"}, {"type": "rand", "packet": "700-1400", "delay": "3-20"},
-          {"type": "rand", "packet": "50-330", "delay": "1-4"}, {"type": "rand", "packet": "380-880", "delay": "2-10"},
-          {"type": "rand", "packet": "210-710", "delay": "1-14"}, {"type": "rand", "packet": "820-1520", "delay": "5-28"},
-          {"type": "str", "packet": "PHANTOM-QUIC4", "delay": "1-7"}, {"type": "rand", "packet": "490-1190", "delay": "2-16"},
-          {"type": "base64", "packet": "UGhhbnRvbVE=", "delay": "1-11"}, {"type": "rand", "packet": "770-1470", "delay": "4-24"},
-          {"type": "rand", "packet": "80-430", "delay": "1-6"}, {"type": "rand", "packet": "500-1200", "delay": "3-14"},
-          {"type": "rand", "packet": "150-650", "delay": "1-9"}, {"type": "rand", "packet": "720-1420", "delay": "4-26"},
-          {"type": "str", "packet": "ULTRA-QUIC", "delay": "1-8"}, {"type": "rand", "packet": "560-1260", "delay": "2-18"},
-          {"type": "base64", "packet": "VWx0cmFRdWlj", "delay": "1-13"}, {"type": "rand", "packet": "840-1540", "delay": "5-32"}
-        ]
+        }
       }
     },
     {
       "tag": "phantom-quic-v6",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIPv6",
         "fragment": {
           "packets": "1-10",
           "length": "1-65",
           "interval": "0-12"
-        },
-        "noises": [
-          {"type": "rand", "packet": "55-375", "delay": "1-10"}, {"type": "rand", "packet": "445-1145", "delay": "2-18"},
-          {"type": "rand", "packet": "115-575", "delay": "1-8"}, {"type": "rand", "packet": "645-1345", "delay": "3-22"},
-          {"type": "rand", "packet": "85-475", "delay": "1-6"}, {"type": "rand", "packet": "545-1245", "delay": "2-15"},
-          {"type": "rand", "packet": "175-675", "delay": "1-12"}, {"type": "rand", "packet": "745-1445", "delay": "4-25"},
-          {"type": "str", "packet": "QUIC-V6-PHANTOM", "delay": "1-5"}, {"type": "rand", "packet": "415-1015", "delay": "2-12"},
-          {"type": "base64", "packet": "UVVJQzY=", "delay": "1-8"}, {"type": "rand", "packet": "695-1395", "delay": "3-20"},
-          {"type": "rand", "packet": "45-325", "delay": "1-4"}, {"type": "rand", "packet": "375-875", "delay": "2-10"},
-          {"type": "rand", "packet": "205-705", "delay": "1-14"}, {"type": "rand", "packet": "815-1515", "delay": "5-28"},
-          {"type": "str", "packet": "IPV6-QUIC", "delay": "1-7"}, {"type": "rand", "packet": "485-1185", "delay": "2-16"},
-          {"type": "base64", "packet": "SVB2NlF1aWM=", "delay": "1-11"}, {"type": "rand", "packet": "765-1465", "delay": "4-24"},
-          {"type": "rand", "packet": "75-425", "delay": "1-6"}, {"type": "rand", "packet": "495-1195", "delay": "3-14"},
-          {"type": "rand", "packet": "145-645", "delay": "1-9"}, {"type": "rand", "packet": "715-1415", "delay": "4-26"},
-          {"type": "str", "packet": "V6-ULTRA-QUIC", "delay": "1-8"}, {"type": "rand", "packet": "555-1255", "delay": "2-18"},
-          {"type": "base64", "packet": "VjZVbHRyYVE=", "delay": "1-13"}, {"type": "rand", "packet": "835-1535", "delay": "5-32"}
-        ]
+        }
       }
     },
     {
       "tag": "phantom-streaming",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-8",
           "length": "8-120",
           "interval": "1-15"
-        },
-        "noises": [
-          {"type": "rand", "packet": "150-750", "delay": "1-8"}, {"type": "rand", "packet": "800-1500", "delay": "2-15"},
-          {"type": "rand", "packet": "250-850", "delay": "1-10"}, {"type": "rand", "packet": "900-1600", "delay": "3-18"},
-          {"type": "rand", "packet": "200-700", "delay": "1-6"}, {"type": "rand", "packet": "750-1450", "delay": "2-12"},
-          {"type": "rand", "packet": "350-950", "delay": "1-12"}, {"type": "rand", "packet": "1000-1700", "delay": "4-22"},
-          {"type": "str", "packet": "STREAM-PHANTOM", "delay": "1-6"}, {"type": "rand", "packet": "600-1300", "delay": "2-14"},
-          {"type": "base64", "packet": "U3RyZWFt", "delay": "1-9"}, {"type": "rand", "packet": "1100-1800", "delay": "3-20"},
-          {"type": "rand", "packet": "100-600", "delay": "1-5"}, {"type": "rand", "packet": "650-1350", "delay": "2-11"},
-          {"type": "rand", "packet": "300-900", "delay": "1-8"}, {"type": "rand", "packet": "950-1650", "delay": "4-24"},
-          {"type": "str", "packet": "PHANTOM-STREAM", "delay": "1-7"}, {"type": "rand", "packet": "700-1400", "delay": "2-16"},
-          {"type": "base64", "packet": "UGhhbnRvbVN0cmVhbQ==", "delay": "1-11"}, {"type": "rand", "packet": "1200-1900", "delay": "5-28"},
-          {"type": "rand", "packet": "180-780", "delay": "1-7"}, {"type": "rand", "packet": "820-1520", "delay": "3-17"},
-          {"type": "rand", "packet": "280-880", "delay": "1-9"}, {"type": "rand", "packet": "930-1630", "delay": "4-25"},
-          {"type": "str", "packet": "ULTRA-STREAM", "delay": "1-8"}, {"type": "rand", "packet": "680-1380", "delay": "2-18"},
-          {"type": "base64", "packet": "VWx0cmFTdHJlYW0=", "delay": "1-13"}, {"type": "rand", "packet": "1150-1850", "delay": "6-32"}
-        ]
+        }
       }
     },
     {
       "tag": "phantom-email-secure",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-6",
           "length": "5-80",
           "interval": "1-12"
-        },
-        "noises": [
-          {"type": "rand", "packet": "120-520", "delay": "1-9"}, {"type": "rand", "packet": "580-1080", "delay": "2-16"},
-          {"type": "rand", "packet": "180-680", "delay": "1-7"}, {"type": "rand", "packet": "720-1220", "delay": "3-19"},
-          {"type": "rand", "packet": "150-550", "delay": "1-5"}, {"type": "rand", "packet": "600-1100", "delay": "2-13"},
-          {"type": "rand", "packet": "220-720", "delay": "1-11"}, {"type": "rand", "packet": "780-1280", "delay": "4-23"},
-          {"type": "str", "packet": "SMTP-SECURE", "delay": "1-6"}, {"type": "rand", "packet": "450-950", "delay": "2-14"},
-          {"type": "base64", "packet": "U01UUA==", "delay": "1-8"}, {"type": "rand", "packet": "1000-1500", "delay": "3-21"},
-          {"type": "rand", "packet": "90-490", "delay": "1-4"}, {"type": "rand", "packet": "530-1030", "delay": "2-12"},
-          {"type": "rand", "packet": "200-700", "delay": "1-10"}, {"type": "rand", "packet": "750-1250", "delay": "4-25"},
-          {"type": "str", "packet": "EMAIL-PHANTOM", "delay": "1-7"}, {"type": "rand", "packet": "480-980", "delay": "2-17"},
-          {"type": "base64", "packet": "RW1haWw=", "delay": "1-12"}, {"type": "rand", "packet": "1020-1520", "delay": "5-29"},
-          {"type": "rand", "packet": "160-660", "delay": "1-8"}, {"type": "rand", "packet": "700-1200", "delay": "3-18"},
-          {"type": "rand", "packet": "240-740", "delay": "1-6"}, {"type": "rand", "packet": "800-1300", "delay": "4-26"},
-          {"type": "str", "packet": "SECURE-MAIL", "delay": "1-9"}, {"type": "rand", "packet": "560-1060", "delay": "2-19"},
-          {"type": "base64", "packet": "U2VjdXJlTWFpbA==", "delay": "1-14"}, {"type": "rand", "packet": "1100-1600", "delay": "6-33"}
-        ]
+        }
       }
     },
     {
       "tag": "phantom-vpn-ports",
       "protocol": "freedom",
       "settings": {
+        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-5",
           "length": "3-60",
           "interval": "1-10"
-        },
-        "noises": [
-          {"type": "rand", "packet": "100-450", "delay": "1-8"}, {"type": "rand", "packet": "500-950", "delay": "2-15"},
-          {"type": "rand", "packet": "140-590", "delay": "1-6"}, {"type": "rand", "packet": "620-1120", "delay": "3-18"},
-          {"type": "rand", "packet": "120-470", "delay": "1-5"}, {"type": "rand", "packet": "520-1020", "delay": "2-12"},
-          {"type": "rand", "packet": "180-630", "delay": "1-10"}, {"type": "rand", "packet": "680-1180", "delay": "4-21"},
-          {"type": "str", "packet": "VPN-PHANTOM", "delay": "1-6"}, {"type": "rand", "packet": "380-880", "delay": "2-13"},
-          {"type": "base64", "packet": "VlBO", "delay": "1-8"}, {"type": "rand", "packet": "920-1420", "delay": "3-20"},
-          {"type": "rand", "packet": "80-430", "delay": "1-4"}, {"type": "rand", "packet": "460-960", "delay": "2-11"},
-          {"type": "rand", "packet": "160-610", "delay": "1-9"}, {"type": "rand", "packet": "650-1150", "delay": "4-24"},
-          {"type": "str", "packet": "TUNNEL-SECURE", "delay": "1-7"}, {"type": "rand", "packet": "420-920", "delay": "2-16"},
-          {"type": "base64", "packet": "VHVubmVs", "delay": "1-11"}, {"type": "rand", "packet": "980-1480", "delay": "5-27"},
-          {"type": "rand", "packet": "130-580", "delay": "1-7"}, {"type": "rand", "packet": "610-1110", "delay": "3-17"},
-          {"type": "rand", "packet": "200-650", "delay": "1-8"}, {"type": "rand", "packet": "700-1200", "delay": "4-25"},
-          {"type": "str", "packet": "OPENVPN-PHANTOM", "delay": "1-9"}, {"type": "rand", "packet": "480-980", "delay": "2-18"},
-          {"type": "base64", "packet": "T3BlblZQTg==", "delay": "1-13"}, {"type": "rand", "packet": "1040-1540", "delay": "6-31"}
-        ]
+        }
       }
     }
   ],
