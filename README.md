@@ -8,12 +8,12 @@ This repository contains an advanced, server-less V2Ray/Xray configuration engin
 * **Intelligent Packet Padding**: Complements fragmentation by applying smart padding to all packets, randomizing their size to mimic standard TLS traffic and further evade statistical analysis.
 * **Protocol-Specific Routing**: Intelligently identifies and routes traffic for different applications—such as Gaming, Social Media, and Streaming—to specialized outbounds with tailored obfuscation profiles.
 * **Comprehensive UDP Obfuscation**: Applies both fragmentation and padding to UDP traffic, ensuring protocols often used for gaming and streaming are also properly camouflaged.
-* **Resilient Secure DNS**: Utilizes multiple trusted DNS-over-HTTPS (DoH) providers (Cloudflare, Google, Quad9, OpenDNS, AdGuard) with an IPv4-first strategy for maximum reliability and privacy.
+* **Resilient Secure DNS**: Utilizes multiple trusted DNS-over-HTTPS (DoH) providers (Cloudflare, Google, Quad9, OpenDNS, AdGuard) for maximum reliability and privacy.
 * **Dual Proxy Inbounds**: Offers both SOCKS5 (port `10808`) and HTTP (port `10809`) inbounds for flexible integration with different applications.
 * **Server-Less Architecture**: Works entirely on the client-side, providing powerful obfuscation without the cost or complexity of a VPS.
 
 ## Usage
 
 1.  Copy the content of the `phantom.json` file.
-2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, MahsaNG).
+2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, Nekoray).
 3.  Ensure your client's `geoip.dat` and `geosite.dat` files are up to date for optimal routing.
