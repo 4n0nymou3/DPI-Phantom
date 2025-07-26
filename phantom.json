@@ -45,7 +45,11 @@
     ],
     "tag": "dns-query",
     "disableFallback": true,
-    "disableCache": false
+    "disableCache": false,
+    "fakedns": {
+      "ipPool": "198.18.0.0/15",
+      "poolSize": 65535
+    }
   },
   "inbounds": [
     {
@@ -60,6 +64,7 @@
     },
     {
       "tag": "socks-in",
+      "listen": "127.0.0.1",
       "port": 10808,
       "protocol": "socks",
       "sniffing": {
@@ -79,6 +84,7 @@
     },
     {
       "tag": "http-in",
+      "listen": "127.0.0.1",
       "port": 10809,
       "protocol": "http",
       "sniffing": {
@@ -128,8 +134,8 @@
         "padding": true,
         "fragment": {
           "packets": "tlshello",
-          "length": "1-65",
-          "interval": "0-20"
+          "length": "10-55",
+          "interval": "5-20"
         }
       },
       "streamSettings": {
@@ -144,9 +150,9 @@
       "settings": {
         "padding": true,
         "fragment": {
-          "packets": "1-15",
-          "length": "20-1400",
-          "interval": "0-25"
+          "packets": "2-13",
+          "length": "25-1350",
+          "interval": "5-22"
         }
       },
       "streamSettings": {
@@ -162,9 +168,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-12",
-          "length": "1-100",
-          "interval": "1-30"
+          "packets": "1-11",
+          "length": "10-100",
+          "interval": "8-28"
         }
       },
       "streamSettings": {
@@ -180,9 +186,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-10",
-          "length": "1-80",
-          "interval": "2-35"
+          "packets": "1-9",
+          "length": "5-85",
+          "interval": "10-33"
         }
       },
       "streamSettings": {
@@ -198,9 +204,9 @@
         "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
-          "packets": "1-8",
-          "length": "1-60",
-          "interval": "3-40"
+          "packets": "1-7",
+          "length": "1-65",
+          "interval": "12-38"
         }
       },
       "streamSettings": {
@@ -217,8 +223,8 @@
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-6",
-          "length": "1-45",
-          "interval": "5-45"
+          "length": "1-50",
+          "interval": "15-42"
         }
       },
       "streamSettings": {
@@ -235,8 +241,8 @@
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-5",
-          "length": "1-30",
-          "interval": "8-50"
+          "length": "1-35",
+          "interval": "18-48"
         }
       },
       "streamSettings": {
@@ -253,8 +259,8 @@
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-4",
-          "length": "1-20",
-          "interval": "10-55"
+          "length": "1-25",
+          "interval": "20-52"
         }
       },
       "streamSettings": {
@@ -271,8 +277,8 @@
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-3",
-          "length": "1-15",
-          "interval": "12-60"
+          "length": "1-18",
+          "interval": "22-58"
         }
       },
       "streamSettings": {
@@ -289,8 +295,8 @@
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-2",
-          "length": "1-10",
-          "interval": "15-65"
+          "length": "1-12",
+          "interval": "25-62"
         }
       },
       "streamSettings": {
@@ -308,7 +314,7 @@
         "fragment": {
           "packets": "1-1",
           "length": "1-8",
-          "interval": "20-70"
+          "interval": "30-70"
         }
       }
     },
@@ -444,7 +450,7 @@
     }
   ],
   "routing": {
-    "domainStrategy": "IPOnDemand",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
         "outboundTag": "dns-out",
@@ -467,6 +473,7 @@
         ]
       },
       {
+        "type": "field",
         "outboundTag": "block",
         "domain": [
           "geosite:category-ads-all",
