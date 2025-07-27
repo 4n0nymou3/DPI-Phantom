@@ -1,0 +1,122 @@
+:root {
+    --bg-color: #0d1117;
+    --text-color: #c9d1d9;
+    --title-color: #28a7a1;
+    --border-color: #30363d;
+    --input-bg: #161b22;
+    --button-bg: #238636;
+    --button-hover-bg: #2ea043;
+    --button-copy-bg: #1f6feb;
+    --button-copy-hover-bg: #388bfd;
+    --button-clear-bg: #6e7681;
+    --button-clear-hover-bg: #8b949e;
+    --footer-text-color: #8b949e;
+    --json-key-color: #79c0ff;
+    --json-string-color: #a5d6ff;
+    --json-number-color: #ffab70;
+    --json-boolean-color: #ff7b72;
+    --json-null-color: #ff7b72;
+}
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 25px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+h1 {
+    color: var(--title-color);
+    text-align: center;
+    margin-top: 0;
+}
+p {
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: center;
+    margin-bottom: 20px;
+}
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    resize: vertical;
+    min-height: 80px;
+}
+pre {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 400px;
+    overflow-y: auto;
+}
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+button {
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-weight: 500;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+#generateButton {
+    background-color: var(--button-bg);
+}
+#generateButton:hover {
+    background-color: var(--button-hover-bg);
+}
+#copyButton {
+    background-color: var(--button-copy-bg);
+}
+#copyButton:hover {
+    background-color: var(--button-copy-hover-bg);
+}
+#clearButton {
+    background-color: var(--button-clear-bg);
+}
+#clearButton:hover {
+    background-color: var(--button-clear-hover-bg);
+}
+footer {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--footer-text-color);
+    font-size: 12px;
+}
+.json-key { color: var(--json-key-color); }
+.json-string { color: var(--json-string-color); }
+.json-number { color: var(--json-number-color); }
+.json-boolean { color: var(--json-boolean-color); }
+.json-null { color: var(--json-null-color); }
