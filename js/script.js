@@ -58,9 +58,9 @@ generateButton.addEventListener('click', async () => {
         return;
     }
 
-    const forcedRouteIPs = ipInput.value.split('\n').map(ip => ip.trim()).filter(ip => ip);
-    if (forcedRouteIPs.length === 0) {
-        outputJson.textContent = 'Error: The IP list for forced routing cannot be empty.';
+    const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
+    if (routeItems.length === 0) {
+        outputJson.textContent = 'Error: The IP/Domain list for forced routing cannot be empty.';
         return;
     }
 
@@ -107,14 +107,39 @@ generateButton.addEventListener('click', async () => {
             return newOutbound;
         });
 
-        const forcedRoutingRule = {
-            type: 'field',
-            outboundTag: 'phantom-tlshello-x',
-            ip: forcedRouteIPs
-        };
+        const ipList = [];
+        const domainList = [];
+        routeItems.forEach(item => {
+            const trimmedItem = item.trim();
+            if (/[a-zA-Z]/.test(trimmedItem)) {
+                let domain = trimmedItem.replace(/^https?:\/\//, '');
+                domain = domain.split('/')[0];
+                domainList.push(domain);
+            } else {
+                ipList.push(trimmedItem);
+            }
+        });
+
+        const routingRulesToAdd = [];
+        if (domainList.length > 0) {
+            routingRulesToAdd.push({
+                type: 'field',
+                outboundTag: 'phantom-tlshello-x',
+                domain: domainList
+            });
+        }
+        if (ipList.length > 0) {
+            routingRulesToAdd.push({
+                type: 'field',
+                outboundTag: 'phantom-tlshello-x',
+                ip: ipList
+            });
+        }
 
         newConfig.outbounds.push(ssOutbound, ...newChainOutbounds);
-        newConfig.routing.rules.unshift(forcedRoutingRule);
+        if (routingRulesToAdd.length > 0) {
+            newConfig.routing.rules.unshift(...routingRulesToAdd);
+        }
         
         delete newConfig.remarks;
         const restOfConfigJson = JSON.stringify(newConfig, null, 2);
