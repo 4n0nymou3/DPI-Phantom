@@ -12,6 +12,10 @@ This repository contains an advanced, server-less V2Ray/Xray configuration engin
 * **Dual Proxy Inbounds**: Offers both SOCKS5 (port `10808`) and HTTP (port `10809`) inbounds for flexible integration with different applications.
 * **Server-Less Architecture**: Works entirely on the client-side, providing powerful obfuscation without the cost or complexity of a VPS.
 
+## Phantom X Chain: The Companion Tool
+
+To simplify the process of chaining this configuration with an exit proxy, a companion web tool named **Phantom X Chain** is available. This utility allows you to combine the core Phantom configuration with your own proxy server, enabling it to bypass firewalls while retaining its advanced obfuscation features. Currently, the tool supports chaining with **Shadowsocks (ss://)** proxies. You can find the link to this tool in the repository's description.
+
 ## Usage
 
 1.  Copy the content of the `phantom.json` file.
