@@ -10,9 +10,12 @@
 
     <div class="container">
         <h1>Phantom X Chain</h1>
-        <p>Paste your Shadowsocks (ss://) URI below to combine it with the Phantom base config.</p>
+        <p>Paste your Shadowsocks (ss://) URI below to chain it with the Phantom config for specific IP routes.</p>
         
         <textarea id="uriInput" placeholder="ss://..."></textarea>
+
+        <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs:</h3>
+        <textarea id="ipInput" rows="6"></textarea>
         
         <div class="button-container">
             <button id="generateButton">Generate Combined Config</button>
