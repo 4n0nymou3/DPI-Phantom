@@ -60,9 +60,6 @@ textarea {
     resize: vertical;
     min-height: 80px;
 }
-.ip-textarea {
-    min-height: 120px;
-}
 pre {
     width: 100%;
     box-sizing: border-box;
