@@ -1,4 +1,5 @@
 const uriInput = document.getElementById('uriInput');
+const ipInput = document.getElementById('ipInput');
 const generateButton = document.getElementById('generateButton');
 const outputJson = document.getElementById('outputJson');
 const copyButton = document.getElementById('copyButton');
@@ -6,13 +7,17 @@ const clearButton = document.getElementById('clearButton');
 
 const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/phantom.json';
 
-const telegramIPs = [
+const defaultForcedRouteIPs = [
     "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
     "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
     "95.161.64.0/20", "149.154.160.0/21", "149.154.168.0/22", "149.154.172.0/22",
     "185.76.151.0/24", "2001:67c:4e8::/48", "2001:b28:f23c::/48", "2001:b28:f23d::/48",
     "2001:b28:f23f::/48", "2a0a:f280:203::/48"
 ];
+
+function setDefaultIPs() {
+    ipInput.value = defaultForcedRouteIPs.join('\n');
+}
 
 function syntaxHighlight(json) {
     json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -53,6 +58,12 @@ generateButton.addEventListener('click', async () => {
         return;
     }
 
+    const forcedRouteIPs = ipInput.value.split('\n').map(ip => ip.trim()).filter(ip => ip);
+    if (forcedRouteIPs.length === 0) {
+        outputJson.textContent = 'Error: The IP list for forced routing cannot be empty.';
+        return;
+    }
+
     let baseConfig;
     try {
         outputJson.textContent = 'Fetching latest Phantom config from GitHub...';
@@ -68,7 +79,7 @@ generateButton.addEventListener('click', async () => {
         const ssDetails = parseShadowsocksUri(uri);
         let newConfig = JSON.parse(JSON.stringify(baseConfig));
 
-        const finalRemarks = "ðŸ‘½ Anonymous Phantom + X Chain (ss)";
+        const finalRemarks = "&#128125; Anonymous Phantom + X Chain";
         newConfig.remarks = finalRemarks;
 
         const ssOutbound = {
@@ -96,14 +107,14 @@ generateButton.addEventListener('click', async () => {
             return newOutbound;
         });
 
-        const telegramRoutingRule = {
+        const forcedRoutingRule = {
             type: 'field',
             outboundTag: 'phantom-tlshello-x',
-            ip: telegramIPs
+            ip: forcedRouteIPs
         };
 
         newConfig.outbounds.push(ssOutbound, ...newChainOutbounds);
-        newConfig.routing.rules.unshift(telegramRoutingRule);
+        newConfig.routing.rules.unshift(forcedRoutingRule);
         
         delete newConfig.remarks;
         const restOfConfigJson = JSON.stringify(newConfig, null, 2);
@@ -133,5 +144,8 @@ copyButton.addEventListener('click', () => {
 
 clearButton.addEventListener('click', () => {
     uriInput.value = '';
+    setDefaultIPs();
     outputJson.innerHTML = 'Your combined JSON config will appear here...';
 });
+
+document.addEventListener('DOMContentLoaded', setDefaultIPs);
