@@ -51,6 +51,11 @@ function parseShadowsocksUri(uri) {
     };
 }
 
+function isDomain(str) {
+    const domainRegex = new RegExp(/^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/);
+    return domainRegex.test(str);
+}
+
 generateButton.addEventListener('click', async () => {
     const uri = uriInput.value.trim();
     if (!uri.startsWith('ss://')) {
@@ -110,13 +115,12 @@ generateButton.addEventListener('click', async () => {
         const ipList = [];
         const domainList = [];
         routeItems.forEach(item => {
-            const trimmedItem = item.trim();
-            if (/[a-zA-Z]/.test(trimmedItem)) {
-                let domain = trimmedItem.replace(/^https?:\/\//, '');
-                domain = domain.split('/')[0];
-                domainList.push(domain);
+            let cleanedItem = item.trim().replace(/^https?:\/\//, '');
+            cleanedItem = cleanedItem.split('/')[0];
+            if (isDomain(cleanedItem)) {
+                domainList.push(cleanedItem);
             } else {
-                ipList.push(trimmedItem);
+                ipList.push(item.trim());
             }
         });
 
@@ -135,8 +139,15 @@ generateButton.addEventListener('click', async () => {
                 ip: ipList
             });
         }
+        
+        const outboundsToAdd = [ssOutbound, ...newChainOutbounds];
+        const dnsOutIndex = newConfig.outbounds.findIndex(o => o.tag === 'dns-out');
+        if (dnsOutIndex !== -1) {
+            newConfig.outbounds.splice(dnsOutIndex + 1, 0, ...outboundsToAdd);
+        } else {
+            newConfig.outbounds.push(...outboundsToAdd);
+        }
 
-        newConfig.outbounds.push(ssOutbound, ...newChainOutbounds);
         if (routingRulesToAdd.length > 0) {
             newConfig.routing.rules.unshift(...routingRulesToAdd);
         }
