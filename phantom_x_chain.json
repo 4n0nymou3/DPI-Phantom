@@ -133,10 +133,10 @@
       "settings": {
         "servers": [
           {
-            "address": "83.147.216.70",
-            "port": 64519,
+            "address": "admin.c1.webramz.co",
+            "port": 443,
             "method": "chacha20-ietf-poly1305",
-            "password": "YXgS8ComTam7qoesPlzlMo"
+            "password": "W74XFALLLuw6m5IA"
           }
         ]
       }
