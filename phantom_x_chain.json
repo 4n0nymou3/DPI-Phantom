@@ -133,10 +133,10 @@
       "settings": {
         "servers": [
           {
-            "address": "171.22.254.17",
-            "port": 990,
+            "address": "azure-sto.edgeservers.org",
+            "port": 48172,
             "method": "chacha20-ietf-poly1305",
-            "password": "f8f7aCzcPKbsF8p3"
+            "password": "51yloQC8D9w1Wae7FHtI65"
           }
         ]
       }
