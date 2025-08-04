@@ -12,12 +12,35 @@ This repository contains an advanced, server-less V2Ray/Xray configuration engin
 * **Dual Proxy Inbounds**: Offers both SOCKS5 (port `10808`) and HTTP (port `10809`) inbounds for flexible integration with different applications.
 * **Server-Less Architecture**: Works entirely on the client-side, providing powerful obfuscation without the cost or complexity of a VPS.
 
-## Phantom X Chain: The Companion Tool
+---
 
-To simplify the process of chaining this configuration with an exit proxy, a companion web tool named **Phantom X Chain** is available. This utility allows you to combine the core Phantom configuration with your own proxy server, enabling it to bypass firewalls while retaining its advanced obfuscation features. Currently, the tool supports chaining with **Shadowsocks (ss://)** proxies. You can find the link to this tool in the repository's description.
+## Phantom Universal Chainer: The Companion Tool
 
-## Usage
+To streamline the process of using this advanced configuration with your own proxy servers, this repository includes a powerful companion web tool: the **Phantom Universal Chainer**.
+
+This tool has been significantly upgraded. Instead of a single Shadowsocks proxy, it now allows you to chain the entire Phantom configuration with a **full, multi-protocol JSON config** from clients like v2rayNG. The result is a single, robust configuration that directs your traffic through Phantom's advanced anti-DPI engine before exiting through your own load-balanced pool of servers (VLESS, VMess, Trojan, etc.). It also includes a **"Route All Traffic"** option for full tunneling.
+
+### ⚠️ Requirements & Instructions
+
+* **Crucial Requirement: Load Balancer:** The input JSON config you provide **must** contain a load balancer. The tool is specifically designed to locate a balancer tagged `proxy-round` and use it as the exit point. Configs without this balancer will not be processed correctly.
+
+* 💡 **How to Create Your Input Config:** You can easily generate a compatible JSON file using a modern client like **v2rayNG (v1.10.11 or newer)**. Simply select multiple servers of any protocol (VLESS, Trojan, etc.) in the app, and use the batch export feature to generate a single, combined JSON file with load balancing enabled. This is the file you should paste into the chainer tool.
+
+---
+
+## Usage (Standalone Phantom Config)
+
+If you wish to use the Phantom config by itself (without chaining to another proxy), follow these steps:
 
 1.  Copy the content of the `phantom.json` file.
-2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, MahsaNG).
+2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, Nekoray).
 3.  Ensure your client's `geoip.dat` and `geosite.dat` files are up to date for optimal routing.
+
+## Usage (With the Chainer Tool)
+
+1.  Prepare your multi-server, load-balanced JSON config using a client like v2rayNG.
+2.  Navigate to the **Phantom Universal Chainer** tool (linked in this repository's "About" section).
+3.  Paste your entire JSON config into the primary input box.
+4.  Adjust the **Forced Route IPs & Domains** list as needed. By default, it contains Telegram's IP ranges.
+5.  Optionally, check the **`Route All Traffic`** box to force all your device's traffic through the chained configuration.
+6.  Click **`Generate Combined Config`** and import the resulting JSON into your client.
