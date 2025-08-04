@@ -40,6 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const domainRegex = new RegExp(/^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/);
         return domainRegex.test(str);
     }
+    
+    function parseJsonc(jsoncString) {
+        const withoutComments = jsoncString.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|\s\/\/.*|^\/\/.*/g, '');
+        return JSON.parse(withoutComments);
+    }
 
     generateButton.addEventListener('click', async () => {
         const jsonInput = jsonConfigInput.value.trim();
@@ -48,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
         outputJson.dataset.rawjson = '';
 
         try {
-            userConfig = JSON.parse(jsonInput);
+            userConfig = parseJsonc(jsonInput);
         } catch (error) {
-            outputJson.textContent = 'Error: Input is not a valid JSON. Please check the config format.';
+            outputJson.textContent = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
             return;
         }
 
@@ -70,9 +75,20 @@ document.addEventListener('DOMContentLoaded', () => {
             outputJson.textContent = 'Fetching latest Phantom config from GitHub...';
             const response = await fetch(phantomConfigUrl);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-            baseConfig = await response.json();
+            const configText = await response.text();
+            
+            try {
+                baseConfig = JSON.parse(configText);
+            } catch (jsonError) {
+                try {
+                    baseConfig = parseJsonc(configText);
+                } catch (jsoncError) {
+                    throw new Error('Failed to parse the fetched config as JSON or JSONC.');
+                }
+            }
+
         } catch (error) {
-            outputJson.textContent = `Error fetching base config: ${error.message}\nPlease check your internet connection or the GitHub URL.`;
+            outputJson.textContent = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
             return;
         }
 
@@ -135,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 newConfig.routing.rules.forEach(rule => {
                     const isDefaultTcpRule = rule.outboundTag === 'phantom-tlshello';
                     const isDefaultUdpRule = rule.outboundTag && rule.outboundTag.startsWith('phantom-udp-');
-
+                    
                     if(isDefaultTcpRule || isDefaultUdpRule) {
                         const isCatchAll = !rule.port && !rule.domain && !rule.ip;
                         if(isCatchAll){
@@ -146,8 +162,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 const rulesToAdd = [];
-                const ipList = routeItems.filter(item => !isDomain(item.split('/')[0]));
-                const domainList = routeItems.filter(item => isDomain(item.split('/')[0]));
+                const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
+                const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
 
                 if(domainList.length > 0) {
                     rulesToAdd.push({
