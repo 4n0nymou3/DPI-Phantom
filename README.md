@@ -18,7 +18,7 @@ This repository contains an advanced, server-less V2Ray/Xray configuration engin
 
 To streamline the process of using this advanced configuration with your own proxy servers, this repository includes a powerful companion web tool: the **Phantom Universal Chainer**.
 
-This tool has been significantly upgraded. Instead of a single Shadowsocks proxy, it now allows you to chain the entire Phantom configuration with a **full, multi-protocol JSON config** from clients like v2rayNG. The result is a single, robust configuration that directs your traffic through Phantom's advanced anti-DPI engine before exiting through your own load-balanced pool of servers (VLESS, VMess, Trojan, etc.). It also includes a **"Route All Traffic"** option for full tunneling.
+This tool allows you to chain the entire Phantom configuration with a **full, multi-protocol JSON config** from clients like v2rayNG. The result is a single, robust configuration that directs your traffic through Phantom's advanced anti-DPI engine before exiting through your own load-balanced pool of servers (VLESS, VMess, Trojan, etc.). It also includes a **"Route All Traffic"** option for full tunneling.
 
 ### ⚠️ Requirements & Instructions
 
@@ -33,7 +33,7 @@ This tool has been significantly upgraded. Instead of a single Shadowsocks proxy
 If you wish to use the Phantom config by itself (without chaining to another proxy), follow these steps:
 
 1.  Copy the content of the `phantom.json` file.
-2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, Nekoray).
+2.  Import the configuration from the clipboard into a compatible client (e.g., v2rayNG, MahsaNG).
 3.  Ensure your client's `geoip.dat` and `geosite.dat` files are up to date for optimal routing.
 
 ## Usage (With the Chainer Tool)
