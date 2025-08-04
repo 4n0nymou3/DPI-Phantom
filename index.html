@@ -3,23 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phantom X Chain</title>
+    <title>Phantom Universal Chainer</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
     <div class="container">
-        <h1>Phantom X Chain <span class="version-tag">v2.0</span></h1>
-        <p>Paste your Shadowsocks (ss://) URI below to chain it with the Phantom config for specific IP routes.</p>
+        <h1>Phantom Universal Chainer <span class="version-tag">v3.2</span></h1>
+        <p>Paste your full v2ray JSON config below to chain it with the Phantom config.</p>
         
-        <textarea id="uriInput" placeholder="ss://..."></textarea>
+        <textarea id="jsonConfigInput" placeholder="Paste your full JSON config here..." rows="10"></textarea>
 
         <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs & Domains:</h3>
         <textarea id="ipInput" rows="6"></textarea>
         
+        <div class="checkbox-container">
+            <input type="checkbox" id="routeAllCheckbox" name="routeAll">
+            <label for="routeAllCheckbox">Route All Traffic Through Config</label>
+        </div>
+
         <div class="button-container">
             <button id="generateButton">Generate Combined Config</button>
-            <button id="clearButton">Clear Fields</button>
+            <button id="clearButton">Clear All</button>
         </div>
 
         <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result:</h3>
