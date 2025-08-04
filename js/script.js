@@ -1,187 +1,256 @@
-const uriInput = document.getElementById('uriInput');
-const ipInput = document.getElementById('ipInput');
-const generateButton = document.getElementById('generateButton');
-const outputJson = document.getElementById('outputJson');
-const copyButton = document.getElementById('copyButton');
-const clearButton = document.getElementById('clearButton');
+document.addEventListener('DOMContentLoaded', () => {
+    const jsonConfigInput = document.getElementById('jsonConfigInput');
+    const ipInput = document.getElementById('ipInput');
+    const generateButton = document.getElementById('generateButton');
+    const outputJson = document.getElementById('outputJson');
+    const copyButton = document.getElementById('copyButton');
+    const clearButton = document.getElementById('clearButton');
+    const routeAllCheckbox = document.getElementById('routeAllCheckbox');
 
-const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/phantom.json';
+    const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/phantom.json';
 
-const defaultForcedRouteIPs = [
-    "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
-    "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
-    "95.161.64.0/20", "149.154.160.0/21", "149.154.168.0/22", "149.154.172.0/22",
-    "185.76.151.0/24", "2001:67c:4e8::/48", "2001:b28:f23c::/48", "2001:b28:f23d::/48",
-    "2001:b28:f23f::/48", "2a0a:f280:203::/48"
-];
+    const defaultForcedRouteIPs = [
+        "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
+        "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
+        "95.161.64.0/20", "149.154.160.0/21", "149.154.168.0/22", "149.154.172.0/22",
+        "185.76.151.0/24", "2001:67c:4e8::/48", "2001:b28:f23c::/48", "2001:b28:f23d::/48",
+        "2001:b28:f23f::/48", "2a0a:f280:203::/48"
+    ];
 
-function setDefaultIPs() {
-    ipInput.value = defaultForcedRouteIPs.join('\n');
-}
+    function setDefaultIPs() {
+        ipInput.value = defaultForcedRouteIPs.join('\n');
+    }
 
-function syntaxHighlight(json) {
-    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-        let cls = 'json-number';
-        if (/^"/.test(match)) {
-            if (/:$/.test(match)) {
-                cls = 'json-key';
-            } else {
-                cls = 'json-string';
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            let cls = 'json-number';
+            if (/^"/.test(match)) {
+                cls = /:$/.test(match) ? 'json-key' : 'json-string';
+            } else if (/true|false/.test(match)) {
+                cls = 'json-boolean';
+            } else if (/null/.test(match)) {
+                cls = 'json-null';
             }
-        } else if (/true|false/.test(match)) {
-            cls = 'json-boolean';
-        } else if (/null/.test(match)) {
-            cls = 'json-null';
+            return `<span class="${cls}">${match}</span>`;
+        });
+    }
+
+    function isDomain(str) {
+        const domainRegex = new RegExp(/^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/);
+        return domainRegex.test(str);
+    }
+
+    generateButton.addEventListener('click', async () => {
+        const jsonInput = jsonConfigInput.value.trim();
+        const routeAll = routeAllCheckbox.checked;
+        let userConfig;
+        outputJson.dataset.rawjson = '';
+
+        try {
+            userConfig = JSON.parse(jsonInput);
+        } catch (error) {
+            outputJson.textContent = 'Error: Input is not a valid JSON. Please check the config format.';
+            return;
         }
-        return '<span class="' + cls + '">' + match + '</span>';
+
+        if (!userConfig.outbounds || !userConfig.routing || !userConfig.routing.balancers) {
+            outputJson.textContent = 'Error: Input config is incomplete. The `outbounds` and `routing.balancers` sections are required.';
+            return;
+        }
+
+        const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
+        if (routeItems.length === 0 && !routeAll) {
+            outputJson.textContent = 'Error: The IP/Domain list for forced routing cannot be empty when "Route All Traffic" is unchecked.';
+            return;
+        }
+
+        let baseConfig;
+        try {
+            outputJson.textContent = 'Fetching latest Phantom config from GitHub...';
+            const response = await fetch(phantomConfigUrl);
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+            baseConfig = await response.json();
+        } catch (error) {
+            outputJson.textContent = `Error fetching base config: ${error.message}\nPlease check your internet connection or the GitHub URL.`;
+            return;
+        }
+
+        try {
+            outputJson.textContent = 'Processing and chaining configs...';
+            let newConfig = JSON.parse(JSON.stringify(baseConfig));
+            const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
+            
+            if (!newConfig.routing) newConfig.routing = {};
+            if (!newConfig.routing.rules) newConfig.routing.rules = [];
+            if (!newConfig.routing.balancers) newConfig.routing.balancers = [];
+            if (!newConfig.dns) newConfig.dns = {};
+            if (!newConfig.dns.hosts) newConfig.dns.hosts = {};
+            if (!newConfig.dns.servers) newConfig.dns.servers = [];
+            if (!newConfig.outbounds) newConfig.outbounds = [];
+            if (!newConfig.policy) newConfig.policy = {};
+
+            const prefix = 'user-';
+            const tagMap = new Map();
+            const mainBalancerOriginalTag = 'proxy-round';
+
+            const allUserTags = new Set();
+            userConfigCopy.outbounds.forEach(o => allUserTags.add(o.tag));
+            if (userConfigCopy.routing.balancers) {
+                userConfigCopy.routing.balancers.forEach(b => allUserTags.add(b.tag));
+            }
+
+            allUserTags.forEach(tag => {
+                if (tag) tagMap.set(tag, prefix + tag);
+            });
+
+            const userBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
+            if (!userBalancer) {
+                 outputJson.textContent = `Error: Main load balancer tag '${mainBalancerOriginalTag}' not found in the input config.`;
+                return;
+            }
+            const userProxySelector = userBalancer.selector[0];
+
+            userConfigCopy.outbounds.forEach(o => {
+                if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
+                if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
+                    if (!o.streamSettings) o.streamSettings = {};
+                    if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
+                    o.streamSettings.sockopt.dialerProxy = 'phantom-tlshello';
+                }
+            });
+
+            if (userConfigCopy.routing.balancers) {
+                userConfigCopy.routing.balancers.forEach(b => {
+                    if (b.tag) b.tag = tagMap.get(b.tag) || b.tag;
+                    if (b.selector) b.selector = b.selector.map(s => s.startsWith('!') ? '!' + prefix + s.substring(1) : prefix + s);
+                });
+            }
+            
+            if (userConfigCopy.observatory && userConfigCopy.observatory.subjectSelector) {
+                userConfigCopy.observatory.subjectSelector = userConfigCopy.observatory.subjectSelector.map(s => prefix + s);
+            }
+
+            if (routeAll) {
+                newConfig.routing.rules.forEach(rule => {
+                    const isDefaultTcpRule = rule.outboundTag === 'phantom-tlshello';
+                    const isDefaultUdpRule = rule.outboundTag && rule.outboundTag.startsWith('phantom-udp-');
+
+                    if(isDefaultTcpRule || isDefaultUdpRule) {
+                        const isCatchAll = !rule.port && !rule.domain && !rule.ip;
+                        if(isCatchAll){
+                            delete rule.outboundTag;
+                            rule.balancerTag = tagMap.get(mainBalancerOriginalTag);
+                        }
+                    }
+                });
+            } else {
+                const rulesToAdd = [];
+                const ipList = routeItems.filter(item => !isDomain(item.split('/')[0]));
+                const domainList = routeItems.filter(item => isDomain(item.split('/')[0]));
+
+                if(domainList.length > 0) {
+                    rulesToAdd.push({
+                        type: 'field',
+                        balancerTag: tagMap.get(mainBalancerOriginalTag),
+                        domain: domainList
+                    });
+                }
+                if(ipList.length > 0) {
+                     rulesToAdd.push({
+                        type: 'field',
+                        balancerTag: tagMap.get(mainBalancerOriginalTag),
+                        ip: ipList
+                    });
+                }
+
+                if (rulesToAdd.length > 0) {
+                    const defaultRuleIndex = newConfig.routing.rules.findIndex(
+                        r => r.outboundTag === 'phantom-tlshello' && !r.port && !r.domain && !r.ip
+                    );
+                    if (defaultRuleIndex > -1) {
+                        newConfig.routing.rules.splice(defaultRuleIndex, 0, ...rulesToAdd);
+                    } else {
+                        newConfig.routing.rules.unshift(...rulesToAdd);
+                    }
+                }
+            }
+            
+            newConfig.outbounds.push(...userConfigCopy.outbounds);
+            if (userConfigCopy.routing.balancers) {
+                newConfig.routing.balancers.push(...userConfigCopy.routing.balancers);
+            }
+            
+            if (userConfigCopy.dns) {
+                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts, ...userConfigCopy.dns.hosts };
+                if (userConfigCopy.dns.servers) {
+                    const existingServers = new Set(newConfig.dns.servers.map(s => typeof s === 'string' ? s : s.address));
+                    userConfigCopy.dns.servers.forEach(server => {
+                        const serverAddress = typeof server === 'string' ? server : server.address;
+                        if (!existingServers.has(serverAddress)) newConfig.dns.servers.push(server);
+                    });
+                }
+            }
+            
+            if (userConfigCopy.policy) {
+                if (userConfigCopy.policy.levels) {
+                    if (!newConfig.policy.levels) newConfig.policy.levels = {};
+                    newConfig.policy.levels = { ...newConfig.policy.levels, ...userConfigCopy.policy.levels };
+                }
+                if (userConfigCopy.policy.system) {
+                    if (!newConfig.policy.system) newConfig.policy.system = {};
+                    newConfig.policy.system = { ...newConfig.policy.system, ...userConfigCopy.policy.system };
+                }
+            }
+            
+            if (userConfigCopy.fakedns) {
+                if (!newConfig.fakedns) newConfig.fakedns = [];
+                newConfig.fakedns.push(...userConfigCopy.fakedns);
+            }
+
+            if (userConfigCopy.observatory) {
+                newConfig.observatory = { ...newConfig.observatory, ...userConfigCopy.observatory };
+            }
+            
+            const finalRemarks = "👽 Anonymous Phantom + X Chain";
+            
+            delete newConfig.remarks;
+            const finalConfigObjectForCopy = { "remarks": finalRemarks, ...newConfig };
+            const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
+            outputJson.dataset.rawjson = finalJsonStringToCopy;
+
+            const restOfConfigJson = JSON.stringify(newConfig, null, 2);
+            const highlightedRestOfConfig = syntaxHighlight(restOfConfigJson);
+            
+            const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
+            const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
+
+            outputJson.innerHTML = finalHtml;
+
+        } catch (error) {
+            outputJson.textContent = `Error processing config: ${error.message}\nPlease check the input format.`;
+        }
     });
-}
 
-function parseShadowsocksUri(uri) {
-    const url = new URL(uri);
-    const b64UserInfo = url.username.replace(/%3D/g, '=');
-    const decodedUserInfo = atob(b64UserInfo);
-    const [method, password] = decodedUserInfo.split(':');
-    return {
-        address: url.hostname,
-        port: parseInt(url.port, 10),
-        method: method,
-        password: password
-    };
-}
-
-function isDomain(str) {
-    const domainRegex = new RegExp(/^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/);
-    return domainRegex.test(str);
-}
-
-generateButton.addEventListener('click', async () => {
-    const uri = uriInput.value.trim();
-    if (!uri.startsWith('ss://')) {
-        outputJson.textContent = 'Error: Invalid Shadowsocks URI. It must start with "ss://".';
-        return;
-    }
-
-    const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
-    if (routeItems.length === 0) {
-        outputJson.textContent = 'Error: The IP/Domain list for forced routing cannot be empty.';
-        return;
-    }
-
-    let baseConfig;
-    try {
-        outputJson.textContent = 'Fetching latest Phantom config from GitHub...';
-        const response = await fetch(phantomConfigUrl);
-        if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-        baseConfig = await response.json();
-    } catch (error) {
-        outputJson.textContent = `Error fetching base config: ${error.message}\nPlease check your internet connection or the GitHub URL.`;
-        return;
-    }
-
-    try {
-        const ssDetails = parseShadowsocksUri(uri);
-        let newConfig = JSON.parse(JSON.stringify(baseConfig));
-
-        const finalRemarks = "&#128125; Anonymous Phantom + X Chain";
-        newConfig.remarks = finalRemarks;
-
-        const ssOutbound = {
-            tag: 'x-chain-exit',
-            protocol: 'shadowsocks',
-            settings: { servers: [ssDetails] }
-        };
-
-        const originalChainTags = [
-            "phantom-tlshello", "ultra-fragment-1", "ultra-fragment-2", "ultra-fragment-3",
-            "ultra-fragment-4", "ultra-fragment-5", "ultra-fragment-6", "ultra-fragment-7",
-            "ultra-fragment-8", "ultra-fragment-9", "ultra-fragment-10"
-        ];
-        
-        const newChainOutbounds = originalChainTags.map((tag, index) => {
-            const originalOutbound = newConfig.outbounds.find(o => o.tag === tag);
-            let newOutbound = JSON.parse(JSON.stringify(originalOutbound));
-            newOutbound.tag = tag + "-x";
-
-            if (index < originalChainTags.length - 1) {
-                newOutbound.streamSettings.sockopt.dialerProxy = originalChainTags[index + 1] + "-x";
-            } else {
-                newOutbound.streamSettings = { sockopt: { dialerProxy: "x-chain-exit" } };
-            }
-            return newOutbound;
-        });
-
-        const ipList = [];
-        const domainList = [];
-        routeItems.forEach(item => {
-            let cleanedItem = item.trim().replace(/^https?:\/\//, '');
-            cleanedItem = cleanedItem.split('/')[0];
-            if (isDomain(cleanedItem)) {
-                domainList.push(cleanedItem);
-            } else {
-                ipList.push(item.trim());
-            }
-        });
-
-        const routingRulesToAdd = [];
-        if (domainList.length > 0) {
-            routingRulesToAdd.push({
-                type: 'field',
-                outboundTag: 'phantom-tlshello-x',
-                domain: domainList
+    copyButton.addEventListener('click', () => {
+        const textToCopy = outputJson.dataset.rawjson;
+        if (navigator.clipboard && textToCopy) {
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                copyButton.textContent = 'Copied!';
+                setTimeout(() => { copyButton.textContent = 'Copy to Clipboard'; }, 2000);
+            }).catch(err => {
+                alert('Failed to copy!');
             });
         }
-        if (ipList.length > 0) {
-            routingRulesToAdd.push({
-                type: 'field',
-                outboundTag: 'phantom-tlshello-x',
-                ip: ipList
-            });
-        }
-        
-        const outboundsToAdd = [ssOutbound, ...newChainOutbounds];
-        const dnsOutIndex = newConfig.outbounds.findIndex(o => o.tag === 'dns-out');
-        if (dnsOutIndex !== -1) {
-            newConfig.outbounds.splice(dnsOutIndex + 1, 0, ...outboundsToAdd);
-        } else {
-            newConfig.outbounds.push(...outboundsToAdd);
-        }
+    });
 
-        if (routingRulesToAdd.length > 0) {
-            newConfig.routing.rules.unshift(...routingRulesToAdd);
-        }
-        
-        delete newConfig.remarks;
-        const restOfConfigJson = JSON.stringify(newConfig, null, 2);
-        const highlightedRestOfConfig = syntaxHighlight(restOfConfigJson);
-        
-        const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
-        const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
+    clearButton.addEventListener('click', () => {
+        jsonConfigInput.value = '';
+        setDefaultIPs();
+        routeAllCheckbox.checked = false;
+        outputJson.innerHTML = 'Your combined JSON config will appear here...';
+        outputJson.dataset.rawjson = '';
+    });
 
-        outputJson.innerHTML = finalHtml;
-
-    } catch (error) {
-        outputJson.textContent = `Error processing config: ${error.message}\nPlease check the URI format.`;
-    }
-});
-
-copyButton.addEventListener('click', () => {
-    const textToCopy = outputJson.textContent;
-    if (navigator.clipboard && !textToCopy.includes('...')) {
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            copyButton.textContent = 'Copied!';
-            setTimeout(() => { copyButton.textContent = 'Copy to Clipboard'; }, 2000);
-        }).catch(err => {
-            alert('Failed to copy!');
-        });
-    }
-});
-
-clearButton.addEventListener('click', () => {
-    uriInput.value = '';
     setDefaultIPs();
-    outputJson.innerHTML = 'Your combined JSON config will appear here...';
 });
-
-document.addEventListener('DOMContentLoaded', setDefaultIPs);
