@@ -11,25 +11,12 @@
         "10.10.34.36",
         "2001:4188:2:600:10:10:34:36"
       ],
-      "geosite:category-ads": [
-        "10.10.34.36",
-        "2001:4188:2:600:10:10:34:36"
-      ],
       "dns.cloudflare.com": [
         "104.16.132.229",
         "104.16.133.229",
         "2606:4700::6810:84e5",
         "2606:4700::6810:85e5"
       ],
-      "dns.google.com": "google.com",
-      "dns.quad9.net": [
-        "9.9.9.9",
-        "149.112.112.112",
-        "2620:fe::fe",
-        "2620:fe::9"
-      ],
-      "dns.opendns.com": "opendns.com",
-      "dns.adguard.com": "adguard.com",
       "domain:googleapis.cn": "googleapis.com",
       "dns.alidns.com": [
         "223.5.5.5",
@@ -59,70 +46,50 @@
         "2001:4860:4860::8888",
         "2001:4860:4860::8844"
       ],
+      "dns.quad9.net": [
+        "9.9.9.9",
+        "149.112.112.112",
+        "2620:fe::fe",
+        "2620:fe::9"
+      ],
       "common.dot.dns.yandex.net": [
         "77.88.8.8",
         "77.88.8.1",
         "2a02:6b8::feed:0ff",
         "2a02:6b8:0:1::feed:0ff"
       ],
+      "bewildered-poem.seotoolsforyou.co.uk": [
+        "2606:4700:20::ac43:44a8",
+        "2606:4700:20::681a:c72",
+        "2606:4700:20::681a:d72",
+        "172.67.68.168",
+        "104.26.12.114",
+        "104.26.13.114"
+      ],
+      "obedient-detail.seotoolsforyou.co.uk": [
+        "2606:4700:20::ac43:44a8",
+        "2606:4700:20::681a:c72",
+        "2606:4700:20::681a:d72",
+        "188.114.98.0",
+        "188.114.99.0"
+      ],
       "dedicated-development.seotoolsforyou.co.uk": [
         "2606:4700:20::ac43:44a8",
-        "2606:4700:20::681a:c72",
         "2606:4700:20::681a:d72",
+        "2606:4700:20::681a:c72",
         "104.26.13.114",
         "172.67.68.168",
         "104.26.12.114"
-      ],
-      "bewildered-poem.seotoolsforyou.co.uk": [
-        "2606:4700:20::681a:d72",
-        "2606:4700:20::681a:c72",
-        "2606:4700:20::ac43:44a8",
-        "104.26.13.114",
-        "172.67.68.168",
-        "104.26.12.114"
-      ],
-      "cloudgetservice.mcloudservice.site": [
-        "172.66.168.226",
-        "172.66.168.223",
-        "172.66.168.227"
-      ],
-      "series-a2-mec.samanehha.co": "20.26.109.68",
-      "admin.c2.webramz.co": "20.26.109.68",
-      "handsome-device.oneeat.co": [
-        "2606:4700:10::6814:2b51",
-        "2606:4700:10::ac42:9c51",
-        "172.66.156.81",
-        "104.20.43.81"
-      ],
-      "series-a2-me.samanehha.co": "51.142.67.57",
-      "obedient-detail.seotoolsforyou.co.uk": [
-        "2606:4700:20::681a:d72",
-        "2606:4700:20::681a:c72",
-        "2606:4700:20::ac43:44a8",
-        "104.26.12.114",
-        "104.26.13.114",
-        "172.67.68.168"
       ]
     },
     "servers": [
       "https://dns.cloudflare.com/dns-query",
-      "https://dns.google.com/dns-query",
-      "https://dns.quad9.net/dns-query",
-      "https://dns.opendns.com/dns-query",
-      "https://dns.adguard.com/dns-query",
-      "https://1.1.1.1/dns-query",
-      "https://8.8.8.8/dns-query",
-      "https://9.9.9.9/dns-query",
       {
         "address": "localhost",
         "domains": [
           "geosite:private",
           "geosite:category-ir",
-          "full:cloudflare.com",
-          "full:google.com",
-          "full:quad9.net",
-          "full:opendns.com",
-          "full:adguard.com"
+          "full:cloudflare.com"
         ]
       },
       {
@@ -137,6 +104,14 @@
           "domain:360.cn",
           "domain:onedns.net",
           "geosite:cn"
+        ]
+      },
+      "https://8.8.8.8/dns-query",
+      {
+        "address": "https://8.8.8.8/dns-query",
+        "domains": [
+          "domain:googleapis.cn",
+          "domain:gstatic.com"
         ]
       },
       {
@@ -156,12 +131,7 @@
       }
     ],
     "tag": "dns-query",
-    "disableFallback": true,
-    "disableCache": false,
-    "fakedns": {
-      "ipPool": "198.18.0.0/15",
-      "poolSize": 65535
-    }
+    "disableFallback": true
   },
   "inbounds": [
     {
@@ -176,39 +146,18 @@
     },
     {
       "tag": "socks-in",
-      "listen": "127.0.0.1",
       "port": 10808,
       "protocol": "socks",
       "sniffing": {
         "enabled": true,
         "destOverride": [
           "http",
-          "tls",
-          "quic",
-          "fakedns"
+          "tls"
         ],
-        "routeOnly": false,
-        "metadataOnly": false
+        "routeOnly": false
       },
       "settings": {
         "udp": true
-      }
-    },
-    {
-      "tag": "http-in",
-      "listen": "127.0.0.1",
-      "port": 10809,
-      "protocol": "http",
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
-        ],
-        "routeOnly": false,
-        "metadataOnly": false
       }
     }
   ],
@@ -235,330 +184,353 @@
       },
       "streamSettings": {
         "sockopt": {
-          "dialerProxy": "ultra-fragment-1"
+          "dialerProxy": "chain1-fragment"
         }
       }
     },
     {
-      "tag": "phantom-tlshello",
+      "tag": "super-fragment",
       "protocol": "freedom",
       "settings": {
-        "padding": true,
         "fragment": {
           "packets": "tlshello",
-          "length": "10-55",
-          "interval": "5-20"
+          "length": "6",
+          "interval": "0"
         }
       },
       "streamSettings": {
         "sockopt": {
-          "dialerProxy": "ultra-fragment-1"
+          "dialerProxy": "chain1-fragment"
         }
       }
     },
     {
-      "tag": "ultra-fragment-1",
+      "tag": "chain1-fragment",
       "protocol": "freedom",
       "settings": {
-        "padding": true,
-        "fragment": {
-          "packets": "2-13",
-          "length": "25-1350",
-          "interval": "5-22"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-2"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-2",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-11",
-          "length": "10-100",
-          "interval": "8-28"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-3"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-3",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-9",
-          "length": "5-85",
-          "interval": "10-33"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-4"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-4",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-7",
-          "length": "1-65",
-          "interval": "12-38"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-5"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-5",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-6",
-          "length": "1-50",
-          "interval": "15-42"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-6"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-6",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-5",
-          "length": "1-35",
-          "interval": "18-48"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-7"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-7",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-4",
-          "length": "1-25",
-          "interval": "20-52"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-8"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-8",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-3",
-          "length": "1-18",
-          "interval": "22-58"
+          "length": "517",
+          "interval": "1"
         }
       },
       "streamSettings": {
         "sockopt": {
-          "dialerProxy": "ultra-fragment-9"
+          "dialerProxy": "chain2-fragment"
         }
       }
     },
     {
-      "tag": "ultra-fragment-9",
+      "tag": "chain2-fragment",
       "protocol": "freedom",
       "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-2",
-          "length": "1-12",
-          "interval": "25-62"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "ultra-fragment-10"
-        }
-      }
-    },
-    {
-      "tag": "ultra-fragment-10",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
         "domainStrategy": "ForceIP",
         "fragment": {
           "packets": "1-1",
-          "length": "1-8",
-          "interval": "30-70"
+          "length": "1",
+          "interval": "2"
         }
       }
     },
     {
-      "tag": "phantom-udp-v4",
+      "tag": "udp-noisesv4",
       "protocol": "freedom",
       "settings": {
-        "padding": true,
         "domainStrategy": "ForceIPv4",
-        "fragment": {
-          "packets": "1-5",
-          "length": "1-40",
-          "interval": "0-15"
-        }
+        "noises": [
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1250",
+            "delay": "10"
+          }
+        ]
       }
     },
     {
-      "tag": "phantom-udp-v6",
+      "tag": "udp-noisesv6",
       "protocol": "freedom",
       "settings": {
-        "padding": true,
         "domainStrategy": "ForceIPv6",
-        "fragment": {
-          "packets": "1-5",
-          "length": "1-40",
-          "interval": "0-15"
-        }
+        "noises": [
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          },
+          {
+            "type": "rand",
+            "packet": "1230",
+            "delay": "10"
+          }
+        ]
       }
     },
     {
-      "tag": "phantom-quic-v4",
-      "protocol": "freedom",
+      "mux": {
+        "concurrency": -1,
+        "enabled": false
+      },
+      "protocol": "vless",
       "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIPv4",
-        "fragment": {
-          "packets": "1-15",
-          "length": "1-85",
-          "interval": "0-18"
+        "vnext": [
+          {
+            "address": "104.18.36.24",
+            "port": 443,
+            "users": [
+              {
+                "encryption": "none",
+                "id": "30f2d443-af46-4dd6-83c9-b5e17299ebd2",
+                "level": 8
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": false,
+          "fingerprint": "random",
+          "serverName": "carlotta.shoorekeeper.cloudns.org",
+          "show": false
+        },
+        "wsSettings": {
+          "headers": {
+            "Host": "carlotta.shoorekeeper.cloudns.org"
+          },
+          "path": "=zani.yaemiko.ggff.net/?Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI?ed=2560"
+        },
+        "sockopt": {
+          "dialerProxy": "phantom-tlshello"
         }
-      }
-    },
-    {
-      "tag": "phantom-quic-v6",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIPv6",
-        "fragment": {
-          "packets": "1-15",
-          "length": "1-85",
-          "interval": "0-18"
-        }
-      }
-    },
-    {
-      "tag": "phantom-streaming",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-12",
-          "length": "8-150",
-          "interval": "1-20"
-        }
-      }
-    },
-    {
-      "tag": "phantom-email-secure",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-8",
-          "length": "5-100",
-          "interval": "1-18"
-        }
-      }
-    },
-    {
-      "tag": "phantom-vpn-ports",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-7",
-          "length": "3-80",
-          "interval": "1-15"
-        }
-      }
-    },
-    {
-      "tag": "phantom-social-media",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-10",
-          "length": "10-120",
-          "interval": "1-12"
-        }
-      }
-    },
-    {
-      "tag": "phantom-web-ports",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-6",
-          "length": "5-90",
-          "interval": "1-10"
-        }
-      }
-    },
-    {
-      "tag": "phantom-gaming",
-      "protocol": "freedom",
-      "settings": {
-        "padding": true,
-        "domainStrategy": "ForceIP",
-        "fragment": {
-          "packets": "1-4",
-          "length": "20-200",
-          "interval": "0-8"
-        }
-      }
+      },
+      "tag": "user-proxy-1"
     },
     {
       "mux": {
@@ -596,69 +568,7 @@
           "dialerProxy": "phantom-tlshello"
         }
       },
-      "tag": "user-proxy-1"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "193.46.56.185",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "iw8GoN42dciNxDBd0RwAdL",
-            "port": 6683
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
       "tag": "user-proxy-2"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.188",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "4a2rfixophdjffa8KVA4Aa",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-3"
     },
     {
       "mux": {
@@ -704,411 +614,7 @@
           "dialerProxy": "phantom-tlshello"
         }
       },
-      "tag": "user-proxy-4"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "104.18.36.24",
-            "port": 443,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "30f2d443-af46-4dd6-83c9-b5e17299ebd2",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "fingerprint": "random",
-          "serverName": "carlotta.shoorekeeper.cloudns.org",
-          "show": false
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "carlotta.shoorekeeper.cloudns.org"
-          },
-          "path": "=zani.yaemiko.ggff.net/?Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI?ed=2560"
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-5"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "78.153.131.96",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "7jvHHF5SaFob",
-            "port": 443
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-6"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.10",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "oZIoA69Q8yhcQV8ka3Pa3A",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-7"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.164",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "cvII85TrW6n0OGyfpHVS1u",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-8"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.22",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "oZIoA69Q8yhcQV8ka3Pa3A",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-9"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.65",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "oZIoA69Q8yhcQV8ka3Pa3A",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-10"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.199",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "1RWwXhwfAB5gAEozU4G2Pg",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-11"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vmess",
-      "settings": {
-        "vnext": [
-          {
-            "address": "216.173.69.250",
-            "port": 8443,
-            "users": [
-              {
-                "id": "91382092-2330-455b-8a1c-9c129cfe661a",
-                "level": 8,
-                "security": "auto"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "wsSettings": {
-          "headers": {
-            "Host": ""
-          },
-          "path": "/"
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-12"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.190",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "cvII85TrW6n0OGyfpHVS1u",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-13"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "92.38.171.215",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "0RsrcFJ1vOsWEqg3P55hvaacKfuShT0cc1h0t8AD0NA8u1uR",
-            "port": 31348
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-14"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "5.182.38.91",
-            "port": 17267,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "1c7fcc38-e6be-43c5-875f-b8de2516b9f2",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "realitySettings": {
-          "allowInsecure": false,
-          "fingerprint": "chrome",
-          "publicKey": "SnWZg6ORcQepuWLI1EVCTTVc4KyfDiGWR4o_CXCMhgk",
-          "serverName": "yahoo.com",
-          "shortId": "4ae260",
-          "show": false
-        },
-        "security": "reality",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-15"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "dedicated-development.seotoolsforyou.co.uk",
-            "port": 80,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "2054405e-70ff-40a2-ae27-16b63d72390a",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": ""
-          },
-          "path": "/"
-        }
-      },
-      "tag": "user-proxy-16"
+      "tag": "user-proxy-3"
     },
     {
       "mux": {
@@ -1144,336 +650,7 @@
           "path": "/"
         }
       },
-      "tag": "user-proxy-17"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vmess",
-      "settings": {
-        "vnext": [
-          {
-            "address": "cloudgetservice.mcloudservice.site",
-            "port": 443,
-            "users": [
-              {
-                "id": "37f464cb-b826-4278-9bf8-11bdf1ec892b",
-                "level": 8,
-                "security": "auto"
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "tlsSettings": {
-          "allowInsecure": false,
-          "serverName": "Fra-Vp-123.BLaZECLOUD.Site",
-          "show": false
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "Fra-Vp-123.BLaZECLOUD.Site"
-          },
-          "path": "/linvkws"
-        }
-      },
-      "tag": "user-proxy-18"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "series-a2-mec.samanehha.co",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "u17T3BvpYaaiuW2c",
-            "port": 443
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        }
-      },
-      "tag": "user-proxy-19"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "4.223.106.151",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "51yloQC8D9w1Wae7FHtI65",
-            "port": 48172
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-20"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "admin.c2.webramz.co",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "WstuSnlu4ieA9M0L",
-            "port": 443
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        }
-      },
-      "tag": "user-proxy-21"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "45.87.175.178",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "1RWwXhwfAB5gAEozU4G2Pg",
-            "port": 8080
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-22"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "handsome-device.oneeat.co",
-            "port": 80,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "2ad87f95-7a0b-4018-8497-5ecaac2f0ddf",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": ""
-          },
-          "path": "/"
-        }
-      },
-      "tag": "user-proxy-23"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "142.4.216.225",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "JIhN6rBKkaEboLNXVSv5rq",
-            "port": 80
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-24"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "64.74.163.218",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "f8f7aCzcPKbsF8p3",
-            "port": 990
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-25"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "185.123.101.241",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "f8f7aCzcPKbsF8p3",
-            "port": 990
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        },
-        "sockopt": {
-          "dialerProxy": "phantom-tlshello"
-        }
-      },
-      "tag": "user-proxy-26"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "shadowsocks",
-      "settings": {
-        "servers": [
-          {
-            "address": "series-a2-me.samanehha.co",
-            "level": 8,
-            "method": "chacha20-ietf-poly1305",
-            "ota": false,
-            "password": "Bog0ELmMM9DSxDdQ",
-            "port": 443
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "tcp",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "phantom-tlshello"
-        },
-        "tcpSettings": {
-          "header": {
-            "type": "none"
-          }
-        }
-      },
-      "tag": "user-proxy-27"
+      "tag": "user-proxy-4"
     },
     {
       "mux": {
@@ -1509,43 +686,74 @@
           "path": "/"
         }
       },
-      "tag": "user-proxy-28"
+      "tag": "user-proxy-5"
     },
     {
       "mux": {
         "concurrency": -1,
         "enabled": false
       },
-      "protocol": "trojan",
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "dedicated-development.seotoolsforyou.co.uk",
+            "port": 80,
+            "users": [
+              {
+                "encryption": "none",
+                "id": "2054405e-70ff-40a2-ae27-16b63d72390a",
+                "level": 8
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "ws",
+        "sockopt": {
+          "domainStrategy": "UseIPv6v4",
+          "dialerProxy": "phantom-tlshello"
+        },
+        "wsSettings": {
+          "headers": {
+            "Host": ""
+          },
+          "path": "/"
+        }
+      },
+      "tag": "user-proxy-6"
+    },
+    {
+      "mux": {
+        "concurrency": -1,
+        "enabled": false
+      },
+      "protocol": "shadowsocks",
       "settings": {
         "servers": [
           {
-            "address": "198.23.229.250",
+            "address": "78.153.131.96",
             "level": 8,
+            "method": "chacha20-ietf-poly1305",
             "ota": false,
-            "password": "2ee85121-31de-4581-a492-eb00f606e392",
+            "password": "7jvHHF5SaFob",
             "port": 443
           }
         ]
       },
       "streamSettings": {
         "network": "tcp",
-        "security": "tls",
         "tcpSettings": {
           "header": {
             "type": "none"
           }
         },
-        "tlsSettings": {
-          "allowInsecure": false,
-          "serverName": "rc6.freeguard.org",
-          "show": false
-        },
         "sockopt": {
           "dialerProxy": "phantom-tlshello"
         }
       },
-      "tag": "user-proxy-29"
+      "tag": "user-proxy-7"
     },
     {
       "protocol": "freedom",
@@ -1569,8 +777,32 @@
     }
   ],
   "routing": {
-    "domainStrategy": "IPIfNonMatch",
+    "domainStrategy": "IPOnDemand",
     "rules": [
+      {
+        "type": "field",
+        "balancerTag": "user-proxy-round",
+        "ip": [
+          "91.105.192.0/23",
+          "91.108.4.0/22",
+          "91.108.8.0/22",
+          "91.108.12.0/22",
+          "91.108.16.0/22",
+          "91.108.20.0/22",
+          "91.108.56.0/23",
+          "91.108.58.0/23",
+          "95.161.64.0/20",
+          "149.154.160.0/21",
+          "149.154.168.0/22",
+          "149.154.172.0/22",
+          "185.76.151.0/24",
+          "2001:67c:4e8::/48",
+          "2001:b28:f23c::/48",
+          "2001:b28:f23d::/48",
+          "2001:b28:f23f::/48",
+          "2a0a:f280:203::/48"
+        ]
+      },
       {
         "outboundTag": "dns-out",
         "inboundTag": [
@@ -1580,23 +812,20 @@
       {
         "outboundTag": "dns-out",
         "inboundTag": [
-          "socks-in",
-          "http-in"
+          "socks-in"
         ],
         "port": 53
       },
       {
-        "outboundTag": "ultra-fragment-1",
+        "outboundTag": "chain1-fragment",
         "inboundTag": [
           "dns-query"
         ]
       },
       {
-        "type": "field",
         "outboundTag": "block",
         "domain": [
-          "geosite:category-ads-all",
-          "geosite:category-ads"
+          "geosite:category-ads-all"
         ]
       },
       {
@@ -1623,7 +852,7 @@
         ]
       },
       {
-        "outboundTag": "phantom-quic-v4",
+        "outboundTag": "udp-noisesv4",
         "network": "udp",
         "ip": [
           "0.0.0.0/0"
@@ -1631,7 +860,7 @@
         "port": 443
       },
       {
-        "outboundTag": "phantom-quic-v6",
+        "outboundTag": "udp-noisesv6",
         "network": "udp",
         "ip": [
           "::/0"
@@ -1639,142 +868,11 @@
         "port": 443
       },
       {
-        "outboundTag": "phantom-gaming",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "27015,27016,27017,7777,7778,25565,19132,28910"
+        "outboundTag": "direct",
+        "network": "udp"
       },
       {
-        "outboundTag": "phantom-gaming",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "27015,27016,27017,7777,7778,25565,19132,28910"
-      },
-      {
-        "outboundTag": "phantom-social-media",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "5222,5223,5228,5242,6667,6697"
-      },
-      {
-        "outboundTag": "phantom-web-ports",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "8000,8001,8008,8888,9000,9001,3000,5000"
-      },
-      {
-        "outboundTag": "phantom-email-secure",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "993,995,465,587,25,110,143"
-      },
-      {
-        "outboundTag": "phantom-udp-v4",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0"
-        ],
-        "port": "993,995,465,587,25,110,143"
-      },
-      {
-        "outboundTag": "phantom-udp-v6",
-        "network": "udp",
-        "ip": [
-          "::/0"
-        ],
-        "port": "993,995,465,587,25,110,143"
-      },
-      {
-        "outboundTag": "phantom-vpn-ports",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "1194,1723,500,4500,1701,1812,1813,51820,8080"
-      },
-      {
-        "outboundTag": "phantom-vpn-ports",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "1194,1723,500,4500,1701,1812,1813,51820,8080"
-      },
-      {
-        "outboundTag": "phantom-streaming",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "1935,8080,8443,9735,3478,5349,554,8554"
-      },
-      {
-        "outboundTag": "phantom-streaming",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ],
-        "port": "1935,8080,8443,9735,3478,5349,554,8554"
-      },
-      {
-        "outboundTag": "phantom-udp-v6",
-        "network": "udp",
-        "ip": [
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "phantom-udp-v4",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0"
-        ]
-      },
-      {
-        "type": "field",
-        "balancerTag": "user-proxy-round",
-        "ip": [
-          "91.105.192.0/23",
-          "91.108.4.0/22",
-          "91.108.8.0/22",
-          "91.108.12.0/22",
-          "91.108.16.0/22",
-          "91.108.20.0/22",
-          "91.108.56.0/23",
-          "91.108.58.0/23",
-          "95.161.64.0/20",
-          "149.154.160.0/21",
-          "149.154.168.0/22",
-          "149.154.172.0/22",
-          "185.76.151.0/24",
-          "2001:67c:4e8::/48",
-          "2001:b28:f23c::/48",
-          "2001:b28:f23d::/48",
-          "2001:b28:f23f::/48",
-          "2a0a:f280:203::/48"
-        ]
-      },
-      {
-        "outboundTag": "phantom-tlshello",
+        "outboundTag": "chain1-fragment",
         "network": "tcp"
       }
     ],
