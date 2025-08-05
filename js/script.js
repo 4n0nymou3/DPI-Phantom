@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let baseConfig;
         try {
-            outputJson.textContent = 'Fetching latest Phantom config from GitHub...';
+            outputJson.textContent = 'Fetching latest anti-DPI config from GitHub...';
             const response = await fetch(phantomConfigUrl);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             const configText = await response.text();
@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
                     if (!o.streamSettings) o.streamSettings = {};
                     if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                    o.streamSettings.sockopt.dialerProxy = 'phantom-tlshello';
+                    o.streamSettings.sockopt.dialerProxy = 'chain1-fragment';
                 }
             });
 
@@ -149,15 +149,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (routeAll) {
                 newConfig.routing.rules.forEach(rule => {
-                    const isDefaultTcpRule = rule.outboundTag === 'phantom-tlshello';
-                    const isDefaultUdpRule = rule.outboundTag && rule.outboundTag.startsWith('phantom-udp-');
+                    const isFinalTcpCatchAll = rule.outboundTag === 'chain1-fragment' && rule.network === 'tcp';
+                    const isFinalUdpCatchAll = rule.outboundTag === 'direct' && rule.network === 'udp';
                     
-                    if(isDefaultTcpRule || isDefaultUdpRule) {
-                        const isCatchAll = !rule.port && !rule.domain && !rule.ip;
-                        if(isCatchAll){
+                    if (isFinalTcpCatchAll || isFinalUdpCatchAll) {
+                         const isGenericRule = !rule.port && !rule.domain && !rule.ip;
+                         if (isGenericRule) {
                             delete rule.outboundTag;
                             rule.balancerTag = tagMap.get(mainBalancerOriginalTag);
-                        }
+                         }
                     }
                 });
             } else {
@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (rulesToAdd.length > 0) {
                     const defaultRuleIndex = newConfig.routing.rules.findIndex(
-                        r => r.outboundTag === 'phantom-tlshello' && !r.port && !r.domain && !r.ip
+                        r => r.outboundTag === 'chain1-fragment' && !r.port && !r.domain && !r.ip
                     );
                     if (defaultRuleIndex > -1) {
                         newConfig.routing.rules.splice(defaultRuleIndex, 0, ...rulesToAdd);
