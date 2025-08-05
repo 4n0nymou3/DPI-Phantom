@@ -58,29 +58,11 @@
         "2a02:6b8::feed:0ff",
         "2a02:6b8:0:1::feed:0ff"
       ],
-      "dedicated-development.seotoolsforyou.co.uk": [
-        "2606:4700:20::681a:c72",
-        "2606:4700:20::681a:d72",
-        "2606:4700:20::ac43:44a8",
-        "172.67.68.168",
-        "104.26.12.114",
-        "104.26.13.114"
-      ],
-      "bewildered-poem.seotoolsforyou.co.uk": [
-        "2606:4700:20::ac43:44a8",
-        "2606:4700:20::681a:c72",
-        "2606:4700:20::681a:d72",
-        "104.26.12.114",
-        "104.26.13.114",
-        "172.67.68.168"
-      ],
-      "obedient-detail.seotoolsforyou.co.uk": [
-        "2606:4700:20::681a:c72",
-        "2606:4700:20::ac43:44a8",
-        "2606:4700:20::681a:d72",
-        "104.26.13.114",
-        "172.67.68.168",
-        "104.26.12.114"
+      "azure-sto.edgeservers.org": [
+        "135.225.124.80",
+        "20.91.252.21",
+        "4.223.100.248",
+        "4.223.106.151"
       ]
     },
     "servers": [
@@ -496,43 +478,29 @@
         "concurrency": -1,
         "enabled": false
       },
-      "protocol": "vless",
+      "protocol": "shadowsocks",
       "settings": {
-        "vnext": [
+        "servers": [
           {
-            "address": "104.18.36.24",
-            "port": 443,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "30f2d443-af46-4dd6-83c9-b5e17299ebd2",
-                "level": 8
-              }
-            ]
+            "address": "azure-sto.edgeservers.org",
+            "level": 8,
+            "method": "chacha20-ietf-poly1305",
+            "ota": false,
+            "password": "51yloQC8D9w1Wae7FHtI65",
+            "port": 48172
           }
         ]
       },
       "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "alpn": [
-            "h2",
-            "http/1.1"
-          ],
-          "fingerprint": "chrome",
-          "serverName": "carlotta.shoorekeeper.cloudns.org",
-          "show": false
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "carlotta.shoorekeeper.cloudns.org"
-          },
-          "path": "/?TELEGRAM-MARAMBASHI_MARAMBASHI?ed=512"
-        },
+        "network": "tcp",
         "sockopt": {
+          "domainStrategy": "UseIPv6v4",
           "dialerProxy": "chain1-fragment"
+        },
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
         }
       },
       "tag": "user-proxy-1"
@@ -542,39 +510,29 @@
         "concurrency": -1,
         "enabled": false
       },
-      "protocol": "vless",
+      "protocol": "shadowsocks",
       "settings": {
-        "vnext": [
+        "servers": [
           {
-            "address": "104.18.36.24",
-            "port": 443,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "30f2d443-af46-4dd6-83c9-b5e17299ebd2",
-                "level": 8
-              }
-            ]
+            "address": "azure-sto.edgeservers.org",
+            "level": 8,
+            "method": "chacha20-ietf-poly1305",
+            "ota": false,
+            "password": "51yloQC8D9w1Wae7FHtI65",
+            "port": 48172
           }
         ]
       },
       "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "fingerprint": "random",
-          "serverName": "carlotta.shoorekeeper.cloudns.org",
-          "show": false
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "carlotta.shoorekeeper.cloudns.org"
-          },
-          "path": "=zani.yaemiko.ggff.net/?Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI---Join---MARAMBASHI?ed=2560"
-        },
+        "network": "tcp",
         "sockopt": {
+          "domainStrategy": "UseIPv6v4",
           "dialerProxy": "chain1-fragment"
+        },
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
         }
       },
       "tag": "user-proxy-2"
@@ -584,35 +542,29 @@
         "concurrency": -1,
         "enabled": false
       },
-      "protocol": "trojan",
+      "protocol": "shadowsocks",
       "settings": {
         "servers": [
           {
-            "address": "172.67.181.173",
+            "address": "azure-sto.edgeservers.org",
             "level": 8,
+            "method": "chacha20-ietf-poly1305",
             "ota": false,
-            "password": "f282b878-8711-45a1-8c69-5564172123c1",
-            "port": 443
+            "password": "51yloQC8D9w1Wae7FHtI65",
+            "port": 48172
           }
         ]
       },
       "streamSettings": {
-        "network": "ws",
-        "security": "tls",
-        "tlsSettings": {
-          "allowInsecure": false,
-          "fingerprint": "chrome",
-          "serverName": "vpn.stupidworld.web.id",
-          "show": false
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "vpn.stupidworld.web.id"
-          },
-          "path": "/Stupid-World/103.106.228.126-2053"
-        },
+        "network": "tcp",
         "sockopt": {
+          "domainStrategy": "UseIPv6v4",
           "dialerProxy": "chain1-fragment"
+        },
+        "tcpSettings": {
+          "header": {
+            "type": "none"
+          }
         }
       },
       "tag": "user-proxy-3"
@@ -626,135 +578,28 @@
       "settings": {
         "servers": [
           {
-            "address": "78.153.131.96",
+            "address": "azure-sto.edgeservers.org",
             "level": 8,
             "method": "chacha20-ietf-poly1305",
             "ota": false,
-            "password": "7jvHHF5SaFob",
-            "port": 443
+            "password": "51yloQC8D9w1Wae7FHtI65",
+            "port": 48172
           }
         ]
       },
       "streamSettings": {
         "network": "tcp",
+        "sockopt": {
+          "domainStrategy": "UseIPv6v4",
+          "dialerProxy": "chain1-fragment"
+        },
         "tcpSettings": {
           "header": {
             "type": "none"
           }
-        },
-        "sockopt": {
-          "dialerProxy": "chain1-fragment"
         }
       },
       "tag": "user-proxy-4"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "dedicated-development.seotoolsforyou.co.uk",
-            "port": 80,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "2054405e-70ff-40a2-ae27-16b63d72390a",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "chain1-fragment"
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": ""
-          },
-          "path": "/"
-        }
-      },
-      "tag": "user-proxy-5"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "bewildered-poem.seotoolsforyou.co.uk",
-            "port": 80,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "0f4865d9-9405-4703-a282-46e326e6d9e7",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "chain1-fragment"
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": ""
-          },
-          "path": "/"
-        }
-      },
-      "tag": "user-proxy-6"
-    },
-    {
-      "mux": {
-        "concurrency": -1,
-        "enabled": false
-      },
-      "protocol": "vless",
-      "settings": {
-        "vnext": [
-          {
-            "address": "obedient-detail.seotoolsforyou.co.uk",
-            "port": 80,
-            "users": [
-              {
-                "encryption": "none",
-                "id": "1dd49fb8-6570-4a2a-a236-f410b63159cf",
-                "level": 8
-              }
-            ]
-          }
-        ]
-      },
-      "streamSettings": {
-        "network": "ws",
-        "sockopt": {
-          "domainStrategy": "UseIPv6v4",
-          "dialerProxy": "chain1-fragment"
-        },
-        "wsSettings": {
-          "headers": {
-            "Host": "obedient-detail.seotoolsforyou.co.uk"
-          },
-          "path": "/"
-        }
-      },
-      "tag": "user-proxy-7"
     },
     {
       "protocol": "freedom",
