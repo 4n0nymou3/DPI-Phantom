@@ -51,28 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const routeAll = routeAllCheckbox.checked;
         let userConfig;
         outputJson.dataset.rawjson = '';
+        outputJson.innerHTML = '<div class="loader"></div>';
 
         try {
             userConfig = parseJsonc(jsonInput);
         } catch (error) {
-            outputJson.textContent = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
+            outputJson.innerHTML = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
             return;
         }
 
         if (!userConfig.outbounds || !userConfig.routing || !userConfig.routing.balancers) {
-            outputJson.textContent = 'Error: Input config is incomplete. The `outbounds` and `routing.balancers` sections are required.';
+            outputJson.innerHTML = 'Error: Input config is incomplete. The `outbounds` and `routing.balancers` sections are required.';
             return;
         }
 
         const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
         if (routeItems.length === 0 && !routeAll) {
-            outputJson.textContent = 'Error: The IP/Domain list for forced routing cannot be empty when "Route All Traffic" is unchecked.';
+            outputJson.innerHTML = 'Error: The IP/Domain list for forced routing cannot be empty when "Route All Traffic" is unchecked.';
             return;
         }
 
         let baseConfig;
         try {
-            outputJson.textContent = 'Fetching latest anti-DPI config from GitHub...';
             const response = await fetch(phantomConfigUrl);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             const configText = await response.text();
@@ -88,12 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
-            outputJson.textContent = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
+            outputJson.innerHTML = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
             return;
         }
 
         try {
-            outputJson.textContent = 'Processing and chaining configs...';
             let newConfig = JSON.parse(JSON.stringify(baseConfig));
             const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
             
@@ -122,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const userBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
             if (!userBalancer) {
-                 outputJson.textContent = `Error: Main load balancer tag '${mainBalancerOriginalTag}' not found in the input config.`;
+                 outputJson.innerHTML = `Error: Main load balancer tag '${mainBalancerOriginalTag}' not found in the input config.`;
                 return;
             }
             const userProxySelector = userBalancer.selector[0];
@@ -241,10 +240,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
             const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
 
-            outputJson.innerHTML = finalHtml;
+            setTimeout(() => {
+                outputJson.innerHTML = finalHtml;
+            }, 3000);
 
         } catch (error) {
-            outputJson.textContent = `Error processing config: ${error.message}\nPlease check the input format.`;
+            setTimeout(() => {
+                outputJson.innerHTML = `Error processing config: ${error.message}\nPlease check the input format.`;
+            }, 3000);
         }
     });
 
@@ -269,4 +272,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     setDefaultIPs();
+
+    particlesJS('particles-js', {
+        particles: {
+            number: { value: 100, density: { enable: true, value_area: 800 } },
+            color: { value: '#ffffff' },
+            shape: { type: 'circle', stroke: { width: 0, color: '#000000' }, polygon: { nb_sides: 5 } },
+            opacity: { value: 0.5, random: false, anim: { enable: false, speed: 1, opacity_min: 0.1, sync: false } },
+            size: { value: 3, random: true, anim: { enable: false, speed: 40, size_min: 0.1, sync: false } },
+            line_linked: { enable: true, distance: 150, color: '#ffffff', opacity: 0.4, width: 1 },
+            move: { enable: true, speed: 6, direction: 'none', random: false, straight: false, out_mode: 'out', bounce: false, attract: { enable: false, rotateX: 600, rotateY: 1200 } }
+        },
+        interactivity: {
+            detect_on: 'canvas',
+            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+            modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8 }, repulse: { distance: 200, duration: 0.4 }, push: { particles_nb: 4 }, remove: { particles_nb: 2 } }
+        },
+        retina_detect: true
+    });
 });
