@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phantom Universal Chainer</title>
     <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
+    <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v3.2</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v4.0</span></h1>
         <p>Paste your full v2ray JSON config below to chain it with the Phantom config.</p>
         
         <textarea id="jsonConfigInput" placeholder="Paste your full JSON config here..." rows="10"></textarea>
@@ -23,15 +25,15 @@
         </div>
 
         <div class="button-container">
-            <button id="generateButton">Generate Combined Config</button>
-            <button id="clearButton">Clear All</button>
+            <button id="generateButton"><i class="fas fa-cogs"></i> Generate Combined Config</button>
+            <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear All</button>
         </div>
 
         <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result:</h3>
         <pre><code id="outputJson">Your combined JSON config will appear here...</code></pre>
         
         <div class="button-container">
-            <button id="copyButton">Copy to Clipboard</button>
+            <button id="copyButton"><i class="fas fa-copy"></i> Copy to Clipboard</button>
         </div>
         
         <footer>
@@ -39,6 +41,7 @@
         </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
     <script src="js/script.js" defer></script>
 </body>
 </html>
