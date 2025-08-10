@@ -1,138 +1,290 @@
 :root {
-    --bg-color: #0d1117;
-    --text-color: #c9d1d9;
-    --title-color: #28a7a1;
-    --border-color: #30363d;
-    --input-bg: #161b22;
-    --button-bg: #238636;
-    --button-hover-bg: #2ea043;
-    --button-copy-bg: #1f6feb;
-    --button-copy-hover-bg: #388bfd;
-    --button-clear-bg: #6e7681;
-    --button-clear-hover-bg: #8b949e;
-    --footer-text-color: #8b949e;
-    --json-key-color: #79c0ff;
-    --json-string-color: #a5d6ff;
-    --json-number-color: #ffab70;
-    --json-boolean-color: #ff7b72;
-    --json-null-color: #ff7b72;
+    --bg-color: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    --text-color: #e0e0e0;
+    --title-color: #00ffff;
+    --border-color: rgba(0, 255, 255, 0.3);
+    --input-bg: rgba(30, 41, 59, 0.8);
+    --button-bg: #00ffff;
+    --button-hover-bg: #00cccc;
+    --button-copy-bg: #4facfe;
+    --button-copy-hover-bg: #00f2fe;
+    --button-clear-bg: #ff4b4b;
+    --button-clear-hover-bg: #ff7878;
+    --footer-text-color: #a0a0a0;
+    --json-key-color: #ff79c6;
+    --json-string-color: #50fa7b;
+    --json-number-color: #bd93f9;
+    --json-boolean-color: #ffb86c;
+    --json-null-color: #ff5555;
+    --shadow-color: rgba(0, 255, 255, 0.2);
 }
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-    background-color: var(--bg-color);
+    font-family: 'Roboto', sans-serif;
+    background: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    padding: 20px;
+    padding: 40px 20px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     min-height: 100vh;
+    overflow-y: auto;
+    position: relative;
 }
+
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
 .container {
     width: 100%;
-    max-width: 800px;
-    padding: 25px;
-    background-color: var(--input-bg);
+    max-width: 900px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px var(--shadow-color);
+    backdrop-filter: blur(15px);
+    animation: fadeIn 1s ease-in-out;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 h1 {
     color: var(--title-color);
     text-align: center;
     margin-top: 0;
+    font-size: 2.5em;
+    text-shadow: 0 0 10px var(--title-color);
+    animation: glow 2s infinite alternate;
 }
+
+@keyframes glow {
+    from { text-shadow: 0 0 5px var(--title-color); }
+    to { text-shadow: 0 0 15px var(--title-color); }
+}
+
+.version-tag {
+    font-size: 0.6em;
+    color: #00ffff;
+    vertical-align: super;
+    margin-left: 10px;
+}
+
 p {
-    font-size: 14px;
-    line-height: 1.5;
+    font-size: 16px;
+    line-height: 1.6;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
+
 textarea {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 15px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
-    background-color: var(--bg-color);
+    background: var(--input-bg);
     color: var(--text-color);
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 13px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
     resize: vertical;
-    min-height: 80px;
+    min-height: 150px;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
+
+textarea:focus {
+    border-color: var(--title-color);
+    box-shadow: inset 0 2px 10px rgba(0, 255, 255, 0.2), 0 0 10px var(--title-color);
+    outline: none;
+}
+
 pre {
     width: 100%;
     box-sizing: border-box;
-    padding: 10px;
-    border-radius: 6px;
+    padding: 15px;
+    border-radius: 10px;
     border: 1px solid var(--border-color);
-    background-color: var(--bg-color);
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-    font-size: 13px;
+    background: var(--input-bg);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
     white-space: pre-wrap;
     word-wrap: break-word;
-    max-height: 400px;
+    max-height: 500px;
     overflow-y: auto;
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
+
+pre::-webkit-scrollbar {
+    width: 8px;
+}
+
+pre::-webkit-scrollbar-track {
+    background: var(--input-bg);
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background: var(--title-color);
+}
+
 .button-container {
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 25px;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 20px;
 }
+
 button {
-    color: white;
+    color: #000;
     border: none;
-    padding: 12px 25px;
-    border-radius: 6px;
-    font-weight: 500;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 700;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 4px 10px var(--shadow-color);
 }
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px var(--shadow-color);
+}
+
 #generateButton {
-    background-color: var(--button-bg);
+    background: var(--button-bg);
+    color: #000;
 }
+
 #generateButton:hover {
-    background-color: var(--button-hover-bg);
+    background: var(--button-hover-bg);
 }
+
 #copyButton {
-    background-color: var(--button-copy-bg);
+    background: var(--button-copy-bg);
+    color: #000;
 }
+
 #copyButton:hover {
-    background-color: var(--button-copy-hover-bg);
+    background: var(--button-copy-hover-bg);
 }
+
 #clearButton {
-    background-color: var(--button-clear-bg);
+    background: var(--button-clear-bg);
+    color: #fff;
 }
+
 #clearButton:hover {
-    background-color: var(--button-clear-hover-bg);
+    background: var(--button-clear-hover-bg);
 }
+
 footer {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 40px;
     color: var(--footer-text-color);
-    font-size: 12px;
+    font-size: 14px;
 }
+
 .json-key { color: var(--json-key-color); }
 .json-string { color: var(--json-string-color); }
 .json-number { color: var(--json-number-color); }
 .json-boolean { color: var(--json-boolean-color); }
 .json-null { color: var(--json-null-color); }
-.version-tag {
-    font-size: 0.5em;
-    color: #8b949e;
-    vertical-align: super;
-    margin-left: 5px;
-}
+
 .checkbox-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
-    gap: 10px;
+    margin-top: 25px;
+    gap: 15px;
 }
+
+.checkbox-container input {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--input-bg);
+    cursor: pointer;
+    position: relative;
+    transition: background 0.3s, border-color 0.3s;
+}
+
+.checkbox-container input:checked {
+    background: var(--title-color);
+    border-color: var(--title-color);
+}
+
+.checkbox-container input:checked::before {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: #000;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12px;
+}
+
 .checkbox-container label {
     cursor: pointer;
+    font-size: 16px;
+}
+
+.loader {
+    border: 8px solid var(--border-color);
+    border-top: 8px solid var(--title-color);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1.5s linear infinite;
+    margin: 20px auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 }
