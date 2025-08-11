@@ -1,32 +1,19 @@
-const CACHE_NAME = 'phantom-chainer-cache-v1';
-const urlsToCache = [
+const CACHE_NAME = 'phantom-chainer-cache-v2';
+const APP_SHELL_URLS = [
     '/',
     '/index.html',
     '/css/style.css',
     '/js/script.js',
     'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-    'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
 ];
 
 self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => {
-            console.log('Opened cache');
-            return cache.addAll(urlsToCache);
-        })
-    );
-});
-
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-        .then(response => {
-            if (response) {
-                return response;
-            }
-            return fetch(event.request);
+            console.log('Opened cache and caching app shell');
+            return cache.addAll(APP_SHELL_URLS);
         })
     );
 });
@@ -42,6 +29,29 @@ self.addEventListener('activate', event => {
                     }
                 })
             );
+        })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        fetch(event.request)
+        .then(networkResponse => {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME)
+                .then(cache => {
+                    cache.put(event.request, responseToCache);
+                });
+            return networkResponse;
+        })
+        .catch(() => {
+            return caches.match(event.request)
+                .then(cachedResponse => {
+                    return cachedResponse || new Response("Network error: You are offline and this resource is not cached.", {
+                        status: 404,
+                        statusText: "Not Found"
+                    });
+                });
         })
     );
 });
