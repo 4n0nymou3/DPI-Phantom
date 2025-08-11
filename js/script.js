@@ -6,8 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyButton = document.getElementById('copyButton');
     const clearButton = document.getElementById('clearButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
+    const statusIndicator = document.getElementById('status-indicator');
 
     const phantomConfigUrl = 'https://raw.githubusercontent.com/XTLS/Xray-examples/refs/heads/main/Serverless-for-Iran/serverless_for_Iran.jsonc';
+    const CACHED_CONFIG_KEY = 'cachedPhantomConfig';
+
     const defaultForcedRouteIPs = [
         "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
         "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
@@ -43,6 +46,30 @@ document.addEventListener('DOMContentLoaded', () => {
     function parseJsonc(jsoncString) {
         const withoutComments = jsoncString.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|\s\/\/.*|^\/\/.*/g, '');
         return JSON.parse(withoutComments);
+    }
+
+    async function getBaseConfig() {
+        try {
+            const response = await fetch(phantomConfigUrl);
+            if (!response.ok) throw new Error(`Network response was not ok`);
+            const configText = await response.text();
+            localStorage.setItem(CACHED_CONFIG_KEY, configText);
+            statusIndicator.textContent = '✓ Online: Fetched latest config.';
+            statusIndicator.className = 'status-indicator status-success';
+            return parseJsonc(configText);
+        } catch (error) {
+            console.warn('Fetch failed, trying to load from cache.', error);
+            const cachedConfig = localStorage.getItem(CACHED_CONFIG_KEY);
+            if (cachedConfig) {
+                statusIndicator.textContent = '! Offline: Using last saved config.';
+                statusIndicator.className = 'status-indicator status-warning';
+                return parseJsonc(cachedConfig);
+            } else {
+                statusIndicator.textContent = '✗ Error: Could not fetch config. No cached version available.';
+                statusIndicator.className = 'status-indicator status-error';
+                throw new Error('Could not fetch config and no cache is available.');
+            }
+        }
     }
 
     generateButton.addEventListener('click', async () => {
@@ -91,20 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let baseConfig;
         try {
-            const response = await fetch(phantomConfigUrl);
-            if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-            const configText = await response.text();
-            try {
-                baseConfig = JSON.parse(configText);
-            } catch (jsonError) {
-                try {
-                    baseConfig = parseJsonc(configText);
-                } catch (jsoncError) {
-                    throw new Error('Failed to parse the fetched config as JSON or JSONC.');
-                }
-            }
+            baseConfig = await getBaseConfig();
         } catch (error) {
-            outputJson.innerHTML = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
+            outputJson.innerHTML = error.message;
             return;
         }
 
@@ -190,22 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
                 const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
 
-                const ruleAction = isLoadBalanced ? {
-                    balancerTag: mainExitTag
-                } : {
-                    outboundTag: mainExitTag
-                };
+                const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
 
-                if (domainList.length > 0) rulesToAdd.push({
-                    type: 'field',
-                    ...ruleAction,
-                    domain: domainList
-                });
-                if (ipList.length > 0) rulesToAdd.push({
-                    type: 'field',
-                    ...ruleAction,
-                    ip: ipList
-                });
+                if (domainList.length > 0) rulesToAdd.push({ type: 'field', ...ruleAction, domain: domainList });
+                if (ipList.length > 0) rulesToAdd.push({ type: 'field', ...ruleAction, ip: ipList });
 
                 if (rulesToAdd.length > 0) {
                     const defaultRuleIndex = newConfig.routing.rules.findIndex(
@@ -225,9 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (userConfigCopy.dns) {
-                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts,
-                    ...userConfigCopy.dns.hosts
-                };
+                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts, ...userConfigCopy.dns.hosts };
                 if (userConfigCopy.dns.servers) {
                     const existingServers = new Set(newConfig.dns.servers.map(s => typeof s === 'string' ? s : s.address));
                     userConfigCopy.dns.servers.forEach(server => {
@@ -238,12 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (userConfigCopy.policy) {
-                if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels,
-                    ...userConfigCopy.policy.levels
-                };
-                if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system,
-                    ...userConfigCopy.policy.system
-                };
+                if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels, ...userConfigCopy.policy.levels };
+                if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system, ...userConfigCopy.policy.system };
             }
 
             if (userConfigCopy.fakedns) {
@@ -252,17 +250,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (userConfigCopy.observatory) {
-                newConfig.observatory = { ...newConfig.observatory,
-                    ...userConfigCopy.observatory
-                };
+                newConfig.observatory = { ...newConfig.observatory, ...userConfigCopy.observatory };
             }
 
             const finalRemarks = "👽 Anonymous Phantom + X Chain";
             delete newConfig.remarks;
-            const finalConfigObjectForCopy = {
-                "remarks": finalRemarks,
-                ...newConfig
-            };
+            const finalConfigObjectForCopy = { "remarks": finalRemarks, ...newConfig };
             const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
             outputJson.dataset.rawjson = finalJsonStringToCopy;
 
@@ -272,13 +265,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
             const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
 
-            setTimeout(() => {
-                outputJson.innerHTML = finalHtml;
-            }, 1000);
+            setTimeout(() => { outputJson.innerHTML = finalHtml; }, 500);
         } catch (error) {
-            setTimeout(() => {
-                outputJson.innerHTML = `Error processing config: ${error.message}\nPlease check the input format.`;
-            }, 1000);
+            setTimeout(() => { outputJson.innerHTML = `Error processing config: ${error.message}\nPlease check the input format.`; }, 500);
         }
     });
 
@@ -288,9 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalText = copyButton.innerHTML;
                 copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                setTimeout(() => {
-                    copyButton.innerHTML = originalText;
-                }, 2000);
+                setTimeout(() => { copyButton.innerHTML = originalText; }, 2000);
             }).catch(err => {
                 alert('Failed to copy!');
             });
@@ -303,6 +290,8 @@ document.addEventListener('DOMContentLoaded', () => {
         routeAllCheckbox.checked = false;
         outputJson.innerHTML = 'Your combined JSON config will appear here...';
         outputJson.dataset.rawjson = '';
+        statusIndicator.textContent = '';
+        statusIndicator.className = 'status-indicator';
     });
 
     setDefaultIPs();
