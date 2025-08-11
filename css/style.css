@@ -270,24 +270,6 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
-@media (max-width: 768px) {
-    body {
-        padding: 20px 10px;
-    }
-    
-    .container {
-        padding: 20px;
-    }
-    
-    h1 {
-        font-size: 2em;
-    }
-    
-    button {
-        padding: 10px 20px;
-        font-size: 14px;
-    }
-}
 .status-indicator {
     text-align: center;
     padding: 10px;
@@ -324,4 +306,23 @@ footer {
     background-color: rgba(255, 85, 85, 0.15);
     color: #ff5555;
     border: 1px solid rgba(255, 85, 85, 0.3);
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 10px;
+    }
+    
+    .container {
+        padding: 20px;
+    }
+    
+    h1 {
+        font-size: 2em;
+    }
+    
+    button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
 }
