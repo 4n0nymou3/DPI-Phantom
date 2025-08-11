@@ -1,11 +1,12 @@
-const CACHE_NAME = 'phantom-chainer-cache-v2';
-const APP_SHELL_URLS = [
+const CACHE_NAME = 'phantom-chainer-cache-v3';
+const URLS_TO_CACHE = [
     '/',
     '/index.html',
     '/css/style.css',
     '/js/script.js',
     'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+    'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap'
 ];
 
 self.addEventListener('install', event => {
@@ -13,7 +14,7 @@ self.addEventListener('install', event => {
         caches.open(CACHE_NAME)
         .then(cache => {
             console.log('Opened cache and caching app shell');
-            return cache.addAll(APP_SHELL_URLS);
+            return cache.addAll(URLS_TO_CACHE);
         })
     );
 });
@@ -35,23 +36,16 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     event.respondWith(
-        fetch(event.request)
-        .then(networkResponse => {
-            const responseToCache = networkResponse.clone();
-            caches.open(CACHE_NAME)
-                .then(cache => {
+        caches.match(event.request)
+        .then(cachedResponse => {
+            const fetchPromise = fetch(event.request).then(networkResponse => {
+                const responseToCache = networkResponse.clone();
+                caches.open(CACHE_NAME).then(cache => {
                     cache.put(event.request, responseToCache);
                 });
-            return networkResponse;
-        })
-        .catch(() => {
-            return caches.match(event.request)
-                .then(cachedResponse => {
-                    return cachedResponse || new Response("Network error: You are offline and this resource is not cached.", {
-                        status: 404,
-                        statusText: "Not Found"
-                    });
-                });
+                return networkResponse;
+            });
+            return cachedResponse || fetchPromise;
         })
     );
 });
