@@ -1,4 +1,4 @@
-const CACHE_NAME = 'phantom-chainer-cache-v3';
+const CACHE_NAME = 'phantom-chainer-cache-v4';
 const URLS_TO_CACHE = [
     '/',
     '/index.html',
@@ -44,7 +44,11 @@ self.addEventListener('fetch', event => {
                     cache.put(event.request, responseToCache);
                 });
                 return networkResponse;
+            }).catch(err => {
+                console.log('Fetch failed; returning offline page instead.', err);
+                return cachedResponse;
             });
+
             return cachedResponse || fetchPromise;
         })
     );
