@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (userConfigCopy.fakedns) {
                 if (!newConfig.fakedns) newConfig.fakedns = [];
-                newConfig.fakedns.push(...userConfigCopy.fakedns);
+                newConfig.fakedns.push(...userConfigCopy.fakedds);
             }
 
             if (userConfigCopy.observatory) {
