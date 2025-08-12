@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phantom Universal Chainer</title>
+    <meta name="description" content="Advanced V2Ray/Xray JSON config chaining tool with offline support">
+    <meta name="theme-color" content="#00ffff">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%2300ffff'/%3E%3Ctext x='50' y='60' text-anchor='middle' font-size='40' fill='%23000'%3EP%3C/text%3E%3C/svg%3E">
 </head>
 <body>
     <div id="particles-js" class="particles"></div>
@@ -17,10 +20,10 @@
         
         <div id="status-indicator" class="status-indicator"></div>
 
-        <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
+        <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10" aria-label="JSON Configuration Input"></textarea>
 
         <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs & Domains:</h3>
-        <textarea id="ipInput" rows="6"></textarea>
+        <textarea id="ipInput" rows="6" aria-label="IP and Domain List"></textarea>
         
         <div class="checkbox-container">
             <input type="checkbox" id="routeAllCheckbox" name="routeAll">
@@ -28,33 +31,103 @@
         </div>
 
         <div class="button-container">
-            <button id="generateButton"><i class="fas fa-cogs"></i> Generate Combined Config</button>
-            <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear All</button>
+            <button id="generateButton" type="button" aria-label="Generate Combined Configuration"><i class="fas fa-cogs" aria-hidden="true"></i> Generate Combined Config</button>
+            <button id="clearButton" type="button" aria-label="Clear All Inputs"><i class="fas fa-trash-alt" aria-hidden="true"></i> Clear All</button>
         </div>
 
         <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result:</h3>
-        <pre><code id="outputJson">Your combined JSON config will appear here...</code></pre>
+        <pre><code id="outputJson" aria-label="Generated JSON Output">Your combined JSON config will appear here...</code></pre>
         
         <div class="button-container">
-            <button id="copyButton"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            <button id="copyButton" type="button" aria-label="Copy Configuration to Clipboard"><i class="fas fa-copy" aria-hidden="true"></i> Copy to Clipboard</button>
         </div>
         
         <footer>
-            Designed by: Anonymous
+            <p>Designed by: Anonymous | <span id="online-status">Checking connection...</span></p>
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
-    <script src="js/script.js" defer></script>
     <script>
+        let particlesLoaded = false;
+        let scriptLoaded = false;
+
+        function checkAllLoaded() {
+            if (particlesLoaded && scriptLoaded) {
+                console.log('All resources loaded successfully');
+            }
+        }
+
+        function loadParticles() {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js';
+            script.onload = function() {
+                particlesLoaded = true;
+                checkAllLoaded();
+            };
+            script.onerror = function() {
+                console.warn('Particles.js failed to load from CDN');
+                particlesLoaded = true;
+                checkAllLoaded();
+            };
+            document.head.appendChild(script);
+        }
+
+        function loadMainScript() {
+            const script = document.createElement('script');
+            script.src = 'js/script.js';
+            script.onload = function() {
+                scriptLoaded = true;
+                checkAllLoaded();
+            };
+            script.onerror = function() {
+                console.error('Main script failed to load');
+                document.getElementById('status-indicator').innerHTML = 'Error: Application script failed to load';
+                document.getElementById('status-indicator').className = 'status-indicator status-error';
+            };
+            document.head.appendChild(script);
+        }
+
+        function updateOnlineStatus() {
+            const statusEl = document.getElementById('online-status');
+            if (navigator.onLine) {
+                statusEl.textContent = 'Online';
+                statusEl.style.color = '#00ff7f';
+            } else {
+                statusEl.textContent = 'Offline Mode';
+                statusEl.style.color = '#ffb86c';
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateOnlineStatus();
+            loadParticles();
+            loadMainScript();
+        });
+
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, err => {
-                    console.log('ServiceWorker registration failed: ', err);
-                });
+                navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                        
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('New content is available; please refresh.');
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
             });
+        } else {
+            console.warn('Service Worker not supported');
         }
     </script>
 </body>
