@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const phantomConfigUrl = 'https://raw.githubusercontent.com/XTLS/Xray-examples/refs/heads/main/Serverless-for-Iran/serverless_for_Iran.jsonc';
     const CACHED_CONFIG_KEY = 'cachedPhantomConfig';
+    const FALLBACK_CONFIG_KEY = 'fallbackPhantomConfig';
 
     const defaultForcedRouteIPs = [
         "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
@@ -18,6 +19,14 @@ document.addEventListener('DOMContentLoaded', () => {
         "185.76.151.0/24", "2001:67c:4e8::/48", "2001:b28:f23c::/48", "2001:b28:f23d::/48",
         "2001:b28:f23f::/48", "2a0a:f280:203::/48"
     ];
+
+    const fallbackConfig = {
+        "log": {"loglevel": "warning"},
+        "inbounds": [{"tag": "socks", "port": 10808, "listen": "127.0.0.1", "protocol": "socks", "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}, "settings": {"auth": "noauth", "udp": true, "userLevel": 8}}, {"tag": "http", "port": 10809, "listen": "127.0.0.1", "protocol": "http", "sniffing": {"enabled": true, "destOverride": ["http", "tls"]}, "settings": {"userLevel": 8}}],
+        "dns": {"servers": ["8.8.8.8", "8.8.4.4", "1.1.1.1"], "tag": "dns"},
+        "routing": {"domainStrategy": "AsIs", "rules": [{"type": "field", "inboundTag": ["api"], "outboundTag": "api"}, {"type": "field", "outboundTag": "direct", "domain": ["domain:ir", "geosite:ir"]}, {"type": "field", "outboundTag": "block", "domain": ["geosite:category-ads-all"]}, {"type": "field", "outboundTag": "direct", "ip": ["geoip:ir", "geoip:private"]}, {"type": "field", "outboundTag": "chain1-fragment", "network": "tcp"}, {"type": "field", "outboundTag": "direct", "network": "udp"}]},
+        "outbounds": [{"tag": "direct", "protocol": "freedom", "settings": {}}, {"tag": "block", "protocol": "blackhole", "settings": {"response": {"type": "http"}}}, {"tag": "chain1-fragment", "protocol": "freedom", "settings": {"fragment": {"packets": "tlshello", "length": "100-200", "interval": "10-20"}}, "streamSettings": {"sockopt": {"tcpKeepAliveIdle": 100, "mark": 255}}}]
+    };
 
     function setDefaultIPs() {
         ipInput.value = defaultForcedRouteIPs.join('\n');
@@ -51,24 +60,34 @@ document.addEventListener('DOMContentLoaded', () => {
     async function getBaseConfig() {
         try {
             const response = await fetch(phantomConfigUrl);
-            if (!response.ok) throw new Error(`Network response was not ok`);
+            if (!response.ok) throw new Error(`Network response was not ok: ${response.status}`);
             const configText = await response.text();
             localStorage.setItem(CACHED_CONFIG_KEY, configText);
+            localStorage.setItem(FALLBACK_CONFIG_KEY, configText);
             statusIndicator.textContent = '✓ Online: Fetched latest config.';
             statusIndicator.className = 'status-indicator status-success';
             return parseJsonc(configText);
         } catch (error) {
-            console.warn('Fetch failed, trying to load from cache.', error);
-            const cachedConfig = localStorage.getItem(CACHED_CONFIG_KEY);
-            if (cachedConfig) {
-                statusIndicator.textContent = '! Offline: Using last saved config.';
-                statusIndicator.className = 'status-indicator status-warning';
-                return parseJsonc(cachedConfig);
-            } else {
-                statusIndicator.textContent = '✗ Error: Could not fetch config. No cached version available.';
-                statusIndicator.className = 'status-indicator status-error';
-                throw new Error('Could not fetch config and no cache is available.');
+            console.warn('Primary fetch failed, trying alternatives...', error);
+            
+            let cachedConfig = localStorage.getItem(CACHED_CONFIG_KEY);
+            if (!cachedConfig) {
+                cachedConfig = localStorage.getItem(FALLBACK_CONFIG_KEY);
             }
+            
+            if (cachedConfig) {
+                try {
+                    statusIndicator.textContent = '! Offline: Using cached config.';
+                    statusIndicator.className = 'status-indicator status-warning';
+                    return parseJsonc(cachedConfig);
+                } catch (parseError) {
+                    console.warn('Cached config corrupted, using fallback...', parseError);
+                }
+            }
+            
+            statusIndicator.textContent = '⚠ Offline: Using built-in fallback config.';
+            statusIndicator.className = 'status-indicator status-warning';
+            return fallbackConfig;
         }
     }
 
@@ -78,6 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let userConfig;
         outputJson.dataset.rawjson = '';
         outputJson.innerHTML = '<div class="loader"></div>';
+
+        if (!jsonInput) {
+            outputJson.innerHTML = 'Error: Please enter a JSON config.';
+            return;
+        }
 
         try {
             userConfig = parseJsonc(jsonInput);
@@ -120,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             baseConfig = await getBaseConfig();
         } catch (error) {
-            outputJson.innerHTML = error.message;
+            outputJson.innerHTML = `Error: ${error.message}`;
             return;
         }
 
@@ -279,7 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
                 setTimeout(() => { copyButton.innerHTML = originalText; }, 2000);
             }).catch(err => {
-                alert('Failed to copy!');
+                console.error('Copy failed:', err);
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-times"></i> Copy Failed';
+                setTimeout(() => { copyButton.innerHTML = originalText; }, 2000);
             });
         }
     });
@@ -295,108 +322,113 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     setDefaultIPs();
-    particlesJS('particles-js', {
-        "particles": {
-            "number": {
-                "value": 100,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#ffffff"
-            },
-            "shape": {
-                "type": "circle",
-                "stroke": {
-                    "width": 0,
-                    "color": "#000000"
-                },
-                "polygon": {
-                    "nb_sides": 5
-                }
-            },
-            "opacity": {
-                "value": 0.5,
-                "random": false,
-                "anim": {
-                    "enable": false,
-                    "speed": 1,
-                    "opacity_min": 0.1,
-                    "sync": false
-                }
-            },
-            "size": {
-                "value": 3,
-                "random": true,
-                "anim": {
-                    "enable": false,
-                    "speed": 40,
-                    "size_min": 0.1,
-                    "sync": false
-                }
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#ffffff",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 6,
-                "direction": "none",
-                "random": false,
-                "straight": false,
-                "out_mode": "out",
-                "bounce": false,
-                "attract": {
-                    "enable": false,
-                    "rotateX": 600,
-                    "rotateY": 1200
-                }
-            }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "repulse"
-                },
-                "onclick": {
-                    "enable": true,
-                    "mode": "push"
-                },
-                "resize": true
-            },
-            "modes": {
-                "grab": {
-                    "distance": 400,
-                    "line_linked": {
-                        "opacity": 1
+    
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS('particles-js', {
+            "particles": {
+                "number": {
+                    "value": 100,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
                     }
                 },
-                "bubble": {
-                    "distance": 400,
-                    "size": 40,
-                    "duration": 2,
-                    "opacity": 8
+                "color": {
+                    "value": "#ffffff"
                 },
-                "repulse": {
-                    "distance": 200,
-                    "duration": 0.4
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    },
+                    "polygon": {
+                        "nb_sides": 5
+                    }
                 },
-                "push": {
-                    "particles_nb": 4
+                "opacity": {
+                    "value": 0.5,
+                    "random": false,
+                    "anim": {
+                        "enable": false,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
                 },
-                "remove": {
-                    "particles_nb": 2
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": false,
+                        "speed": 40,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 6,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": false,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
                 }
-            }
-        },
-        "retina_detect": true
-    });
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "repulse"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 400,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "bubble": {
+                        "distance": 400,
+                        "size": 40,
+                        "duration": 2,
+                        "opacity": 8
+                    },
+                    "repulse": {
+                        "distance": 200,
+                        "duration": 0.4
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    },
+                    "remove": {
+                        "particles_nb": 2
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    } else {
+        console.warn('ParticlesJS library not loaded, skipping particle animation');
+    }
 });
