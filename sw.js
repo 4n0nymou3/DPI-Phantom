@@ -1,5 +1,5 @@
-const CACHE_NAME = 'phantom-chainer-cache-v2';
-const DATA_CACHE_NAME = 'phantom-chainer-data-cache-v2';
+const CACHE_NAME = 'phantom-chainer-cache-v3';
+const DATA_CACHE_NAME = 'phantom-chainer-data-cache-v3';
 
 const APP_SHELL_URLS = [
     '/',
