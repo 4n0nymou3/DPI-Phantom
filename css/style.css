@@ -270,44 +270,6 @@ footer {
     100% { transform: rotate(360deg); }
 }
 
-.status-indicator {
-    text-align: center;
-    padding: 10px;
-    border-radius: 8px;
-    margin: 0 auto 20px auto;
-    max-width: 500px;
-    font-weight: 700;
-    font-size: 14px;
-    display: none;
-    animation: fadeInStatus 0.5s ease-in-out;
-}
-
-@keyframes fadeInStatus {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.status-indicator.status-success {
-    display: block;
-    background-color: rgba(0, 255, 127, 0.15);
-    color: #00ff7f;
-    border: 1px solid rgba(0, 255, 127, 0.3);
-}
-
-.status-indicator.status-warning {
-    display: block;
-    background-color: rgba(255, 184, 108, 0.15);
-    color: #ffb86c;
-    border: 1px solid rgba(255, 184, 108, 0.3);
-}
-
-.status-indicator.status-error {
-    display: block;
-    background-color: rgba(255, 85, 85, 0.15);
-    color: #ff5555;
-    border: 1px solid rgba(255, 85, 85, 0.3);
-}
-
 @media (max-width: 768px) {
     body {
         padding: 20px 10px;
