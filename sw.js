@@ -1,14 +1,10 @@
-const CACHE_NAME = 'phantom-chainer-cache-v1';
+const CACHE_NAME = 'phantom-chainer-cache-v2';
 const APP_SHELL_URLS = [
     '/',
     '/index.html',
     '/css/style.css',
     '/js/script.js',
-    '/manifest.json',
-    'https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
-    'https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js',
-    'https://raw.githubusercontent.com/XTLS/Xray-examples/refs/heads/main/Serverless-for-Iran/serverless_for_Iran.jsonc'
+    '/manifest.json'
 ];
 
 self.addEventListener('install', event => {
