@@ -11,7 +11,7 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v4.1</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v4.2</span></h1>
         <p>Paste your full V2Ray/Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
         <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
@@ -29,7 +29,7 @@
             <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear All</button>
         </div>
 
-        <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result:</h3>
+        <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result: <span id="configCounter"></span></h3>
         <pre><code id="outputJson">Your combined JSON config will appear here...</code></pre>
         
         <div class="button-container">
