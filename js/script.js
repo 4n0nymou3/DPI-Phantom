@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyButton = document.getElementById('copyButton');
     const clearButton = document.getElementById('clearButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
+    const configCounter = document.getElementById('configCounter');
 
     const phantomConfigUrl = 'https://raw.githubusercontent.com/XTLS/Xray-examples/refs/heads/main/Serverless-for-Iran/serverless_for_Iran.jsonc';
     const defaultForcedRouteIPs = [
@@ -51,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let userConfig;
         outputJson.dataset.rawjson = '';
         outputJson.innerHTML = '<div class="loader"></div>';
+        configCounter.textContent = '';
 
         try {
             userConfig = parseJsonc(jsonInput);
@@ -64,13 +66,34 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const isLoadBalanced = Array.isArray(userConfig.routing.balancers) && userConfig.routing.balancers.length > 0;
-        let mainExitTag = '';
+        let configCount = 0;
         const mainBalancerOriginalTag = 'proxy-round';
         const singleProxyOriginalTag = 'proxy';
+        const isLoadBalanced = Array.isArray(userConfig.routing.balancers) && userConfig.routing.balancers.length > 0;
+        
+        const userBalancer = userConfig.routing.balancers?.find(b => b.tag === mainBalancerOriginalTag);
+
+        if (userBalancer && userBalancer.selector && Array.isArray(userConfig.outbounds)) {
+            const selectors = userBalancer.selector.filter(s => !s.startsWith('!'));
+            userConfig.outbounds.forEach(outbound => {
+                if (outbound.tag && selectors.some(s => outbound.tag.startsWith(s))) {
+                    configCount++;
+                }
+            });
+        }
+        
+        if (configCount === 0) {
+            const singleProxy = userConfig.outbounds?.find(o => o.tag === singleProxyOriginalTag);
+            if (singleProxy) {
+                configCount = 1;
+            }
+        }
+
+        if (configCount > 0) {
+            configCounter.textContent = `(${configCount} config${configCount > 1 ? 's' : ''} detected)`;
+        }
 
         if (isLoadBalanced) {
-            const userBalancer = userConfig.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
             if (!userBalancer) {
                 outputJson.innerHTML = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
                 return;
@@ -111,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             let newConfig = JSON.parse(JSON.stringify(baseConfig));
             const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
+            let mainExitTag = '';
 
             if (!newConfig.routing) newConfig.routing = {};
             if (!newConfig.routing.rules) newConfig.routing.rules = [];
@@ -135,8 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (isLoadBalanced) {
-                const userBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
-                const userProxySelector = userBalancer.selector[0];
+                const currentBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
+                const userProxySelector = currentBalancer.selector[0];
                 mainExitTag = tagMap.get(mainBalancerOriginalTag);
 
                 userConfigCopy.outbounds.forEach(o => {
@@ -147,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         o.streamSettings.sockopt.dialerProxy = 'chain1-fragment';
                     }
                 });
-
                 userConfigCopy.routing.balancers.forEach(b => {
                     if (b.tag) b.tag = tagMap.get(b.tag) || b.tag;
                     if (b.selector) b.selector = b.selector.map(s => s.startsWith('!') ? '!' + prefix + s.substring(1) : prefix + s);
@@ -268,10 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const restOfConfigJson = JSON.stringify(newConfig, null, 2);
             const highlightedRestOfConfig = syntaxHighlight(restOfConfigJson);
-
             const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
             const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
-
             setTimeout(() => {
                 outputJson.innerHTML = finalHtml;
             }, 1000);
@@ -303,6 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         routeAllCheckbox.checked = false;
         outputJson.innerHTML = 'Your combined JSON config will appear here...';
         outputJson.dataset.rawjson = '';
+        configCounter.textContent = '';
     });
 
     setDefaultIPs();
