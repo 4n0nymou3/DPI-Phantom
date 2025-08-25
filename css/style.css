@@ -145,6 +145,14 @@ pre::-webkit-scrollbar-thumb:hover {
     background: var(--title-color);
 }
 
+#configCounter {
+    font-size: 0.7em;
+    color: var(--text-color);
+    font-weight: normal;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
