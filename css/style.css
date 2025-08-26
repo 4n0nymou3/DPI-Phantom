@@ -17,6 +17,8 @@
     --json-boolean-color: #ffb86c;
     --json-null-color: #ff5555;
     --shadow-color: rgba(0, 255, 255, 0.2);
+    --line-number-bg: rgba(20, 31, 49, 0.9);
+    --line-number-color: #666;
 }
 
 body {
@@ -89,59 +91,172 @@ p {
     margin-bottom: 30px;
 }
 
+.textarea-container {
+    display: flex;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    position: relative;
+    max-height: 250px;
+}
+
+.textarea-container:focus-within {
+    border-color: var(--title-color);
+    box-shadow: inset 0 2px 10px rgba(0, 255, 255, 0.2), 0 0 10px var(--title-color);
+}
+
+.line-numbers {
+    background: var(--line-number-bg);
+    color: var(--line-number-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    padding: 15px 10px;
+    text-align: right;
+    border-right: 1px solid var(--border-color);
+    user-select: none;
+    white-space: pre;
+    line-height: 1.5;
+    min-width: 40px;
+    flex-shrink: 0;
+    overflow: hidden;
+    max-height: 250px;
+}
+
 textarea {
     width: 100%;
     box-sizing: border-box;
     padding: 15px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background: var(--input-bg);
+    border: none;
+    background: transparent;
     color: var(--text-color);
     font-family: 'Roboto Mono', monospace;
     font-size: 14px;
-    resize: vertical;
+    resize: none;
     min-height: 150px;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-    transition: border-color 0.3s, box-shadow 0.3s;
+    max-height: 250px;
+    outline: none;
+    line-height: 1.5;
+    overflow-y: auto;
 }
 
-textarea:focus {
-    border-color: var(--title-color);
-    box-shadow: inset 0 2px 10px rgba(0, 255, 255, 0.2), 0 0 10px var(--title-color);
+textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background: var(--title-color);
+}
+
+.pre-container {
+    display: flex;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto;
+    position: relative;
+    max-height: 500px;
+}
+
+.output-container {
+    max-height: 500px;
+}
+
+.output-content {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 15px;
+    border: none;
+    background: transparent;
+    color: var(--text-color);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    max-height: 500px;
     outline: none;
+    line-height: 1.5;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.output-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.output-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.output-content::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.output-content::-webkit-scrollbar-thumb:hover {
+    background: var(--title-color);
+}
+
+#outputJson {
+    max-height: 500px;
+}
+
+.textarea-container {
+    position: relative;
+}
+
+.pre-container .line-numbers {
+    max-height: none;
+    overflow: visible;
+    position: sticky;
+    top: 0;
+}
+
+.pre-container .line-numbers::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
 }
 
 pre {
     width: 100%;
     box-sizing: border-box;
     padding: 15px;
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    background: var(--input-bg);
+    border: none;
+    background: transparent;
     font-family: 'Roboto Mono', monospace;
     font-size: 14px;
     white-space: pre-wrap;
     word-wrap: break-word;
-    max-height: 500px;
-    overflow-y: auto;
-    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
+    max-height: none;
+    overflow: visible;
+    line-height: 1.5;
+    margin: 0;
 }
 
-pre::-webkit-scrollbar {
+.pre-container::-webkit-scrollbar {
     width: 8px;
 }
 
-pre::-webkit-scrollbar-track {
+.pre-container::-webkit-scrollbar-track {
     background: var(--input-bg);
 }
 
-pre::-webkit-scrollbar-thumb {
+.pre-container::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 4px;
 }
 
-pre::-webkit-scrollbar-thumb:hover {
+.pre-container::-webkit-scrollbar-thumb:hover {
     background: var(--title-color);
 }
 
@@ -263,14 +378,82 @@ footer {
     font-size: 16px;
 }
 
-.loader {
-    border: 8px solid var(--border-color);
-    border-top: 8px solid var(--title-color);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1.5s linear infinite;
-    margin: 20px auto;
+.loader-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+@keyframes spinny {
+  0% {
+    transform-origin:50%;
+    transform:translate3d(-50%, -50%, 0) rotateZ(0deg);
+  }
+  100% {
+    transform:translate3d(-50%, -50%, 0) rotateZ(360deg);
+  }
+}
+
+.spinny-loader {
+    display:inline-block;
+    position:relative;
+    width:140px;
+    height:140px;
+    margin:0 10px;
+}
+
+.spinny-loader > div {
+    position:absolute;
+    top:50%;
+    left:50%;
+    display:block;
+    width:60px;
+    height:60px;
+    transform: translate3d(-50%, -50%, 0);
+    border-radius:200px;
+    background-color:var(--input-bg);
+}
+
+.spinny-loader::before, .spinny-loader::after {
+    content:"";
+    position:absolute;
+    top:50%;
+    left:50%;
+    display:block;
+
+    border-radius:200px;
+    border-style:solid;
+    border-width:15px;
+    border-color:var(--border-color) transparent var(--border-color) transparent;
+
+    animation-name:spinny;
+    animation-duration: 1s;
+    animation-iteration-count:infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.spinny-loader::after {
+    width:140px;
+    height:140px;
+    animation-direction: alternate-reverse;
+}
+
+.spinny-loader::before {
+    width:100px;
+    height:100px;
+}
+
+body.loading::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(30, 41, 59, 0.9);
+    z-index: 999;
 }
 
 @keyframes spin {
@@ -294,5 +477,10 @@ footer {
     button {
         padding: 10px 20px;
         font-size: 14px;
+    }
+    
+    .line-numbers {
+        padding: 15px 5px;
+        min-width: 35px;
     }
 }
