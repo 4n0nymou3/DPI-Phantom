@@ -11,13 +11,19 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v4.2</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v5.0</span></h1>
         <p>Paste your full V2Ray/Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
-        <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
+        <div class="textarea-container">
+            <div class="line-numbers" id="jsonInputLineNumbers">1</div>
+            <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
+        </div>
 
         <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs & Domains:</h3>
-        <textarea id="ipInput" rows="6"></textarea>
+        <div class="textarea-container">
+            <div class="line-numbers" id="ipInputLineNumbers">1</div>
+            <textarea id="ipInput" rows="6"></textarea>
+        </div>
         
         <div class="checkbox-container">
             <input type="checkbox" id="routeAllCheckbox" name="routeAll">
@@ -30,7 +36,10 @@
         </div>
 
         <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result: <span id="configCounter"></span></h3>
-        <pre><code id="outputJson">Your combined JSON config will appear here...</code></pre>
+        <div class="textarea-container">
+            <div class="line-numbers" id="outputLineNumbers">1</div>
+            <textarea id="outputJson" readonly>Your combined JSON config will appear here...</textarea>
+        </div>
         
         <div class="button-container">
             <button id="copyButton"><i class="fas fa-copy"></i> Copy to Clipboard</button>
