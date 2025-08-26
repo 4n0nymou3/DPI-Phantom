@@ -7,6 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clearButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
     const configCounter = document.getElementById('configCounter');
+    
+    const jsonInputLineNumbers = document.getElementById('jsonInputLineNumbers');
+    const ipInputLineNumbers = document.getElementById('ipInputLineNumbers');
+    const outputLineNumbers = document.getElementById('outputLineNumbers');
 
     const phantomConfigUrl = 'https://raw.githubusercontent.com/XTLS/Xray-examples/refs/heads/main/Serverless-for-Iran/serverless_for_Iran.jsonc';
     const defaultForcedRouteIPs = [
@@ -17,8 +21,142 @@ document.addEventListener('DOMContentLoaded', () => {
         "2001:b28:f23f::/48", "2a0a:f280:203::/48"
     ];
 
+    function updateLineNumbers(textarea, lineNumbersDiv) {
+        const lines = textarea.value.split('\n');
+        const lineCount = lines.length;
+        let lineNumbers = '';
+        for (let i = 1; i <= lineCount; i++) {
+            lineNumbers += i + '\n';
+        }
+        lineNumbersDiv.textContent = lineNumbers;
+    }
+
+    function updateOutputLineNumbers(text) {
+        const lines = text.split('\n');
+        const lineCount = lines.length;
+        let lineNumbers = '';
+        for (let i = 1; i <= lineCount; i++) {
+            lineNumbers += i + '\n';
+        }
+        outputLineNumbers.textContent = lineNumbers;
+    }
+
+    function syncScroll(textarea, lineNumbersDiv) {
+        lineNumbersDiv.scrollTop = textarea.scrollTop;
+    }
+
+    function initParticles() {
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 100,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 400,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+    }
+
     function setDefaultIPs() {
         ipInput.value = defaultForcedRouteIPs.join('\n');
+        updateLineNumbers(ipInput, ipInputLineNumbers);
     }
 
     function syntaxHighlight(json) {
@@ -46,23 +184,61 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(withoutComments);
     }
 
+    jsonConfigInput.addEventListener('input', () => {
+        updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+    });
+
+    jsonConfigInput.addEventListener('scroll', () => {
+        syncScroll(jsonConfigInput, jsonInputLineNumbers);
+    });
+
+    ipInput.addEventListener('input', () => {
+        updateLineNumbers(ipInput, ipInputLineNumbers);
+    });
+
+    ipInput.addEventListener('scroll', () => {
+        syncScroll(ipInput, ipInputLineNumbers);
+    });
+
+    outputJson.addEventListener('scroll', () => {
+        syncScroll(outputJson, outputLineNumbers);
+    });
+
     generateButton.addEventListener('click', async () => {
         const jsonInput = jsonConfigInput.value.trim();
         const routeAll = routeAllCheckbox.checked;
         let userConfig;
-        outputJson.dataset.rawjson = '';
-        outputJson.innerHTML = '<div class="loader"></div>';
+        outputJson.value = '';
+        const loadingContainer = document.body;
+        loadingContainer.classList.add('loading');
+        
+        let existingLoader = loadingContainer.querySelector('.loader-container');
+        if (!existingLoader) {
+            const loader = document.createElement('div');
+            loader.className = 'loader-container';
+            loader.innerHTML = '<div class="spinny-loader"><div class="spinny-circle"></div></div>';
+            loadingContainer.appendChild(loader);
+        }
+        outputLineNumbers.textContent = '1';
         configCounter.textContent = '';
 
         try {
             userConfig = parseJsonc(jsonInput);
         } catch (error) {
-            outputJson.innerHTML = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
         if (!userConfig.outbounds || !userConfig.routing) {
-            outputJson.innerHTML = 'Error: Input config is incomplete. The `outbounds` and `routing` sections are required.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: Input config is incomplete. The `outbounds` and `routing` sections are required.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -95,20 +271,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isLoadBalanced) {
             if (!userBalancer) {
-                outputJson.innerHTML = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
                 return;
             }
         } else {
             const singleProxy = userConfig.outbounds.find(o => o.tag === singleProxyOriginalTag);
             if (!singleProxy) {
-                outputJson.innerHTML = `Error: Single config must contain a primary outbound with the tag "${singleProxyOriginalTag}".`;
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error: Single config must contain a primary outbound with the tag "${singleProxyOriginalTag}".`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
                 return;
             }
         }
 
         const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
         if (routeItems.length === 0 && !routeAll) {
-            outputJson.innerHTML = 'Error: The IP/Domain list cannot be empty when "Route All Traffic" is unchecked.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: The IP/Domain list cannot be empty when "Route All Traffic" is unchecked.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -127,7 +315,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (error) {
-            outputJson.innerHTML = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -294,17 +486,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
             const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
             setTimeout(() => {
-                outputJson.innerHTML = finalHtml;
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                outputJson.value = finalJsonStringToCopy;
+                outputJson.dataset.rawjson = finalJsonStringToCopy;
+                updateOutputLineNumbers(finalJsonStringToCopy);
             }, 1000);
         } catch (error) {
             setTimeout(() => {
-                outputJson.innerHTML = `Error processing config: ${error.message}\nPlease check the input format.`;
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error processing config: ${error.message}\nPlease check the input format.`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
             }, 1000);
         }
     });
 
     copyButton.addEventListener('click', () => {
-        const textToCopy = outputJson.dataset.rawjson;
+        const textToCopy = outputJson.dataset.rawjson || outputJson.value;
         if (navigator.clipboard && textToCopy) {
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const originalText = copyButton.innerHTML;
@@ -320,116 +520,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     clearButton.addEventListener('click', () => {
         jsonConfigInput.value = '';
+        updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
         setDefaultIPs();
         routeAllCheckbox.checked = false;
-        outputJson.innerHTML = 'Your combined JSON config will appear here...';
+        outputJson.value = 'Your combined JSON config will appear here...';
         outputJson.dataset.rawjson = '';
+        updateOutputLineNumbers('Your combined JSON config will appear here...');
         configCounter.textContent = '';
     });
 
     setDefaultIPs();
-    particlesJS('particles-js', {
-        "particles": {
-            "number": {
-                "value": 100,
-                "density": {
-                    "enable": true,
-                    "value_area": 800
-                }
-            },
-            "color": {
-                "value": "#ffffff"
-            },
-            "shape": {
-                "type": "circle",
-                "stroke": {
-                    "width": 0,
-                    "color": "#000000"
-                },
-                "polygon": {
-                    "nb_sides": 5
-                }
-            },
-            "opacity": {
-                "value": 0.5,
-                "random": false,
-                "anim": {
-                    "enable": false,
-                    "speed": 1,
-                    "opacity_min": 0.1,
-                    "sync": false
-                }
-            },
-            "size": {
-                "value": 3,
-                "random": true,
-                "anim": {
-                    "enable": false,
-                    "speed": 40,
-                    "size_min": 0.1,
-                    "sync": false
-                }
-            },
-            "line_linked": {
-                "enable": true,
-                "distance": 150,
-                "color": "#ffffff",
-                "opacity": 0.4,
-                "width": 1
-            },
-            "move": {
-                "enable": true,
-                "speed": 6,
-                "direction": "none",
-                "random": false,
-                "straight": false,
-                "out_mode": "out",
-                "bounce": false,
-                "attract": {
-                    "enable": false,
-                    "rotateX": 600,
-                    "rotateY": 1200
-                }
-            }
-        },
-        "interactivity": {
-            "detect_on": "canvas",
-            "events": {
-                "onhover": {
-                    "enable": true,
-                    "mode": "repulse"
-                },
-                "onclick": {
-                    "enable": true,
-                    "mode": "push"
-                },
-                "resize": true
-            },
-            "modes": {
-                "grab": {
-                    "distance": 400,
-                    "line_linked": {
-                        "opacity": 1
-                    }
-                },
-                "bubble": {
-                    "distance": 400,
-                    "size": 40,
-                    "duration": 2,
-                    "opacity": 8
-                },
-                "repulse": {
-                    "distance": 200,
-                    "duration": 0.4
-                },
-                "push": {
-                    "particles_nb": 4
-                },
-                "remove": {
-                    "particles_nb": 2
-                }
-            }
-        },
-        "retina_detect": true
-    });
+    updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+    
+    setTimeout(() => {
+        initParticles();
+    }, 500);
 });
