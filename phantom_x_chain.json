@@ -1,5 +1,5 @@
 {
-  "remarks": "👽 Patterniha Phantom + X Chain",
+  "remarks": "👽 Anonymous Phantom + X Chain",
   "version": {
     "min": "25.9.5"
   },
@@ -78,9 +78,9 @@
       ],
       "azure-sto.edgeservers.org": [
         "135.225.124.80",
-        "4.223.106.240",
         "4.223.100.248",
-        "4.223.106.151"
+        "4.223.106.151",
+        "4.223.106.240"
       ]
     },
     "servers": [
