@@ -159,21 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLineNumbers(ipInput, ipInputLineNumbers);
     }
 
-    function syntaxHighlight(json) {
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-            let cls = 'json-number';
-            if (/^"/.test(match)) {
-                cls = /:$/.test(match) ? 'json-key' : 'json-string';
-            } else if (/true|false/.test(match)) {
-                cls = 'json-boolean';
-            } else if (/null/.test(match)) {
-                cls = 'json-null';
-            }
-            return `<span class="${cls}">${match}</span>`;
-        });
-    }
-
     function isDomain(str) {
         const domainRegex = new RegExp(/^(?!-)[A-Za-z0-9-]+([\-\.]{1}[a-z0-9]+)*\.[A-Za-z]{2,6}$/);
         return domainRegex.test(str);
@@ -409,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
                     } else {
                         const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
-                        newConfig.routing.rules.splice(lastDirectRuleIndex + 1, 0, ...rulesToAdd);
+                        newConfig.routing.rules.splice(lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0, 0, ...rulesToAdd);
                     }
                 }
             }
