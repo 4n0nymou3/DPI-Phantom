@@ -1,5 +1,5 @@
 {
-  "remarks": "👽 Anonymous Phantom + X Chain",
+  "remarks": "👽 Patterniha Phantom + X Chain",
   "version": {
     "min": "25.9.5"
   },
@@ -76,7 +76,12 @@
         "2a02:6b8::feed:0ff",
         "2a02:6b8:0:1::feed:0ff"
       ],
-      "azure-sto.edgeservers.org": "10.10.34.36"
+      "azure-sto.edgeservers.org": [
+        "135.225.124.80",
+        "4.223.106.240",
+        "4.223.100.248",
+        "4.223.106.151"
+      ]
     },
     "servers": [
       {
@@ -617,7 +622,7 @@
             "prioritizeIPv6": true,
             "tryDelayMs": 250
           },
-          "dialerProxy": "chain1-fragment"
+          "dialerProxy": "full-fragment"
         },
         "tcpSettings": {
           "header": {
@@ -655,7 +660,7 @@
             "prioritizeIPv6": true,
             "tryDelayMs": 250
           },
-          "dialerProxy": "chain1-fragment"
+          "dialerProxy": "full-fragment"
         },
         "tcpSettings": {
           "header": {
@@ -693,7 +698,7 @@
             "prioritizeIPv6": true,
             "tryDelayMs": 250
           },
-          "dialerProxy": "chain1-fragment"
+          "dialerProxy": "full-fragment"
         },
         "tcpSettings": {
           "header": {
@@ -731,7 +736,7 @@
             "prioritizeIPv6": true,
             "tryDelayMs": 250
           },
-          "dialerProxy": "chain1-fragment"
+          "dialerProxy": "full-fragment"
         },
         "tcpSettings": {
           "header": {
@@ -819,6 +824,16 @@
           "geoip:private",
           "geoip:ir"
         ]
+      },
+      {
+        "type": "field",
+        "network": "tcp",
+        "balancerTag": "user-proxy-round"
+      },
+      {
+        "type": "field",
+        "network": "udp",
+        "balancerTag": "user-proxy-round"
       },
       {
         "outboundTag": "udp-noises",
