@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }
             
-            const finalRemarks = "👽 Patterniha Phantom + X Chain";
+            const finalRemarks = "👽 Anonymous Phantom + X Chain";
             if (newConfig.remarks) {
                 newConfig.remarks = finalRemarks;
             }
