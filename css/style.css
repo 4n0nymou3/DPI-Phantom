@@ -422,12 +422,10 @@ footer {
     top:50%;
     left:50%;
     display:block;
-
     border-radius:200px;
     border-style:solid;
     border-width:15px;
     border-color:var(--border-color) transparent var(--border-color) transparent;
-
     animation-name:spinny;
     animation-duration: 1s;
     animation-iteration-count:infinite;
