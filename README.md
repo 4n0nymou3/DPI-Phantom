@@ -1,28 +1,58 @@
-# Phantom Universal Chainer
+# Phantom Universal Chainer v6.2
 
-This repository hosts the **Phantom Universal Chainer**, a powerful web tool designed to enhance your existing V2Ray/Xray proxy setup. It allows you to seamlessly chain your own multi-protocol, load-balanced configuration with **Patterniha's sophisticated anti-DPI engine**, creating a single, robust config for maximum resilience.
+> یک ابزار تحت وب قدرتمند برای ترکیب (Chain) کانفیگ شخصی V2Ray/Xray شما با آخرین نسخه از موتور پیشرفته ضد-DPI، برای دستیابی به حداکثر پایداری و مقاومت در برابر فیلترینگ.
 
-## What is the Patterniha Anti-DPI Engine?
-
-The Patterniha config is an advanced, server-less V2Ray/Xray configuration that utilizes modern traffic obfuscation techniques to bypass Deep Packet Inspection (DPI) systems. The **Phantom Universal Chainer** always fetches the latest version of this engine to ensure optimal performance against censorship.
+این ابزار به شما اجازه می‌دهد تا به سادگی کانفیگ شخصی خود (چه تک‌سرور و چه چندسرور) را به عنوان خروجی نهایی، به موتور ضد سانسور **Patterniha** متصل کنید و یک کانفیگ واحد و قدرتمند بسازید.
 
 ---
 
-## How to Use the Phantom Universal Chainer
+## ✨ ویژگی‌های کلیدی
 
-The chainer tool is designed for ease of use but has one important requirement to function correctly.
+* **سازگاری:** از هر دو نوع کانفیگ **تک‌سرور** و **چندسرور (Load Balanced)** پشتیبانی می‌کند.
+* **همیشه به‌روز:** این ابزار در هر بار استفاده، همیشه **آخرین نسخه از موتور ضد-DPI** را مستقیماً از مخزن رسمی Patterniha دریافت می‌کند تا بالاترین سطح عملکرد را تضمین کند.
+* **مسیریابی هوشمند:** به شما امکان انتخاب بین دو حالت را می‌دهد:
+    1.  **حالت هدفمند:** فقط ترافیک دامنه‌ها و IPهای خاص (مانند تلگرام) را از زنجیره عبور می‌دهد.
+    2.  **حالت تمام ترافیک (Full Tunnel):** تمام ترافیک دستگاه شما را از طریق زنجیره ایجاد شده عبور می‌دهد.
+* **کاملاً بدون سرور:** موتور ضد-DPI استفاده شده نیازی به سرور اختصاصی ندارد و بر اساس تکنیک‌های مدرن کار می‌کند.
 
-### ⚠️ Requirements & Instructions
+---
 
-* **Crucial Requirement: Load Balancer:** The input JSON config you provide **must** contain a load balancer. The tool is specifically designed to locate a balancer tagged `proxy-round` and use it as the exit point for the anti-DPI engine. Configs without this balancer will not be processed correctly.
+## ⚙️ نحوه استفاده
 
-* 💡 **How to Create Your Input Config:** You can easily generate a compatible JSON file using a modern client like **v2rayNG (v1.10.11 or newer)**. Simply select multiple servers of any protocol (VLESS, Trojan, etc.) in the app, and use the batch export feature to generate a single, combined JSON file with load balancing enabled. This is the file you should paste into the chainer tool.
+برای استفاده صحیح از ابزار، کانفیگ ورودی شما باید یکی از دو شرط زیر را داشته باشد:
 
-### Step-by-Step Usage
+### ✅ پیش‌نیازها: آماده‌سازی کانفیگ ورودی
 
-1.  Prepare your multi-server, load-balanced JSON config using a client like v2rayNG.
-2.  Navigate to the **Phantom Universal Chainer** tool (linked in this repository's "About" section).
-3.  Paste your entire JSON config into the primary input box.
-4.  Adjust the **Forced Route IPs & Domains** list as needed. By default, it contains Telegram's IP ranges.
-5.  Optionally, check the **`Route All Traffic`** box to force all your device's traffic through the chained configuration.
-6.  Click **`Generate Combined Config`** and import the resulting JSON into your client.
+> **مهم:** ابزار برای شناسایی کانفیگ شما، به یک "تگ" یا برچسب مشخص نیاز دارد.
+
+#### ۱. برای کانفیگ چندسرور (Load Balanced):
+- کانفیگ `JSON` شما **باید** شامل یک بخش `balancers` باشد.
+- در این بخش، یک بالانسر با تگ `proxy-round` **باید** وجود داشته باشد.
+- **💡 نکته:** ساده‌ترین راه برای ساخت چنین کانفیگی، استفاده از کلاینت‌های مدرن مانند **v2rayNG** است. کافیست چند سرور را انتخاب کرده و از گزینه‌ای با نام دقیق `Creating Intelligent Selection Current Group Configuration` استفاده کنید.
+
+#### ۲. برای کانفیگ تک‌سرور:
+- کانفیگ `JSON` شما **باید** شامل یک بخش `outbounds` باشد.
+- در این بخش، خروجی (outbound) اصلی شما **باید** تگ `proxy` را داشته باشد.
+
+---
+
+### 📝 مراحل گام‌به‌گام
+
+1.  کانفیگ `JSON` خود را طبق یکی از دو حالت بالا آماده کنید.
+2.  به صفحه وب **Phantom Universal Chainer** بروید.
+3.  کل محتوای کانفیگ `JSON` خود را در کادر ورودی اول جای‌گذاری (Paste) کنید.
+4.  در کادر دوم (`Forced Route IPs & Domains`)، لیست IPها و دامنه‌هایی که می‌خواهید ترافیکشان از کانفیگ شما عبور کند را وارد کنید (این لیست به طور پیش‌فرض شامل IPهای تلگرام است).
+5.  **(اختیاری)** اگر می‌خواهید **تمام ترافیک** دستگاهتان از زنجیره عبور کند، تیک گزینه `Route All Traffic Through Config` را فعال کنید.
+6.  روی دکمه `Generate Combined Config` کلیک کنید.
+7.  کانفیگ تولید شده در کادر نتیجه را کپی کرده و در کلاینت مورد نظر خود وارد (Import) کنید.
+
+اکنون از یک اتصال پایدارتر و مقاوم‌تر لذت ببرید!
+
+---
+
+## 🙏 تشکر ویژه
+
+* با تشکر فراوان از **Patterniha** برای توسعه و به‌روزرسانی مداوم موتور قدرتمند:
+https://github.com/patterniha/Serverless-for-Iran
+
+* **Anonymous** ❤️
