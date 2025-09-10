@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
                         if (!o.streamSettings) o.streamSettings = {};
                         if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                        o.streamSettings.sockopt.dialerProxy = 'chain1-fragment';
+                        o.streamSettings.sockopt.dialerProxy = 'full-fragment';
                     }
                 });
                 userConfigCopy.routing.balancers.forEach(b => {
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (o.tag === mainExitTag) {
                         if (!o.streamSettings) o.streamSettings = {};
                         if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                        o.streamSettings.sockopt.dialerProxy = 'chain1-fragment';
+                        o.streamSettings.sockopt.dialerProxy = 'full-fragment';
                     }
                 });
             }
@@ -383,53 +383,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 userConfigCopy.observatory.subjectSelector = userConfigCopy.observatory.subjectSelector.map(s => prefix + s);
             }
 
-            if (routeAll) {
-                newConfig.routing.rules.forEach(rule => {
-                    const isFinalTcpCatchAll = rule.outboundTag === 'chain1-fragment' && rule.network === 'tcp';
-                    const isFinalUdpCatchAll = rule.outboundTag === 'direct' && rule.network === 'udp';
+            const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
+            const insertionIndex = newConfig.routing.rules.findIndex(r =>
+                r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
+            );
 
-                    if (isFinalTcpCatchAll || isFinalUdpCatchAll) {
-                        const isGenericRule = !rule.port && !rule.domain && !rule.ip;
-                        if (isGenericRule) {
-                            delete rule.outboundTag;
-                            if (isLoadBalanced) {
-                                rule.balancerTag = mainExitTag;
-                            } else {
-                                rule.outboundTag = mainExitTag;
-                            }
-                        }
-                    }
-                });
+            if (routeAll) {
+                const tcpCatchAll = { type: 'field', network: 'tcp', ...ruleAction };
+                const udpCatchAll = { type: 'field', network: 'udp', ...ruleAction };
+                if (insertionIndex > -1) {
+                    newConfig.routing.rules.splice(insertionIndex + 1, 0, tcpCatchAll, udpCatchAll);
+                } else {
+                    newConfig.routing.rules.push(tcpCatchAll, udpCatchAll);
+                }
             } else {
                 const rulesToAdd = [];
                 const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
                 const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
 
-                const ruleAction = isLoadBalanced ? {
-                    balancerTag: mainExitTag
-                } : {
-                    outboundTag: mainExitTag
-                };
-
-                if (domainList.length > 0) rulesToAdd.push({
-                    type: 'field',
-                    ...ruleAction,
-                    domain: domainList
-                });
-                if (ipList.length > 0) rulesToAdd.push({
-                    type: 'field',
-                    ...ruleAction,
-                    ip: ipList
-                });
+                if (domainList.length > 0) rulesToAdd.push({ type: 'field', domain: domainList, ...ruleAction });
+                if (ipList.length > 0) rulesToAdd.push({ type: 'field', ip: ipList, ...ruleAction });
 
                 if (rulesToAdd.length > 0) {
-                    const defaultRuleIndex = newConfig.routing.rules.findIndex(
-                        r => r.outboundTag === 'chain1-fragment' && !r.port && !r.domain && !r.ip
-                    );
-                    if (defaultRuleIndex > -1) {
-                        newConfig.routing.rules.splice(defaultRuleIndex, 0, ...rulesToAdd);
+                    if (insertionIndex > -1) {
+                         newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
                     } else {
-                        newConfig.routing.rules.unshift(...rulesToAdd);
+                        const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
+                        newConfig.routing.rules.splice(lastDirectRuleIndex + 1, 0, ...rulesToAdd);
                     }
                 }
             }
@@ -471,27 +451,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     ...userConfigCopy.observatory
                 };
             }
+            
+            const finalRemarks = "👽 Patterniha Phantom + X Chain";
+            if (newConfig.remarks) {
+                newConfig.remarks = finalRemarks;
+            }
 
-            const finalRemarks = "👽 Anonymous Phantom + X Chain";
-            delete newConfig.remarks;
-            const finalConfigObjectForCopy = {
-                "remarks": finalRemarks,
-                ...newConfig
-            };
-            const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
-            outputJson.dataset.rawjson = finalJsonStringToCopy;
+            const finalConfigObjectForCopy = { ...newConfig };
+             if (!newConfig.remarks) {
+                finalConfigObjectForCopy.remarks = finalRemarks;
+                const { remarks, ...rest } = finalConfigObjectForCopy;
+                const reorderedObject = { remarks, ...rest };
+                const finalJsonStringToCopy = JSON.stringify(reorderedObject, null, 2);
+                outputJson.dataset.rawjson = finalJsonStringToCopy;
+             } else {
+                const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
+                outputJson.dataset.rawjson = finalJsonStringToCopy;
+             }
 
-            const restOfConfigJson = JSON.stringify(newConfig, null, 2);
-            const highlightedRestOfConfig = syntaxHighlight(restOfConfigJson);
-            const remarksLineHtml = `  <span class="json-key">"remarks":</span> <span class="json-string">"${finalRemarks}"</span>,`;
-            const finalHtml = highlightedRestOfConfig.replace(/^\{/, `{\n${remarksLineHtml}`);
             setTimeout(() => {
                 loadingContainer.classList.remove('loading');
                 loadingContainer.querySelector('.loader-container')?.remove();
-                outputJson.value = finalJsonStringToCopy;
-                outputJson.dataset.rawjson = finalJsonStringToCopy;
-                updateOutputLineNumbers(finalJsonStringToCopy);
+                outputJson.value = outputJson.dataset.rawjson;
+                updateOutputLineNumbers(outputJson.dataset.rawjson);
             }, 1000);
+
         } catch (error) {
             setTimeout(() => {
                 loadingContainer.classList.remove('loading');
