@@ -1,218 +1,6 @@
 [
   {
-    "remarks": "👽 Anonymous 1 (BPB)",
-    "log": {
-      "loglevel": "warning"
-    },
-    "dns": {
-      "hosts": {
-        "geosite:category-ads-all": [
-          "127.0.0.1"
-        ],
-        "geosite:category-ads-ir": [
-          "127.0.0.1"
-        ],
-        "dns.google": [
-          "8.8.8.8",
-          "8.8.4.4"
-        ]
-      },
-      "servers": [
-        {
-          "address": "fakedns",
-          "domains": [
-            "geosite:category-ir"
-          ]
-        },
-        {
-          "address": "https://dns.google/dns-query",
-          "tag": "remote-dns"
-        },
-        {
-          "address": "8.8.8.8",
-          "domains": [
-            "geosite:category-ir"
-          ],
-          "expectIPs": [
-            "geoip:ir"
-          ]
-        }
-      ],
-      "queryStrategy": "UseIP",
-      "tag": "dns",
-      "disableFallbackIfMatch": true
-    },
-    "inbounds": [
-      {
-        "port": 10808,
-        "protocol": "socks",
-        "settings": {
-          "auth": "noauth",
-          "udp": true,
-          "userLevel": 8
-        },
-        "sniffing": {
-          "destOverride": [
-            "http",
-            "tls",
-            "fakedns"
-          ],
-          "enabled": true,
-          "routeOnly": true
-        },
-        "tag": "socks-in"
-      },
-      {
-        "port": 10853,
-        "protocol": "dokodemo-door",
-        "settings": {
-          "address": "1.1.1.1",
-          "network": "tcp,udp",
-          "port": 53
-        },
-        "tag": "dns-in"
-      }
-    ],
-    "outbounds": [
-      {
-        "tag": "fragment",
-        "protocol": "freedom",
-        "settings": {
-          "fragment": {
-            "packets": "tlshello",
-            "length": "100-200",
-            "interval": "1-1"
-          },
-          "domainStrategy": "UseIPv4v6",
-          "noises": [
-            {
-              "type": "rand",
-              "packet": "50-100",
-              "delay": "1-1"
-            },
-            {
-              "type": "rand",
-              "packet": "50-100",
-              "delay": "1-1"
-            },
-            {
-              "type": "rand",
-              "packet": "50-100",
-              "delay": "1-1"
-            },
-            {
-              "type": "rand",
-              "packet": "50-100",
-              "delay": "1-1"
-            },
-            {
-              "type": "rand",
-              "packet": "50-100",
-              "delay": "1-1"
-            }
-          ]
-        }
-      },
-      {
-        "protocol": "dns",
-        "tag": "dns-out"
-      },
-      {
-        "protocol": "freedom",
-        "settings": {
-          "domainStrategy": "UseIP"
-        },
-        "tag": "direct"
-      },
-      {
-        "protocol": "blackhole",
-        "settings": {
-          "response": {
-            "type": "http"
-          }
-        },
-        "tag": "block"
-      }
-    ],
-    "policy": {
-      "levels": {
-        "8": {
-          "connIdle": 300,
-          "downlinkOnly": 1,
-          "handshake": 4,
-          "uplinkOnly": 1
-        }
-      },
-      "system": {
-        "statsOutboundUplink": true,
-        "statsOutboundDownlink": true
-      }
-    },
-    "routing": {
-      "domainStrategy": "IPIfNonMatch",
-      "rules": [
-        {
-          "inboundTag": [
-            "socks-in"
-          ],
-          "port": 53,
-          "outboundTag": "dns-out",
-          "type": "field"
-        },
-        {
-          "inboundTag": [
-            "dns-in"
-          ],
-          "outboundTag": "dns-out",
-          "type": "field"
-        },
-        {
-          "inboundTag": [
-            "remote-dns"
-          ],
-          "outboundTag": "fragment",
-          "type": "field"
-        },
-        {
-          "inboundTag": [
-            "dns"
-          ],
-          "outboundTag": "direct",
-          "type": "field"
-        },
-        {
-          "domain": [
-            "geosite:category-ads-all",
-            "geosite:category-ads-ir"
-          ],
-          "outboundTag": "block",
-          "type": "field"
-        },
-        {
-          "domain": [
-            "geosite:category-ir"
-          ],
-          "outboundTag": "direct",
-          "type": "field"
-        },
-        {
-          "ip": [
-            "geoip:ir"
-          ],
-          "outboundTag": "direct",
-          "type": "field"
-        },
-        {
-          "network": "tcp,udp",
-          "outboundTag": "fragment",
-          "type": "field"
-        }
-      ]
-    },
-    "stats": {}
-  },
-  {
-    "remarks": "👽 Anonymous 2 (BPB)",
+    "remarks": "1 BPB (old version)",
     "log": {
       "loglevel": "warning"
     },
@@ -430,7 +218,219 @@
     "stats": {}
   },
   {
-    "remarks": "👽 Anonymous 3 (Knocker tlshello)",
+    "remarks": "2 BPB (new version)",
+    "log": {
+      "loglevel": "warning"
+    },
+    "dns": {
+      "hosts": {
+        "geosite:category-ads-all": [
+          "127.0.0.1"
+        ],
+        "geosite:category-ads-ir": [
+          "127.0.0.1"
+        ],
+        "dns.google": [
+          "8.8.8.8",
+          "8.8.4.4"
+        ]
+      },
+      "servers": [
+        {
+          "address": "fakedns",
+          "domains": [
+            "geosite:category-ir"
+          ]
+        },
+        {
+          "address": "https://dns.google/dns-query",
+          "tag": "remote-dns"
+        },
+        {
+          "address": "8.8.8.8",
+          "domains": [
+            "geosite:category-ir"
+          ],
+          "expectIPs": [
+            "geoip:ir"
+          ]
+        }
+      ],
+      "queryStrategy": "UseIP",
+      "tag": "dns",
+      "disableFallbackIfMatch": true
+    },
+    "inbounds": [
+      {
+        "port": 10808,
+        "protocol": "socks",
+        "settings": {
+          "auth": "noauth",
+          "udp": true,
+          "userLevel": 8
+        },
+        "sniffing": {
+          "destOverride": [
+            "http",
+            "tls",
+            "fakedns"
+          ],
+          "enabled": true,
+          "routeOnly": true
+        },
+        "tag": "socks-in"
+      },
+      {
+        "port": 10853,
+        "protocol": "dokodemo-door",
+        "settings": {
+          "address": "1.1.1.1",
+          "network": "tcp,udp",
+          "port": 53
+        },
+        "tag": "dns-in"
+      }
+    ],
+    "outbounds": [
+      {
+        "tag": "fragment",
+        "protocol": "freedom",
+        "settings": {
+          "fragment": {
+            "packets": "tlshello",
+            "length": "100-200",
+            "interval": "1-1"
+          },
+          "domainStrategy": "UseIPv4v6",
+          "noises": [
+            {
+              "type": "rand",
+              "packet": "50-100",
+              "delay": "1-1"
+            },
+            {
+              "type": "rand",
+              "packet": "50-100",
+              "delay": "1-1"
+            },
+            {
+              "type": "rand",
+              "packet": "50-100",
+              "delay": "1-1"
+            },
+            {
+              "type": "rand",
+              "packet": "50-100",
+              "delay": "1-1"
+            },
+            {
+              "type": "rand",
+              "packet": "50-100",
+              "delay": "1-1"
+            }
+          ]
+        }
+      },
+      {
+        "protocol": "dns",
+        "tag": "dns-out"
+      },
+      {
+        "protocol": "freedom",
+        "settings": {
+          "domainStrategy": "UseIP"
+        },
+        "tag": "direct"
+      },
+      {
+        "protocol": "blackhole",
+        "settings": {
+          "response": {
+            "type": "http"
+          }
+        },
+        "tag": "block"
+      }
+    ],
+    "policy": {
+      "levels": {
+        "8": {
+          "connIdle": 300,
+          "downlinkOnly": 1,
+          "handshake": 4,
+          "uplinkOnly": 1
+        }
+      },
+      "system": {
+        "statsOutboundUplink": true,
+        "statsOutboundDownlink": true
+      }
+    },
+    "routing": {
+      "domainStrategy": "IPIfNonMatch",
+      "rules": [
+        {
+          "inboundTag": [
+            "socks-in"
+          ],
+          "port": 53,
+          "outboundTag": "dns-out",
+          "type": "field"
+        },
+        {
+          "inboundTag": [
+            "dns-in"
+          ],
+          "outboundTag": "dns-out",
+          "type": "field"
+        },
+        {
+          "inboundTag": [
+            "remote-dns"
+          ],
+          "outboundTag": "fragment",
+          "type": "field"
+        },
+        {
+          "inboundTag": [
+            "dns"
+          ],
+          "outboundTag": "direct",
+          "type": "field"
+        },
+        {
+          "domain": [
+            "geosite:category-ads-all",
+            "geosite:category-ads-ir"
+          ],
+          "outboundTag": "block",
+          "type": "field"
+        },
+        {
+          "domain": [
+            "geosite:category-ir"
+          ],
+          "outboundTag": "direct",
+          "type": "field"
+        },
+        {
+          "ip": [
+            "geoip:ir"
+          ],
+          "outboundTag": "direct",
+          "type": "field"
+        },
+        {
+          "network": "tcp,udp",
+          "outboundTag": "fragment",
+          "type": "field"
+        }
+      ]
+    },
+    "stats": {}
+  },
+  {
+    "remarks": "3 Knocker (tlshello)",
     "log": {
       "access": "",
       "error": "",
@@ -617,7 +617,7 @@
     "stats": {}
   },
   {
-    "remarks": "👽 Anonymous 4 (Patterniha v1)",
+    "remarks": "4 Patterniha (old version)",
     "log": {
       "loglevel": "warning",
       "dnsLog": false,
@@ -1082,7 +1082,7 @@
     }
   },
   {
-    "remarks": "👽 Anonymous 5 (Patterniha v2)",
+    "remarks": "5 Patterniha (new version)",
     "version": {
       "min": "25.9.5"
     },
@@ -1244,7 +1244,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "130",
-            "interval": "260",
+            "interval": "190",
             "maxSplit": "4"
           }
         },
@@ -1261,7 +1261,7 @@
           "fragment": {
             "packets": "2-4",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "130"
           }
         },
@@ -1284,7 +1284,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "517"
           }
         },
@@ -1647,6 +1647,10 @@
             "geosite:private",
             "geosite:ir",
             "domain:dynx.pro"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
@@ -1661,50 +1665,86 @@
           "network": "udp",
           "protocol": [
             "quic"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp"
+          "network": "udp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095"
+          "port": "80,8080,8880,2052,2082,2086,2095",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp"
+          "network": "tcp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        },
+        {
+          "outboundTag": "block-out",
+          "network": "tcp,udp"
         }
       ]
     }
   },
   {
-    "remarks": "👽 Anonymous 6 (Patterniha v2 shecan)",
+    "remarks": "6 Patterniha (new version shecan)",
     "version": {
       "min": "25.9.5"
     },
@@ -1866,7 +1906,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "130",
-            "interval": "260",
+            "interval": "190",
             "maxSplit": "4"
           }
         },
@@ -1883,7 +1923,7 @@
           "fragment": {
             "packets": "2-4",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "130"
           }
         },
@@ -1906,7 +1946,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "517"
           }
         },
@@ -2269,6 +2309,10 @@
             "geosite:private",
             "geosite:ir",
             "domain:dynx.pro"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
@@ -2283,50 +2327,86 @@
           "network": "udp",
           "protocol": [
             "quic"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp"
+          "network": "udp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095"
+          "port": "80,8080,8880,2052,2082,2086,2095",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp"
+          "network": "tcp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        },
+        {
+          "outboundTag": "block-out",
+          "network": "tcp,udp"
         }
       ]
     }
   },
   {
-    "remarks": "👽 Anonymous 7 (Patterniha v2 dynx)",
+    "remarks": "7 Patterniha (new version dynx)",
     "version": {
       "min": "25.9.5"
     },
@@ -2488,7 +2568,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "130",
-            "interval": "260",
+            "interval": "190",
             "maxSplit": "4"
           }
         },
@@ -2505,7 +2585,7 @@
           "fragment": {
             "packets": "2-4",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "130"
           }
         },
@@ -2528,7 +2608,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "1",
-            "interval": "2",
+            "interval": "1",
             "maxSplit": "517"
           }
         },
@@ -2891,6 +2971,10 @@
             "geosite:private",
             "geosite:ir",
             "domain:dynx.pro"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
@@ -2905,44 +2989,80 @@
           "network": "udp",
           "protocol": [
             "quic"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp"
+          "network": "udp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095"
+          "port": "80,8080,8880,2052,2082,2086,2095",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp"
+          "network": "tcp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
+        },
+        {
+          "outboundTag": "block-out",
+          "network": "tcp,udp"
         }
       ]
     }
