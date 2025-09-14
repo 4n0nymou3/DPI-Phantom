@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ipInputLineNumbers = document.getElementById('ipInputLineNumbers');
     const outputLineNumbers = document.getElementById('outputLineNumbers');
 
-    const phantomConfigUrl = 'https://raw.githubusercontent.com/patterniha/Serverless-for-Iran/refs/heads/main/Serverless.jsonc';
+    const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless.json';
     const defaultForcedRouteIPs = [
         "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
         "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
