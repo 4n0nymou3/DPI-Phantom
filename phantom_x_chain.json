@@ -78,10 +78,10 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
+          "135.225.124.80",
           "4.223.106.240",
           "4.223.100.248",
-          "4.223.106.151",
-          "135.225.124.80"
+          "4.223.106.151"
         ]
       },
       "servers": [
@@ -91,9 +91,7 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com",
-            "domain:dynx.pro",
-            "geosite:sanctioned"
+            "full:www.cloudflare.com"
           ],
           "finalQuery": true
         },
@@ -109,26 +107,9 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com",
-            "domain:dynx.pro"
+            "full:www.cloudflare.com"
           ],
           "finalQuery": true
-        },
-        {
-          "tag": "anti-sanction-dns",
-          "address": "localhost",
-          "domains": [
-            "geosite:sanctioned"
-          ],
-          "unexpectedIPs": [
-            "geoip:irgfw-all-injected-ips",
-            "0.0.0.0",
-            "::",
-            "127.0.0.1",
-            "::1"
-          ],
-          "timeoutMs": 2000,
-          "finalQuery": false
         },
         "1.1.1.1",
         {
@@ -791,12 +772,6 @@
           "port": 53
         },
         {
-          "outboundTag": "direct-out",
-          "inboundTag": [
-            "anti-sanction-dns"
-          ]
-        },
-        {
           "outboundTag": "full-fragment",
           "inboundTag": [
             "no-filter-dns"
@@ -815,12 +790,7 @@
           "domain": [
             "domain:ir",
             "geosite:private",
-            "geosite:ir",
-            "domain:dynx.pro"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
+            "geosite:ir"
           ]
         },
         {
@@ -845,76 +815,44 @@
           "network": "udp",
           "protocol": [
             "quic"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "443,2053,2083,2087,2096,8443"
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "network": "udp"
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "443,2053,2083,2087,2096,8443"
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "80,8080,8880,2052,2082,2086,2095"
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "network": "tcp"
         },
         {
           "outboundTag": "block-out",
@@ -1027,10 +965,10 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
+          "135.225.124.80",
           "4.223.106.240",
           "4.223.100.248",
-          "4.223.106.151",
-          "135.225.124.80"
+          "4.223.106.151"
         ]
       },
       "servers": [
@@ -1040,9 +978,7 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com",
-            "domain:dynx.pro",
-            "geosite:sanctioned"
+            "full:www.cloudflare.com"
           ],
           "finalQuery": true
         },
@@ -1058,26 +994,9 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com",
-            "domain:dynx.pro"
+            "full:www.cloudflare.com"
           ],
           "finalQuery": true
-        },
-        {
-          "tag": "anti-sanction-dns",
-          "address": "localhost",
-          "domains": [
-            "geosite:sanctioned"
-          ],
-          "unexpectedIPs": [
-            "geoip:irgfw-all-injected-ips",
-            "0.0.0.0",
-            "::",
-            "127.0.0.1",
-            "::1"
-          ],
-          "timeoutMs": 2000,
-          "finalQuery": false
         },
         "1.1.1.1",
         {
@@ -1740,12 +1659,6 @@
           "port": 53
         },
         {
-          "outboundTag": "direct-out",
-          "inboundTag": [
-            "anti-sanction-dns"
-          ]
-        },
-        {
           "outboundTag": "full-fragment",
           "inboundTag": [
             "no-filter-dns"
@@ -1764,12 +1677,7 @@
           "domain": [
             "domain:ir",
             "geosite:private",
-            "geosite:ir",
-            "domain:dynx.pro"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
+            "geosite:ir"
           ]
         },
         {
@@ -1808,76 +1716,44 @@
           "network": "udp",
           "protocol": [
             "quic"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "443,2053,2083,2087,2096,8443"
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "network": "udp"
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "443,2053,2083,2087,2096,8443"
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
-          ],
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "port": "80,8080,8880,2052,2082,2086,2095"
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp",
-          "ip": [
-            "0.0.0.0/0",
-            "::/0"
-          ]
+          "network": "tcp"
         },
         {
           "outboundTag": "block-out",
