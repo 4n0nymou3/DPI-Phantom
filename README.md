@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# Phantom Universal Chainer v6.2
+# Phantom Universal Chainer v7.0
 
 > یک ابزار تحت وب قدرتمند برای ترکیب (Chain) کانفیگ شخصی Xray شما با آخرین نسخه از موتور پیشرفته ضد-DPI، برای دستیابی به حداکثر پایداری و مقاومت در برابر فیلترینگ.
 
