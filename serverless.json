@@ -5,7 +5,7 @@
     "Patterniha telegram": "https://t.me/projectXhttp",
     "Patterniha donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
   },
-  "remarks": "Serverless",
+  "remarks": "Serverless-v14",
   "version": {
     "min": "25.9.5"
   },
@@ -25,12 +25,6 @@
   "dns": {
     "hosts": {
       "geosite:category-ads-all": "#3",
-      "one.one.one.one": [
-        "1.1.1.1",
-        "1.0.0.1",
-        "2606:4700:4700::1111",
-        "2606:4700:4700::1001"
-      ],
       "cloudflare-dns.com": "www.cloudflare.com"
     },
     "servers": [
@@ -71,7 +65,7 @@
       "port": 10853,
       "protocol": "tunnel",
       "settings": {
-        "address": "one.one.one.one",
+        "address": "127.0.0.1",
         "port": 53,
         "network": "tcp,udp"
       },
@@ -130,15 +124,11 @@
       "tag": "dns-out",
       "protocol": "dns",
       "settings": {
-        "nonIPQuery": "skip",
-        "network": "tcp",
-        "address": "one.one.one.one",
-        "port": 53
-      },
-      "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "full-fragment"
-        }
+        "nonIPQuery": "reject",
+        "blockTypes": [
+          0,
+          65
+        ]
       }
     },
     {
@@ -512,6 +502,16 @@
         ]
       },
       {
+        "outboundTag": "block-out",
+        "ip": [
+          "geoip:irgfw-block-injected-ips",
+          "0.0.0.0",
+          "::",
+          "198.18.0.0/15",
+          "fc00::/18"
+        ]
+      },
+      {
         "outboundTag": "dns-out",
         "inboundTag": [
           "dns-in"
@@ -528,14 +528,6 @@
         "outboundTag": "full-fragment",
         "inboundTag": [
           "no-filter-dns"
-        ]
-      },
-      {
-        "outboundTag": "block-out",
-        "ip": [
-          "geoip:irgfw-block-injected-ips",
-          "0.0.0.0",
-          "::"
         ]
       },
       {
