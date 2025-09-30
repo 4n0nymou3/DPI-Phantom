@@ -4,71 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phantom Universal Chainer</title>
-    <meta name="description" content="Combine your Xray JSON configs with Phantom Universal Chainer. Supports single proxy and multi-proxy (load balanced) configs.">
-    <meta name="keywords" content="Phantom, Universal Chainer, Xray, JSON config, proxy">
-    <meta name="author" content="Anonymous">
-    <meta name="robots" content="index, follow">
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/terminal.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="loading-screen"></div>
-    <div class="terminal-container">
-        <div class="terminal-header">
-            <div class="terminal-title">Phantom Universal Chainer</div>
+    <div id="particles-js" class="particles"></div>
+    <div class="container">
+        <h1>Phantom Universal Chainer <span class="version-tag">v7.0</span></h1>
+        <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
+        
+        <div class="textarea-container">
+            <div class="line-numbers" id="jsonInputLineNumbers">1</div>
+            <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
         </div>
-        <div class="terminal-content">
-            <div class="version-info">
-                <div class="badge-container">
-                    <img src="https://img.shields.io/badge/version-7.5-blue.svg?cacheSeconds=2592000" alt="Version" class="badge" />
-                </div>
-            </div>
-            <div class="terminal-section">
-                <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
-                <div class="terminal-actions">
-                    <button id="pasteButton" class="glow-button secondary">Paste from Clipboard</button>
-                </div>
-                <div id="jsonConfigInput" class="terminal-editor"></div>
-            </div>
-            <div class="terminal-section">
-                <p>Forced Route IPs & Domains:</p>
-                <div id="ipInput" class="terminal-editor ip-input-height"></div>
-            </div>
-            <div class="terminal-section">
-                <label class="checkbox-wrapper">
-                    <input type="checkbox" id="routeAllCheckbox" />
-                    Route All Traffic Through Config
-                </label>
-            </div>
-            <div class="terminal-actions">
-                <button id="generateButton" class="glow-button primary">Generate Combined Config</button>
-                <button id="clearButton" class="glow-button secondary" disabled>Clear</button>
-            </div>
-            <div id="loading" class="loading-container">
-                <div class="terminal-loading"></div>
-            </div>
-            <div id="error" class="terminal-error"></div>
-            <div class="terminal-section">
-                <h3>Result: <span id="configCounter"></span></h3>
-                <div id="outputJson" class="terminal-editor"></div>
-            </div>
-            <div class="terminal-actions">
-                <button id="copyButton" class="glow-button secondary">Copy to Clipboard</button>
-            </div>
+
+        <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs & Domains:</h3>
+        <div class="textarea-container">
+            <div class="line-numbers" id="ipInputLineNumbers">1</div>
+            <textarea id="ipInput" rows="6"></textarea>
         </div>
-        <div class="terminal-footer">
-            Designed by Anonymous
+        
+        <div class="checkbox-container">
+            <input type="checkbox" id="routeAllCheckbox" name="routeAll">
+            <label for="routeAllCheckbox">Route All Traffic Through Config</label>
         </div>
+
+        <div class="button-container">
+            <button id="generateButton"><i class="fas fa-cogs"></i> Generate Combined Config</button>
+            <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear All</button>
+        </div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result: <span id="configCounter"></span></h3>
+        <div class="textarea-container">
+            <div class="line-numbers" id="outputLineNumbers">1</div>
+            <textarea id="outputJson" readonly>Your combined JSON config will appear here...</textarea>
+        </div>
+        
+        <div class="button-container">
+            <button id="copyButton"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+        </div>
+        
+        <footer>
+            Designed by: Anonymous
+        </footer>
     </div>
 
-    <script src="js/editor-init.js"></script>
-    <script src="js/script.js"></script>
-    <script>
-        setTimeout(() => {
-            document.querySelector('.loading-screen').style.display = 'none';
-        }, 1000);
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js" defer></script>
+    <script src="js/script.js" defer></script>
 </body>
 </html>
