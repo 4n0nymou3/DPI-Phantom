@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+* {
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+.ace_editor {
+    font-family: 'IBM Plex Mono', monospace !important;
+    background-color: var(--terminal-input-bg) !important;
+}
+
+.ace_content {
+    font-family: 'IBM Plex Mono', monospace !important;
+    background-color: var(--terminal-input-bg) !important;
+}
+
+.ace_gutter {
+    background-color: var(--terminal-bg) !important;
+    color: var(--terminal-text) !important;
+}
+
+.ace_cursor {
+    border-left: 2px solid var(--terminal-text) !important;
+}
+
+.ace_marker-layer .ace_selection {
+    background: rgba(122, 162, 247, 0.3) !important;
+}
+
+.loading-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.terminal-loading {
+    width: 20px;
+    height: 20px;
+    border: 2px solid transparent;
+    border-top-color: var(--terminal-purple);
+    border-right-color: var(--terminal-blue);
+    border-radius: 50%;
+    animation: loading-spin 0.8s linear infinite;
+}
+
+@keyframes loading-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
