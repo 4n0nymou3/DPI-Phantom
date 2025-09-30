@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const jsonConfigInput = document.getElementById('jsonConfigInput');
+    const ipInput = document.getElementById('ipInput');
     const generateButton = document.getElementById('generateButton');
+    const outputJson = document.getElementById('outputJson');
     const copyButton = document.getElementById('copyButton');
     const clearButton = document.getElementById('clearButton');
-    const pasteButton = document.getElementById('pasteButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
     const configCounter = document.getElementById('configCounter');
-    const errorDiv = document.getElementById('error');
-    const loadingDiv = document.getElementById('loading');
     
+    const jsonInputLineNumbers = document.getElementById('jsonInputLineNumbers');
+    const ipInputLineNumbers = document.getElementById('ipInputLineNumbers');
+    const outputLineNumbers = document.getElementById('outputLineNumbers');
+
     const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless.json';
     const defaultForcedRouteIPs = [
         "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
@@ -17,10 +21,142 @@ document.addEventListener('DOMContentLoaded', () => {
         "2001:b28:f23f::/48", "2a0a:f280:203::/48"
     ];
 
-    function setDefaultIPs() {
-        if (window.ipInputEditor) {
-            window.ipInputEditor.setValue(defaultForcedRouteIPs.join('\n'), -1);
+    function updateLineNumbers(textarea, lineNumbersDiv) {
+        const lines = textarea.value.split('\n');
+        const lineCount = lines.length;
+        let lineNumbers = '';
+        for (let i = 1; i <= lineCount; i++) {
+            lineNumbers += i + '\n';
         }
+        lineNumbersDiv.textContent = lineNumbers;
+    }
+
+    function updateOutputLineNumbers(text) {
+        const lines = text.split('\n');
+        const lineCount = lines.length;
+        let lineNumbers = '';
+        for (let i = 1; i <= lineCount; i++) {
+            lineNumbers += i + '\n';
+        }
+        outputLineNumbers.textContent = lineNumbers;
+    }
+
+    function syncScroll(textarea, lineNumbersDiv) {
+        lineNumbersDiv.scrollTop = textarea.scrollTop;
+    }
+
+    function initParticles() {
+        if (typeof particlesJS !== 'undefined') {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": {
+                        "value": 100,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#ffffff"
+                    },
+                    "shape": {
+                        "type": "circle",
+                        "stroke": {
+                            "width": 0,
+                            "color": "#000000"
+                        },
+                        "polygon": {
+                            "nb_sides": 5
+                        }
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": false,
+                        "anim": {
+                            "enable": false,
+                            "speed": 1,
+                            "opacity_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true,
+                        "anim": {
+                            "enable": false,
+                            "speed": 40,
+                            "size_min": 0.1,
+                            "sync": false
+                        }
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#ffffff",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 6,
+                        "direction": "none",
+                        "random": false,
+                        "straight": false,
+                        "out_mode": "out",
+                        "bounce": false,
+                        "attract": {
+                            "enable": false,
+                            "rotateX": 600,
+                            "rotateY": 1200
+                        }
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "repulse"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        },
+                        "resize": true
+                    },
+                    "modes": {
+                        "grab": {
+                            "distance": 400,
+                            "line_linked": {
+                                "opacity": 1
+                            }
+                        },
+                        "bubble": {
+                            "distance": 400,
+                            "size": 40,
+                            "duration": 2,
+                            "opacity": 8
+                        },
+                        "repulse": {
+                            "distance": 200,
+                            "duration": 0.4
+                        },
+                        "push": {
+                            "particles_nb": 4
+                        },
+                        "remove": {
+                            "particles_nb": 2
+                        }
+                    }
+                },
+                "retina_detect": true
+            });
+        }
+    }
+
+    function setDefaultIPs() {
+        ipInput.value = defaultForcedRouteIPs.join('\n');
+        updateLineNumbers(ipInput, ipInputLineNumbers);
     }
 
     function isDomain(str) {
@@ -33,37 +169,61 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(withoutComments);
     }
 
-    function showLoading(show) {
-        if (show) {
-            loadingDiv.style.display = 'flex';
-            generateButton.disabled = true;
-        } else {
-            loadingDiv.style.display = 'none';
-            generateButton.disabled = false;
-        }
-    }
+    jsonConfigInput.addEventListener('input', () => {
+        updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+    });
+
+    jsonConfigInput.addEventListener('scroll', () => {
+        syncScroll(jsonConfigInput, jsonInputLineNumbers);
+    });
+
+    ipInput.addEventListener('input', () => {
+        updateLineNumbers(ipInput, ipInputLineNumbers);
+    });
+
+    ipInput.addEventListener('scroll', () => {
+        syncScroll(ipInput, ipInputLineNumbers);
+    });
+
+    outputJson.addEventListener('scroll', () => {
+        syncScroll(outputJson, outputLineNumbers);
+    });
 
     generateButton.addEventListener('click', async () => {
-        const jsonInput = window.jsonConfigEditor.getValue().trim();
+        const jsonInput = jsonConfigInput.value.trim();
         const routeAll = routeAllCheckbox.checked;
         let userConfig;
+        outputJson.value = '';
+        const loadingContainer = document.body;
+        loadingContainer.classList.add('loading');
         
-        window.outputEditor.setValue('', -1);
-        errorDiv.textContent = '';
-        showLoading(true);
+        let existingLoader = loadingContainer.querySelector('.loader-container');
+        if (!existingLoader) {
+            const loader = document.createElement('div');
+            loader.className = 'loader-container';
+            loader.innerHTML = '<div class="spinny-loader"><div class="spinny-circle"></div></div>';
+            loadingContainer.appendChild(loader);
+        }
+        outputLineNumbers.textContent = '1';
         configCounter.textContent = '';
 
         try {
             userConfig = parseJsonc(jsonInput);
         } catch (error) {
-            showLoading(false);
-            errorDiv.textContent = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: Input is not a valid JSON or JSONC. Please check the config format.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
         if (!userConfig.outbounds || !userConfig.routing) {
-            showLoading(false);
-            errorDiv.textContent = 'Error: Input config is incomplete. The `outbounds` and `routing` sections are required.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: Input config is incomplete. The `outbounds` and `routing` sections are required.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -71,35 +231,57 @@ document.addEventListener('DOMContentLoaded', () => {
         const mainBalancerOriginalTag = 'proxy-round';
         const singleProxyOriginalTag = 'proxy';
         const isLoadBalanced = Array.isArray(userConfig.routing.balancers) && userConfig.routing.balancers.length > 0;
+        
         const userBalancer = userConfig.routing.balancers?.find(b => b.tag === mainBalancerOriginalTag);
 
         if (userBalancer && userBalancer.selector && Array.isArray(userConfig.outbounds)) {
             const selectors = userBalancer.selector.filter(s => !s.startsWith('!'));
             userConfig.outbounds.forEach(outbound => {
-                if (outbound.tag && selectors.some(s => outbound.tag.startsWith(s))) configCount++;
+                if (outbound.tag && selectors.some(s => outbound.tag.startsWith(s))) {
+                    configCount++;
+                }
             });
         }
-        if (configCount === 0 && userConfig.outbounds?.find(o => o.tag === singleProxyOriginalTag)) {
-            configCount = 1;
+        
+        if (configCount === 0) {
+            const singleProxy = userConfig.outbounds?.find(o => o.tag === singleProxyOriginalTag);
+            if (singleProxy) {
+                configCount = 1;
+            }
         }
+
         if (configCount > 0) {
             configCounter.textContent = `(${configCount} config${configCount > 1 ? 's' : ''} detected)`;
         }
 
-        if (isLoadBalanced && !userBalancer) {
-            showLoading(false);
-            errorDiv.textContent = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
-            return;
-        } else if (!isLoadBalanced && !userConfig.outbounds.find(o => o.tag === singleProxyOriginalTag)) {
-            showLoading(false);
-            errorDiv.textContent = `Error: Single config must contain a primary outbound with the tag "${singleProxyOriginalTag}".`;
-            return;
+        if (isLoadBalanced) {
+            if (!userBalancer) {
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
+                return;
+            }
+        } else {
+            const singleProxy = userConfig.outbounds.find(o => o.tag === singleProxyOriginalTag);
+            if (!singleProxy) {
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error: Single config must contain a primary outbound with the tag "${singleProxyOriginalTag}".`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
+                return;
+            }
         }
 
-        const routeItems = window.ipInputEditor.getValue().split('\n').map(item => item.trim()).filter(item => item);
+        const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
         if (routeItems.length === 0 && !routeAll) {
-            showLoading(false);
-            errorDiv.textContent = 'Error: The IP/Domain list cannot be empty when "Route All Traffic" is unchecked.';
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: The IP/Domain list cannot be empty when "Route All Traffic" is unchecked.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -108,10 +290,21 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(phantomConfigUrl);
             if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
             const configText = await response.text();
-            baseConfig = parseJsonc(configText);
+            try {
+                baseConfig = JSON.parse(configText);
+            } catch (jsonError) {
+                try {
+                    baseConfig = parseJsonc(configText);
+                } catch (jsoncError) {
+                    throw new Error('Failed to parse the fetched config as JSON or JSONC.');
+                }
+            }
         } catch (error) {
-            showLoading(false);
-            errorDiv.textContent = `Error fetching base config: ${error.message}`;
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = `Error fetching base config: ${error.message}\nPlease check your internet connection or the config URL.`;
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
             return;
         }
 
@@ -128,18 +321,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!newConfig.dns.servers) newConfig.dns.servers = [];
             if (!newConfig.outbounds) newConfig.outbounds = [];
             if (!newConfig.policy) newConfig.policy = {};
-            if (!newConfig.fakedns) newConfig.fakedns = [];
 
             const prefix = 'user-';
             const tagMap = new Map();
+
             const allUserTags = new Set();
             userConfigCopy.outbounds.forEach(o => allUserTags.add(o.tag));
-            if (isLoadBalanced) userConfigCopy.routing.balancers.forEach(b => allUserTags.add(b.tag));
-            allUserTags.forEach(tag => { if (tag) tagMap.set(tag, prefix + tag); });
+            if (isLoadBalanced) {
+                userConfigCopy.routing.balancers.forEach(b => allUserTags.add(b.tag));
+            }
+
+            allUserTags.forEach(tag => {
+                if (tag) tagMap.set(tag, prefix + tag);
+            });
 
             if (isLoadBalanced) {
-                const userProxySelector = userBalancer.selector[0];
+                const currentBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
+                const userProxySelector = currentBalancer.selector[0];
                 mainExitTag = tagMap.get(mainBalancerOriginalTag);
+
                 userConfigCopy.outbounds.forEach(o => {
                     if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
                     if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
@@ -149,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
                 userConfigCopy.routing.balancers.forEach(b => {
-                    if (b.tag) b.tag = tagMap.get(b.tag) || o.tag;
+                    if (b.tag) b.tag = tagMap.get(b.tag) || b.tag;
                     if (b.selector) b.selector = b.selector.map(s => s.startsWith('!') ? '!' + prefix + s.substring(1) : prefix + s);
                 });
             } else {
@@ -164,30 +364,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            if (userConfigCopy.observatory?.subjectSelector) {
+            if (userConfigCopy.observatory && userConfigCopy.observatory.subjectSelector) {
                 userConfigCopy.observatory.subjectSelector = userConfigCopy.observatory.subjectSelector.map(s => prefix + s);
             }
 
             const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
-            const insertionIndex = newConfig.routing.rules.findIndex(r => r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir'));
-            
+            const insertionIndex = newConfig.routing.rules.findIndex(r =>
+                r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
+            );
+
             if (routeAll) {
-                const rules = [{ type: 'field', network: 'tcp', ...ruleAction }, { type: 'field', network: 'udp', ...ruleAction }];
-                newConfig.routing.rules.splice(insertionIndex > -1 ? insertionIndex + 1 : 0, 0, ...rules);
+                const tcpCatchAll = { type: 'field', network: 'tcp', ...ruleAction };
+                const udpCatchAll = { type: 'field', network: 'udp', ...ruleAction };
+                if (insertionIndex > -1) {
+                    newConfig.routing.rules.splice(insertionIndex + 1, 0, tcpCatchAll, udpCatchAll);
+                } else {
+                    newConfig.routing.rules.push(tcpCatchAll, udpCatchAll);
+                }
             } else {
                 const rulesToAdd = [];
                 const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
                 const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
+
                 if (domainList.length > 0) rulesToAdd.push({ type: 'field', domain: domainList, ...ruleAction });
                 if (ipList.length > 0) rulesToAdd.push({ type: 'field', ip: ipList, ...ruleAction });
-                if (rulesToAdd.length > 0) newConfig.routing.rules.splice(insertionIndex > -1 ? insertionIndex + 1 : 0, 0, ...rulesToAdd);
+
+                if (rulesToAdd.length > 0) {
+                    if (insertionIndex > -1) {
+                         newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
+                    } else {
+                        const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
+                        newConfig.routing.rules.splice(lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0, 0, ...rulesToAdd);
+                    }
+                }
             }
 
             newConfig.outbounds.push(...userConfigCopy.outbounds);
-            if (isLoadBalanced) newConfig.routing.balancers.push(...userConfigCopy.routing.balancers);
-            
+            if (isLoadBalanced) {
+                newConfig.routing.balancers.push(...userConfigCopy.routing.balancers);
+            }
+
             if (userConfigCopy.dns) {
-                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts, ...userConfigCopy.dns.hosts };
+                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts,
+                    ...userConfigCopy.dns.hosts
+                };
                 if (userConfigCopy.dns.servers) {
                     const existingServers = new Set(newConfig.dns.servers.map(s => typeof s === 'string' ? s : s.address));
                     userConfigCopy.dns.servers.forEach(server => {
@@ -198,70 +418,90 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (userConfigCopy.policy) {
-                if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels, ...userConfigCopy.policy.levels };
-                if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system, ...userConfigCopy.system };
+                if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels,
+                    ...userConfigCopy.policy.levels
+                };
+                if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system,
+                    ...userConfigCopy.policy.system
+                };
             }
 
             if (userConfigCopy.fakedns) {
+                if (!newConfig.fakedns) newConfig.fakedns = [];
                 newConfig.fakedns.push(...userConfigCopy.fakedns);
             }
 
-            if (userConfigCopy.observatory) newConfig.observatory = { ...newConfig.observatory, ...userConfigCopy.observatory };
+            if (userConfigCopy.observatory) {
+                newConfig.observatory = { ...newConfig.observatory,
+                    ...userConfigCopy.observatory
+                };
+            }
             
-            newConfig.remarks = "👽 Anonymous Phantom + X Chain";
-            const finalJsonString = JSON.stringify(newConfig, null, 2);
-            window.outputEditor.setValue(finalJsonString, -1);
+            const finalRemarks = "👽 Anonymous Phantom + X Chain";
+            if (newConfig.remarks) {
+                newConfig.remarks = finalRemarks;
+            }
+
+            const finalConfigObjectForCopy = { ...newConfig };
+             if (!newConfig.remarks) {
+                finalConfigObjectForCopy.remarks = finalRemarks;
+                const { remarks, ...rest } = finalConfigObjectForCopy;
+                const reorderedObject = { remarks, ...rest };
+                const finalJsonStringToCopy = JSON.stringify(reorderedObject, null, 2);
+                outputJson.dataset.rawjson = finalJsonStringToCopy;
+             } else {
+                const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
+                outputJson.dataset.rawjson = finalJsonStringToCopy;
+             }
+
+            setTimeout(() => {
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                outputJson.value = outputJson.dataset.rawjson;
+                updateOutputLineNumbers(outputJson.dataset.rawjson);
+            }, 1000);
 
         } catch (error) {
-            errorDiv.textContent = `Error processing config: ${error.message}`;
-        } finally {
-            showLoading(false);
+            setTimeout(() => {
+                loadingContainer.classList.remove('loading');
+                loadingContainer.querySelector('.loader-container')?.remove();
+                const errorMessage = `Error processing config: ${error.message}\nPlease check the input format.`;
+                outputJson.value = errorMessage;
+                updateOutputLineNumbers(errorMessage);
+            }, 1000);
         }
     });
 
     copyButton.addEventListener('click', () => {
-        const textToCopy = window.outputEditor.getValue();
-        if (navigator.clipboard && textToCopy && !textToCopy.startsWith('Your combined')) {
+        const textToCopy = outputJson.dataset.rawjson || outputJson.value;
+        if (navigator.clipboard && textToCopy) {
             navigator.clipboard.writeText(textToCopy).then(() => {
-                copyButton.textContent = 'Copied!';
-                setTimeout(() => { copyButton.textContent = 'Copy to Clipboard'; }, 2000);
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyButton.innerHTML = originalText;
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy!');
             });
         }
     });
 
-    function clearAll() {
-        window.jsonConfigEditor.setValue('', -1);
-        window.outputEditor.setValue('Your combined JSON config will appear here...', -1);
-        routeAllCheckbox.checked = false;
-        errorDiv.textContent = '';
-        configCounter.textContent = '';
+    clearButton.addEventListener('click', () => {
+        jsonConfigInput.value = '';
+        updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
         setDefaultIPs();
-        clearButton.disabled = true;
-    }
-
-    clearButton.addEventListener('click', clearAll);
-
-    pasteButton.addEventListener('click', () => {
-        navigator.clipboard.readText().then(text => {
-            window.jsonConfigEditor.setValue(text, -1);
-            onInputChange();
-        }).catch(err => {
-            alert('Clipboard access denied. Please paste manually.');
-        });
+        routeAllCheckbox.checked = false;
+        outputJson.value = 'Your combined JSON config will appear here...';
+        outputJson.dataset.rawjson = '';
+        updateOutputLineNumbers('Your combined JSON config will appear here...');
+        configCounter.textContent = '';
     });
 
-    function onInputChange() {
-        const hasInput = window.jsonConfigEditor.getValue().trim() !== '' || window.ipInputEditor.getValue().trim() !== defaultForcedRouteIPs.join('\n');
-        clearButton.disabled = !hasInput;
-    }
-
-    window.addEventListener('load', () => {
-        if (window.jsonConfigEditor && window.ipInputEditor) {
-            setDefaultIPs();
-            window.jsonConfigEditor.on('input', onInputChange);
-            window.ipInputEditor.on('input', onInputChange);
-        } else {
-            console.error("ACE editors could not be initialized.");
-        }
-    });
+    setDefaultIPs();
+    updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+    
+    setTimeout(() => {
+        initParticles();
+    }, 500);
 });
