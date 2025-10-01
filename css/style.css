@@ -6,12 +6,12 @@
     --input-bg: rgba(30, 41, 59, 0.8);
     --button-bg: #00ffff;
     --button-hover-bg: #00cccc;
-    --button-copy-bg: #4facfe;
-    --button-copy-hover-bg: #00f2fe;
+    --button-copy-bg: #50fa7b;
+    --button-copy-hover-bg: #8affab;
     --button-clear-bg: #ff4b4b;
     --button-clear-hover-bg: #ff7878;
-    --button-paste-bg: #50fa7b;
-    --button-paste-hover-bg: #8affab;
+    --button-paste-bg: #4facfe;
+    --button-paste-hover-bg: #00f2fe;
     --footer-text-color: #a0a0a0;
     --json-key-color: #ff79c6;
     --json-string-color: #50fa7b;
@@ -93,16 +93,29 @@ p {
     margin-bottom: 30px;
 }
 
-.input-header-buttons {
+.input-header-buttons,
+.output-footer-buttons {
     display: flex;
     justify-content: flex-start;
     margin-bottom: 10px;
 }
 
-.input-header-buttons button {
+.output-footer-buttons {
+    margin-top: 25px;
+    margin-bottom: 0;
+}
+
+.input-header-buttons button,
+.output-footer-buttons button {
     padding: 8px 15px;
     font-size: 14px;
     border-radius: 8px;
+    box-shadow: none;
+}
+
+.input-header-buttons button:hover,
+.output-footer-buttons button:hover {
+    transform: translateY(-2px);
 }
 
 #pasteButton {
