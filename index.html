@@ -11,9 +11,13 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v7.1</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v7.2</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
+        <div class="input-header-buttons">
+            <button id="pasteButton"><i class="fas fa-paste"></i> Paste from Clipboard</button>
+        </div>
+
         <div class="textarea-container">
             <div class="line-numbers" id="jsonInputLineNumbers">1</div>
             <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
