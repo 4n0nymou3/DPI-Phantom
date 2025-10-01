@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }
             
-            const finalRemarks = "👽 Anonymous Phantom + X Chain";
+            const finalRemarks = routeAll ? 'Anonymous Phantom + X Chain (All)' : 'Anonymous Phantom + X Chain (Custom)';
             if (newConfig.remarks) {
                 newConfig.remarks = finalRemarks;
             }
