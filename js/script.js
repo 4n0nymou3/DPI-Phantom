@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputJson = document.getElementById('outputJson');
     const copyButton = document.getElementById('copyButton');
     const clearButton = document.getElementById('clearButton');
+    const pasteButton = document.getElementById('pasteButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
     const configCounter = document.getElementById('configCounter');
     
@@ -187,6 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     outputJson.addEventListener('scroll', () => {
         syncScroll(outputJson, outputLineNumbers);
+    });
+
+    pasteButton.addEventListener('click', () => {
+        if (navigator.clipboard) {
+            navigator.clipboard.readText().then(clipText => {
+                jsonConfigInput.value = clipText;
+                updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+            }).catch(err => {
+                alert('Failed to paste from clipboard.');
+            });
+        }
     });
 
     generateButton.addEventListener('click', async () => {
