@@ -101,7 +101,7 @@ p {
 }
 
 .output-footer-buttons {
-    margin-top: 25px;
+    margin-top: 10px;
     margin-bottom: 0;
 }
 
@@ -364,6 +364,16 @@ footer {
     margin-top: 40px;
     color: var(--footer-text-color);
     font-size: 14px;
+}
+
+footer a {
+    color: var(--title-color);
+    text-decoration: none;
+    transition: text-decoration 0.3s;
+}
+
+footer a:hover {
+    text-decoration: underline;
 }
 
 .json-key { color: var(--json-key-color); }
