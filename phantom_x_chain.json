@@ -84,8 +84,8 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
-          "4.223.100.248",
           "135.225.124.80",
+          "4.223.100.248",
           "4.223.106.240",
           "4.223.106.151"
         ]
@@ -104,7 +104,7 @@
         {
           "tag": "no-filter-dns",
           "address": "https://cloudflare-dns.com/dns-query",
-          "timeoutMs": 5000,
+          "timeoutMs": 10000,
           "finalQuery": true
         },
         {
@@ -211,7 +211,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "130",
-            "interval": "190",
+            "interval": "560",
             "maxSplit": "4"
           }
         },
@@ -228,7 +228,7 @@
           "fragment": {
             "packets": "2-4",
             "length": "1",
-            "interval": "1",
+            "interval": "4",
             "maxSplit": "130"
           }
         },
@@ -251,7 +251,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "1",
-            "interval": "1",
+            "interval": "4",
             "maxSplit": "517"
           }
         },
@@ -961,8 +961,8 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
-          "4.223.100.248",
           "135.225.124.80",
+          "4.223.100.248",
           "4.223.106.240",
           "4.223.106.151"
         ]
@@ -981,7 +981,7 @@
         {
           "tag": "no-filter-dns",
           "address": "https://cloudflare-dns.com/dns-query",
-          "timeoutMs": 5000,
+          "timeoutMs": 10000,
           "finalQuery": true
         },
         {
@@ -1088,7 +1088,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "130",
-            "interval": "190",
+            "interval": "560",
             "maxSplit": "4"
           }
         },
@@ -1105,7 +1105,7 @@
           "fragment": {
             "packets": "2-4",
             "length": "1",
-            "interval": "1",
+            "interval": "4",
             "maxSplit": "130"
           }
         },
@@ -1128,7 +1128,7 @@
           "fragment": {
             "packets": "1-1",
             "length": "1",
-            "interval": "1",
+            "interval": "4",
             "maxSplit": "517"
           }
         },
