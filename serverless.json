@@ -1,11 +1,11 @@
 {
   "__Credits__": {
     "Anonymous repository": "https://github.com/4n0nymou3/DPI-Phantom",
-    "Patterniha repository": "https://github.com/patterniha/Serverless-for-Iran",
-    "Patterniha telegram": "https://t.me/projectXhttp",
-    "Patterniha donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
+    "repository": "https://github.com/patterniha/Serverless-for-Iran",
+    "telegram": "https://t.me/projectXhttp",
+    "donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
   },
-  "remarks": "Serverless-v14",
+  "remarks": "Serverless-v16",
   "version": {
     "min": "25.9.5"
   },
@@ -41,7 +41,7 @@
       {
         "tag": "no-filter-dns",
         "address": "https://cloudflare-dns.com/dns-query",
-        "timeoutMs": 5000,
+        "timeoutMs": 10000,
         "finalQuery": true
       },
       {
@@ -138,7 +138,7 @@
         "fragment": {
           "packets": "1-1",
           "length": "130",
-          "interval": "190",
+          "interval": "560",
           "maxSplit": "4"
         }
       },
@@ -155,7 +155,7 @@
         "fragment": {
           "packets": "2-4",
           "length": "1",
-          "interval": "1",
+          "interval": "4",
           "maxSplit": "130"
         }
       },
@@ -178,7 +178,7 @@
         "fragment": {
           "packets": "1-1",
           "length": "1",
-          "interval": "1",
+          "interval": "4",
           "maxSplit": "517"
         }
       },
