@@ -240,11 +240,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let configCount = 0;
-        const mainBalancerOriginalTag = 'proxy-round';
         const singleProxyOriginalTag = 'proxy';
+        const mainBalancerOriginalTags = ['proxy-round', 'all'];
         const isLoadBalanced = Array.isArray(userConfig.routing.balancers) && userConfig.routing.balancers.length > 0;
         
-        const userBalancer = userConfig.routing.balancers?.find(b => b.tag === mainBalancerOriginalTag);
+        let userBalancer = null;
+        if (isLoadBalanced) {
+            userBalancer = userConfig.routing.balancers?.find(b => mainBalancerOriginalTags.includes(b.tag));
+        }
 
         if (userBalancer && userBalancer.selector && Array.isArray(userConfig.outbounds)) {
             const selectors = userBalancer.selector.filter(s => !s.startsWith('!'));
@@ -270,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!userBalancer) {
                 loadingContainer.classList.remove('loading');
                 loadingContainer.querySelector('.loader-container')?.remove();
-                const errorMessage = `Error: Load-balanced config must contain a balancer with the tag "${mainBalancerOriginalTag}".`;
+                const errorMessage = `Error: Load-balanced config must contain a balancer with one of the following tags: "${mainBalancerOriginalTags.join(', ')}".`;
                 outputJson.value = errorMessage;
                 updateOutputLineNumbers(errorMessage);
                 return;
@@ -348,8 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (isLoadBalanced) {
-                const currentBalancer = userConfigCopy.routing.balancers.find(b => b.tag === mainBalancerOriginalTag);
-                const userProxySelector = currentBalancer.selector[0];
+                const mainBalancerOriginalTag = userBalancer.tag;
+                const userProxySelector = userBalancer.selector[0];
                 mainExitTag = tagMap.get(mainBalancerOriginalTag);
 
                 userConfigCopy.outbounds.forEach(o => {
