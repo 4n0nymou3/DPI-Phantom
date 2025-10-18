@@ -1,13 +1,12 @@
 {
   "__Credits__": {
-    "Anonymous repository": "https://github.com/4n0nymou3/DPI-Phantom",
-    "Patterniha repository": "https://github.com/patterniha/Serverless-for-Iran",
-    "Patterniha telegram": "https://t.me/projectXhttp",
-    "Patterniha donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
+    "repository": "https://github.com/patterniha/Serverless-for-Iran",
+    "telegram": "https://t.me/projectXhttp",
+    "donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
   },
-  "remarks": "Serverless-v16",
+  "remarks": "Serverless-v17",
   "version": {
-    "min": "25.9.5"
+    "min": "25.10.15"
   },
   "log": {
     "loglevel": "warning",
@@ -25,7 +24,7 @@
   "dns": {
     "hosts": {
       "geosite:category-ads-all": "#3",
-      "cloudflare-dns.com": "www.cloudflare.com"
+      "cloudflare-dns.com": "challenges.cloudflare.com"
     },
     "servers": [
       {
@@ -34,7 +33,7 @@
           "domain:ir",
           "geosite:private",
           "geosite:ir",
-          "full:www.cloudflare.com"
+          "full:challenges.cloudflare.com"
         ],
         "finalQuery": true
       },
@@ -50,7 +49,7 @@
           "domain:ir",
           "geosite:private",
           "geosite:ir",
-          "full:www.cloudflare.com"
+          "full:challenges.cloudflare.com"
         ],
         "finalQuery": true
       }
@@ -497,18 +496,12 @@
     "rules": [
       {
         "outboundTag": "block-out",
-        "domain": [
-          "geosite:category-ads-all"
-        ]
+        "port": 0
       },
       {
         "outboundTag": "block-out",
-        "ip": [
-          "geoip:irgfw-block-injected-ips",
-          "0.0.0.0",
-          "::",
-          "198.18.0.0/15",
-          "fc00::/18"
+        "domain": [
+          "geosite:category-ads-all"
         ]
       },
       {
@@ -531,11 +524,25 @@
         ]
       },
       {
+        "outboundTag": "block-out",
+        "ip": [
+          "geoip:irgfw-block-injected-ips",
+          "0.0.0.0",
+          "::",
+          "198.18.0.0/15",
+          "fc00::/18"
+        ]
+      },
+      {
         "outboundTag": "direct-out",
         "domain": [
           "domain:ir",
           "geosite:private",
           "geosite:ir"
+        ],
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
         ]
       },
       {
@@ -550,48 +557,80 @@
         "network": "udp",
         "protocol": [
           "quic"
+        ],
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
         ]
       },
       {
         "outboundTag": "udp-noises",
         "network": "udp",
-        "port": "443,2053,2083,2087,2096,8443"
+        "port": "443,2053,2083,2087,2096,8443",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
       },
       {
         "outboundTag": "direct-out",
-        "network": "udp"
+        "network": "udp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
       },
       {
         "outboundTag": "full-fragment",
         "network": "tcp",
         "protocol": [
           "tls"
+        ],
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
         ]
       },
       {
         "outboundTag": "full-fragment",
         "network": "tcp",
-        "port": "443,2053,2083,2087,2096,8443"
+        "port": "443,2053,2083,2087,2096,8443",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
       },
       {
         "outboundTag": "full-fragment",
         "network": "tcp",
         "protocol": [
           "http"
+        ],
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
         ]
       },
       {
         "outboundTag": "full-fragment",
         "network": "tcp",
-        "port": "80,8080,8880,2052,2082,2086,2095"
+        "port": "80,8080,8880,2052,2082,2086,2095",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
       },
       {
         "outboundTag": "full-fragment",
-        "network": "tcp"
+        "network": "tcp",
+        "ip": [
+          "0.0.0.0/0",
+          "::/0"
+        ]
       },
       {
         "outboundTag": "block-out",
-        "network": "tcp,udp"
+        "port": "0-65535"
       }
     ]
   }
