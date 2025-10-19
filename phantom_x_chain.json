@@ -8,7 +8,7 @@
     },
     "remarks": "Anonymous Phantom + X Chain (All)",
     "version": {
-      "min": "25.9.5"
+      "min": "25.10.15"
     },
     "log": {
       "loglevel": "warning",
@@ -84,10 +84,10 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
-          "135.225.124.80",
-          "4.223.100.248",
           "4.223.106.240",
-          "4.223.106.151"
+          "4.223.100.248",
+          "4.223.106.151",
+          "135.225.124.80"
         ]
       },
       "servers": [
@@ -97,7 +97,7 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com"
+            "full:challenges.cloudflare.com"
           ],
           "finalQuery": true
         },
@@ -113,11 +113,11 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com"
+            "full:challenges.cloudflare.com"
           ],
           "finalQuery": true
         },
-        "8.8.8.8",
+        "https://my-doh-proxy.moein-alimoradian-5be.workers.dev/dns-query",
         {
           "address": "1.1.1.2",
           "domains": [
@@ -742,18 +742,12 @@
       "rules": [
         {
           "outboundTag": "block-out",
-          "domain": [
-            "geosite:category-ads-all"
-          ]
+          "port": 0
         },
         {
           "outboundTag": "block-out",
-          "ip": [
-            "geoip:irgfw-block-injected-ips",
-            "0.0.0.0",
-            "::",
-            "198.18.0.0/15",
-            "fc00::/18"
+          "domain": [
+            "geosite:category-ads-all"
           ]
         },
         {
@@ -776,11 +770,25 @@
           ]
         },
         {
+          "outboundTag": "block-out",
+          "ip": [
+            "geoip:irgfw-block-injected-ips",
+            "0.0.0.0",
+            "::",
+            "198.18.0.0/15",
+            "fc00::/18"
+          ]
+        },
+        {
           "outboundTag": "direct-out",
           "domain": [
             "domain:ir",
             "geosite:private",
             "geosite:ir"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
@@ -805,48 +813,80 @@
           "network": "udp",
           "protocol": [
             "quic"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp"
+          "network": "udp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095"
+          "port": "80,8080,8880,2052,2082,2086,2095",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp"
+          "network": "tcp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "block-out",
-          "network": "tcp,udp"
+          "port": "0-65535"
         }
       ],
       "balancers": [
@@ -885,7 +925,7 @@
     },
     "remarks": "Anonymous Phantom + X Chain (Telegram)",
     "version": {
-      "min": "25.9.5"
+      "min": "25.10.15"
     },
     "log": {
       "loglevel": "warning",
@@ -961,10 +1001,10 @@
           "2a02:6b8:0:1::feed:0ff"
         ],
         "azure-sto.edgeservers.org": [
-          "135.225.124.80",
-          "4.223.100.248",
           "4.223.106.240",
-          "4.223.106.151"
+          "4.223.100.248",
+          "4.223.106.151",
+          "135.225.124.80"
         ]
       },
       "servers": [
@@ -974,7 +1014,7 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com"
+            "full:challenges.cloudflare.com"
           ],
           "finalQuery": true
         },
@@ -990,11 +1030,11 @@
             "domain:ir",
             "geosite:private",
             "geosite:ir",
-            "full:www.cloudflare.com"
+            "full:challenges.cloudflare.com"
           ],
           "finalQuery": true
         },
-        "8.8.8.8",
+        "https://my-doh-proxy.moein-alimoradian-5be.workers.dev/dns-query",
         {
           "address": "1.1.1.2",
           "domains": [
@@ -1619,18 +1659,12 @@
       "rules": [
         {
           "outboundTag": "block-out",
-          "domain": [
-            "geosite:category-ads-all"
-          ]
+          "port": 0
         },
         {
           "outboundTag": "block-out",
-          "ip": [
-            "geoip:irgfw-block-injected-ips",
-            "0.0.0.0",
-            "::",
-            "198.18.0.0/15",
-            "fc00::/18"
+          "domain": [
+            "geosite:category-ads-all"
           ]
         },
         {
@@ -1653,11 +1687,25 @@
           ]
         },
         {
+          "outboundTag": "block-out",
+          "ip": [
+            "geoip:irgfw-block-injected-ips",
+            "0.0.0.0",
+            "::",
+            "198.18.0.0/15",
+            "fc00::/18"
+          ]
+        },
+        {
           "outboundTag": "direct-out",
           "domain": [
             "domain:ir",
             "geosite:private",
             "geosite:ir"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
@@ -1696,48 +1744,80 @@
           "network": "udp",
           "protocol": [
             "quic"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "udp-noises",
           "network": "udp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "direct-out",
-          "network": "udp"
+          "network": "udp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "tls"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "443,2053,2083,2087,2096,8443"
+          "port": "443,2053,2083,2087,2096,8443",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
           "protocol": [
             "http"
+          ],
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
           ]
         },
         {
           "outboundTag": "full-fragment",
           "network": "tcp",
-          "port": "80,8080,8880,2052,2082,2086,2095"
+          "port": "80,8080,8880,2052,2082,2086,2095",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "full-fragment",
-          "network": "tcp"
+          "network": "tcp",
+          "ip": [
+            "0.0.0.0/0",
+            "::/0"
+          ]
         },
         {
           "outboundTag": "block-out",
-          "network": "tcp,udp"
+          "port": "0-65535"
         }
       ],
       "balancers": [
