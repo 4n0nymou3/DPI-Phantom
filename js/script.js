@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clearButton');
     const pasteButton = document.getElementById('pasteButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
+    const customNameCheckbox = document.getElementById('customNameCheckbox');
+    const customNameInput = document.getElementById('customNameInput');
+    const customNameInputContainer = document.getElementById('customNameInputContainer');
     const configCounter = document.getElementById('configCounter');
     
     const jsonInputLineNumbers = document.getElementById('jsonInputLineNumbers');
@@ -170,6 +173,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(withoutComments);
     }
 
+    customNameCheckbox.addEventListener('change', () => {
+        if (customNameCheckbox.checked) {
+            customNameInput.disabled = false;
+            customNameInputContainer.classList.add('active');
+        } else {
+            customNameInput.disabled = true;
+            customNameInputContainer.classList.remove('active');
+        }
+    });
+
     jsonConfigInput.addEventListener('input', () => {
         updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
     });
@@ -204,6 +217,8 @@ document.addEventListener('DOMContentLoaded', () => {
     generateButton.addEventListener('click', async () => {
         const jsonInput = jsonConfigInput.value.trim();
         const routeAll = routeAllCheckbox.checked;
+        const useCustomName = customNameCheckbox.checked;
+        const customName = customNameInput.value.trim();
         let userConfig;
         outputJson.value = '';
         const loadingContainer = document.body;
@@ -218,6 +233,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         outputLineNumbers.textContent = '1';
         configCounter.textContent = '';
+
+        if (useCustomName && customName === '') {
+            loadingContainer.classList.remove('loading');
+            loadingContainer.querySelector('.loader-container')?.remove();
+            const errorMessage = 'Error: Please enter a custom config name or uncheck the "Use Custom Config Name" option.';
+            outputJson.value = errorMessage;
+            updateOutputLineNumbers(errorMessage);
+            return;
+        }
 
         try {
             userConfig = parseJsonc(jsonInput);
@@ -452,7 +476,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
             }
             
-            const finalRemarks = routeAll ? 'Anonymous Phantom + X Chain (All)' : 'Anonymous Phantom + X Chain (Custom)';
+            let finalRemarks;
+            if (useCustomName) {
+                finalRemarks = customName;
+            } else {
+                finalRemarks = routeAll ? 'Anonymous Phantom + X Chain (All)' : 'Anonymous Phantom + X Chain (Custom)';
+            }
+            
             if (newConfig.remarks) {
                 newConfig.remarks = finalRemarks;
             }
@@ -507,6 +537,10 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
         setDefaultIPs();
         routeAllCheckbox.checked = false;
+        customNameCheckbox.checked = false;
+        customNameInput.value = '';
+        customNameInput.disabled = true;
+        customNameInputContainer.classList.remove('active');
         outputJson.value = 'Your combined JSON config will appear here...';
         outputJson.dataset.rawjson = '';
         updateOutputLineNumbers('Your combined JSON config will appear here...');
