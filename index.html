@@ -11,7 +11,7 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v9.0</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v9.1</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
         <div class="input-header-buttons">
@@ -29,9 +29,18 @@
             <textarea id="ipInput" rows="6"></textarea>
         </div>
         
-        <div class="checkbox-container">
-            <input type="checkbox" id="routeAllCheckbox" name="routeAll">
-            <label for="routeAllCheckbox">Route All Traffic Through Config</label>
+        <div class="checkbox-container-left">
+            <div class="checkbox-item">
+                <input type="checkbox" id="routeAllCheckbox" name="routeAll">
+                <label for="routeAllCheckbox">Route All Traffic Through Config</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="customNameCheckbox" name="customName">
+                <label for="customNameCheckbox">Use Custom Config Name</label>
+            </div>
+            <div class="custom-name-input-container" id="customNameInputContainer">
+                <input type="text" id="customNameInput" placeholder="Enter your custom config name here..." disabled>
+            </div>
         </div>
 
         <div class="button-container">
