@@ -382,15 +382,21 @@ footer a:hover {
 .json-boolean { color: var(--json-boolean-color); }
 .json-null { color: var(--json-null-color); }
 
-.checkbox-container {
+.checkbox-container-left {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
+    align-items: flex-start;
     margin-top: 25px;
     gap: 15px;
 }
 
-.checkbox-container input {
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-item input {
     appearance: none;
     width: 20px;
     height: 20px;
@@ -400,14 +406,15 @@ footer a:hover {
     cursor: pointer;
     position: relative;
     transition: background 0.3s, border-color 0.3s;
+    flex-shrink: 0;
 }
 
-.checkbox-container input:checked {
+.checkbox-item input:checked {
     background: var(--title-color);
     border-color: var(--title-color);
 }
 
-.checkbox-container input:checked::before {
+.checkbox-item input:checked::before {
     content: '\f00c';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
@@ -419,9 +426,47 @@ footer a:hover {
     font-size: 12px;
 }
 
-.checkbox-container label {
+.checkbox-item label {
     cursor: pointer;
     font-size: 16px;
+}
+
+.custom-name-input-container {
+    width: 100%;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.custom-name-input-container.active {
+    opacity: 1;
+}
+
+.custom-name-input-container input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    background: var(--input-bg);
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    box-sizing: border-box;
+}
+
+.custom-name-input-container input:focus {
+    border-color: var(--title-color);
+    box-shadow: 0 0 10px var(--title-color);
+}
+
+.custom-name-input-container input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.custom-name-input-container input::placeholder {
+    color: #888;
 }
 
 .loader-container {
@@ -526,5 +571,13 @@ body.loading::before {
     .line-numbers {
         padding: 15px 5px;
         min-width: 35px;
+    }
+    
+    .checkbox-container-left {
+        align-items: stretch;
+    }
+    
+    .custom-name-input-container input {
+        width: 100%;
     }
 }
