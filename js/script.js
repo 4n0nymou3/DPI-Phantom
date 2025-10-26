@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clearButton');
     const pasteButton = document.getElementById('pasteButton');
     const routeAllCheckbox = document.getElementById('routeAllCheckbox');
+    const dualConfigToggle = document.getElementById('dualConfigToggle');
     const customNameCheckbox = document.getElementById('customNameCheckbox');
     const customNameInput = document.getElementById('customNameInput');
     const customNameInputContainer = document.getElementById('customNameInputContainer');
@@ -173,6 +174,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return JSON.parse(withoutComments);
     }
 
+    dualConfigToggle.addEventListener('change', () => {
+        if (dualConfigToggle.checked) {
+            routeAllCheckbox.disabled = true;
+        } else {
+            routeAllCheckbox.disabled = false;
+        }
+    });
+
     customNameCheckbox.addEventListener('change', () => {
         if (customNameCheckbox.checked) {
             customNameInput.disabled = false;
@@ -217,6 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     generateButton.addEventListener('click', async () => {
         const jsonInput = jsonConfigInput.value.trim();
         const routeAll = routeAllCheckbox.checked;
+        const generateDual = dualConfigToggle.checked;
         const useCustomName = customNameCheckbox.checked;
         const customName = customNameInput.value.trim();
         let userConfig;
@@ -315,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const routeItems = ipInput.value.split('\n').map(item => item.trim()).filter(item => item);
-        if (routeItems.length === 0 && !routeAll) {
+        if (routeItems.length === 0 && !routeAll && !generateDual) {
             loadingContainer.classList.remove('loading');
             loadingContainer.querySelector('.loader-container')?.remove();
             const errorMessage = 'Error: The IP/Domain list cannot be empty when "Route All Traffic" is unchecked.';
@@ -348,162 +358,174 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
-            let newConfig = JSON.parse(JSON.stringify(baseConfig));
-            const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
-            let mainExitTag = '';
+            function createSingleConfig(routeAllTraffic) {
+                let newConfig = JSON.parse(JSON.stringify(baseConfig));
+                const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
+                let mainExitTag = '';
 
-            if (!newConfig.routing) newConfig.routing = {};
-            if (!newConfig.routing.rules) newConfig.routing.rules = [];
-            if (!newConfig.routing.balancers) newConfig.routing.balancers = [];
-            if (!newConfig.dns) newConfig.dns = {};
-            if (!newConfig.dns.hosts) newConfig.dns.hosts = {};
-            if (!newConfig.dns.servers) newConfig.dns.servers = [];
-            if (!newConfig.outbounds) newConfig.outbounds = [];
-            if (!newConfig.policy) newConfig.policy = {};
+                if (!newConfig.routing) newConfig.routing = {};
+                if (!newConfig.routing.rules) newConfig.routing.rules = [];
+                if (!newConfig.routing.balancers) newConfig.routing.balancers = [];
+                if (!newConfig.dns) newConfig.dns = {};
+                if (!newConfig.dns.hosts) newConfig.dns.hosts = {};
+                if (!newConfig.dns.servers) newConfig.dns.servers = [];
+                if (!newConfig.outbounds) newConfig.outbounds = [];
+                if (!newConfig.policy) newConfig.policy = {};
 
-            const prefix = 'user-';
-            const tagMap = new Map();
+                const prefix = 'user-';
+                const tagMap = new Map();
 
-            const allUserTags = new Set();
-            userConfigCopy.outbounds.forEach(o => allUserTags.add(o.tag));
-            if (isLoadBalanced) {
-                userConfigCopy.routing.balancers.forEach(b => allUserTags.add(b.tag));
-            }
+                const allUserTags = new Set();
+                userConfigCopy.outbounds.forEach(o => allUserTags.add(o.tag));
+                if (isLoadBalanced) {
+                    userConfigCopy.routing.balancers.forEach(b => allUserTags.add(b.tag));
+                }
 
-            allUserTags.forEach(tag => {
-                if (tag) tagMap.set(tag, prefix + tag);
-            });
-
-            if (isLoadBalanced) {
-                const mainBalancerOriginalTag = userBalancer.tag;
-                const userProxySelector = userBalancer.selector[0];
-                mainExitTag = tagMap.get(mainBalancerOriginalTag);
-
-                userConfigCopy.outbounds.forEach(o => {
-                    if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
-                    if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
-                        if (!o.streamSettings) o.streamSettings = {};
-                        if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                        o.streamSettings.sockopt.dialerProxy = 'full-fragment';
-                    }
+                allUserTags.forEach(tag => {
+                    if (tag) tagMap.set(tag, prefix + tag);
                 });
-                userConfigCopy.routing.balancers.forEach(b => {
-                    if (b.tag) b.tag = tagMap.get(b.tag) || b.tag;
-                    if (b.selector) b.selector = b.selector.map(s => s.startsWith('!') ? '!' + prefix + s.substring(1) : prefix + s);
-                });
-            } else {
-                mainExitTag = tagMap.get(singleProxyOriginalTag);
-                userConfigCopy.outbounds.forEach(o => {
-                    if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
-                    if (o.tag === mainExitTag) {
-                        if (!o.streamSettings) o.streamSettings = {};
-                        if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                        o.streamSettings.sockopt.dialerProxy = 'full-fragment';
-                    }
-                });
-            }
 
-            if (userConfigCopy.observatory && userConfigCopy.observatory.subjectSelector) {
-                userConfigCopy.observatory.subjectSelector = userConfigCopy.observatory.subjectSelector.map(s => prefix + s);
-            }
+                if (isLoadBalanced) {
+                    const mainBalancerOriginalTag = userBalancer.tag;
+                    const userProxySelector = userBalancer.selector[0];
+                    mainExitTag = tagMap.get(mainBalancerOriginalTag);
 
-            const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
-            const insertionIndex = newConfig.routing.rules.findIndex(r =>
-                r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
-            );
-
-            if (routeAll) {
-                const tcpCatchAll = { type: 'field', network: 'tcp', ...ruleAction };
-                const udpCatchAll = { type: 'field', network: 'udp', ...ruleAction };
-                if (insertionIndex > -1) {
-                    newConfig.routing.rules.splice(insertionIndex + 1, 0, tcpCatchAll, udpCatchAll);
+                    userConfigCopy.outbounds.forEach(o => {
+                        if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
+                        if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
+                            if (!o.streamSettings) o.streamSettings = {};
+                            if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
+                            o.streamSettings.sockopt.dialerProxy = 'full-fragment';
+                        }
+                    });
+                    userConfigCopy.routing.balancers.forEach(b => {
+                        if (b.tag) b.tag = tagMap.get(b.tag) || b.tag;
+                        if (b.selector) b.selector = b.selector.map(s => s.startsWith('!') ? '!' + prefix + s.substring(1) : prefix + s);
+                    });
                 } else {
-                    newConfig.routing.rules.push(tcpCatchAll, udpCatchAll);
-                }
-            } else {
-                const rulesToAdd = [];
-                const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
-                const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
-
-                if (domainList.length > 0) rulesToAdd.push({ type: 'field', domain: domainList, ...ruleAction });
-                if (ipList.length > 0) rulesToAdd.push({ type: 'field', ip: ipList, ...ruleAction });
-
-                if (rulesToAdd.length > 0) {
-                    if (insertionIndex > -1) {
-                         newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
-                    } else {
-                        const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
-                        newConfig.routing.rules.splice(lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0, 0, ...rulesToAdd);
-                    }
-                }
-            }
-
-            newConfig.outbounds.push(...userConfigCopy.outbounds);
-            if (isLoadBalanced) {
-                newConfig.routing.balancers.push(...userConfigCopy.routing.balancers);
-            }
-
-            if (userConfigCopy.dns) {
-                if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts,
-                    ...userConfigCopy.dns.hosts
-                };
-                if (userConfigCopy.dns.servers) {
-                    const existingServers = new Set(newConfig.dns.servers.map(s => typeof s === 'string' ? s : s.address));
-                    userConfigCopy.dns.servers.forEach(server => {
-                        const serverAddress = typeof server === 'string' ? server : server.address;
-                        if (!existingServers.has(serverAddress)) newConfig.dns.servers.push(server);
+                    mainExitTag = tagMap.get(singleProxyOriginalTag);
+                    userConfigCopy.outbounds.forEach(o => {
+                        if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
+                        if (o.tag === mainExitTag) {
+                            if (!o.streamSettings) o.streamSettings = {};
+                            if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
+                            o.streamSettings.sockopt.dialerProxy = 'full-fragment';
+                        }
                     });
                 }
+
+                if (userConfigCopy.observatory && userConfigCopy.observatory.subjectSelector) {
+                    userConfigCopy.observatory.subjectSelector = userConfigCopy.observatory.subjectSelector.map(s => prefix + s);
+                }
+
+                const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
+                const insertionIndex = newConfig.routing.rules.findIndex(r =>
+                    r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
+                );
+
+                if (routeAllTraffic) {
+                    const tcpCatchAll = { type: 'field', network: 'tcp', ...ruleAction };
+                    const udpCatchAll = { type: 'field', network: 'udp', ...ruleAction };
+                    if (insertionIndex > -1) {
+                        newConfig.routing.rules.splice(insertionIndex + 1, 0, tcpCatchAll, udpCatchAll);
+                    } else {
+                        newConfig.routing.rules.push(tcpCatchAll, udpCatchAll);
+                    }
+                } else {
+                    const rulesToAdd = [];
+                    const ipList = routeItems.filter(item => !isDomain(item.split('/')[0].trim()));
+                    const domainList = routeItems.filter(item => isDomain(item.split('/')[0].trim()));
+
+                    if (domainList.length > 0) rulesToAdd.push({ type: 'field', domain: domainList, ...ruleAction });
+                    if (ipList.length > 0) rulesToAdd.push({ type: 'field', ip: ipList, ...ruleAction });
+
+                    if (rulesToAdd.length > 0) {
+                        if (insertionIndex > -1) {
+                             newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
+                        } else {
+                            const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
+                            newConfig.routing.rules.splice(lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0, 0, ...rulesToAdd);
+                        }
+                    }
+                }
+
+                newConfig.outbounds.push(...userConfigCopy.outbounds);
+                if (isLoadBalanced) {
+                    newConfig.routing.balancers.push(...userConfigCopy.routing.balancers);
+                }
+
+                if (userConfigCopy.dns) {
+                    if (userConfigCopy.dns.hosts) newConfig.dns.hosts = { ...newConfig.dns.hosts,
+                        ...userConfigCopy.dns.hosts
+                    };
+                    if (userConfigCopy.dns.servers) {
+                        const existingServers = new Set(newConfig.dns.servers.map(s => typeof s === 'string' ? s : s.address));
+                        userConfigCopy.dns.servers.forEach(server => {
+                            const serverAddress = typeof server === 'string' ? server : server.address;
+                            if (!existingServers.has(serverAddress)) newConfig.dns.servers.push(server);
+                        });
+                    }
+                }
+
+                if (userConfigCopy.policy) {
+                    if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels,
+                        ...userConfigCopy.policy.levels
+                    };
+                    if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system,
+                        ...userConfigCopy.policy.system
+                    };
+                }
+
+                if (userConfigCopy.fakedns) {
+                    if (!newConfig.fakedns) newConfig.fakedns = [];
+                    newConfig.fakedns.push(...userConfigCopy.fakedns);
+                }
+
+                if (userConfigCopy.observatory) {
+                    newConfig.observatory = { ...newConfig.observatory,
+                        ...userConfigCopy.observatory
+                    };
+                }
+                
+                let finalRemarks;
+                if (useCustomName) {
+                    finalRemarks = customName + (routeAllTraffic ? ' (All)' : ' (Custom)');
+                } else {
+                    finalRemarks = routeAllTraffic ? 'Anonymous Phantom + X Chain (All)' : 'Anonymous Phantom + X Chain (Custom)';
+                }
+                
+                if (newConfig.remarks) {
+                    newConfig.remarks = finalRemarks;
+                }
+
+                const finalConfigObject = { ...newConfig };
+                if (!newConfig.remarks) {
+                    finalConfigObject.remarks = finalRemarks;
+                    const { remarks, ...rest } = finalConfigObject;
+                    return { remarks, ...rest };
+                }
+                
+                return finalConfigObject;
             }
 
-            if (userConfigCopy.policy) {
-                if (userConfigCopy.policy.levels) newConfig.policy.levels = { ...newConfig.policy.levels,
-                    ...userConfigCopy.policy.levels
-                };
-                if (userConfigCopy.policy.system) newConfig.policy.system = { ...newConfig.policy.system,
-                    ...userConfigCopy.policy.system
-                };
-            }
-
-            if (userConfigCopy.fakedns) {
-                if (!newConfig.fakedns) newConfig.fakedns = [];
-                newConfig.fakedns.push(...userConfigCopy.fakedns);
-            }
-
-            if (userConfigCopy.observatory) {
-                newConfig.observatory = { ...newConfig.observatory,
-                    ...userConfigCopy.observatory
-                };
-            }
+            let finalOutput;
             
-            let finalRemarks;
-            if (useCustomName) {
-                finalRemarks = customName;
+            if (generateDual) {
+                const configAll = createSingleConfig(true);
+                const configCustom = createSingleConfig(false);
+                finalOutput = JSON.stringify([configAll, configCustom], null, 2);
             } else {
-                finalRemarks = routeAll ? 'Anonymous Phantom + X Chain (All)' : 'Anonymous Phantom + X Chain (Custom)';
-            }
-            
-            if (newConfig.remarks) {
-                newConfig.remarks = finalRemarks;
+                const singleConfig = createSingleConfig(routeAll);
+                finalOutput = JSON.stringify(singleConfig, null, 2);
             }
 
-            const finalConfigObjectForCopy = { ...newConfig };
-             if (!newConfig.remarks) {
-                finalConfigObjectForCopy.remarks = finalRemarks;
-                const { remarks, ...rest } = finalConfigObjectForCopy;
-                const reorderedObject = { remarks, ...rest };
-                const finalJsonStringToCopy = JSON.stringify(reorderedObject, null, 2);
-                outputJson.dataset.rawjson = finalJsonStringToCopy;
-             } else {
-                const finalJsonStringToCopy = JSON.stringify(finalConfigObjectForCopy, null, 2);
-                outputJson.dataset.rawjson = finalJsonStringToCopy;
-             }
+            outputJson.dataset.rawjson = finalOutput;
 
             setTimeout(() => {
                 loadingContainer.classList.remove('loading');
                 loadingContainer.querySelector('.loader-container')?.remove();
-                outputJson.value = outputJson.dataset.rawjson;
-                updateOutputLineNumbers(outputJson.dataset.rawjson);
+                outputJson.value = finalOutput;
+                updateOutputLineNumbers(finalOutput);
             }, 1000);
 
         } catch (error) {
@@ -537,6 +559,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
         setDefaultIPs();
         routeAllCheckbox.checked = false;
+        routeAllCheckbox.disabled = false;
+        dualConfigToggle.checked = false;
         customNameCheckbox.checked = false;
         customNameInput.value = '';
         customNameInput.disabled = true;
