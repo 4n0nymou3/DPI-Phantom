@@ -11,7 +11,7 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v9.1</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v9.2</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
         <div class="input-header-buttons">
@@ -33,6 +33,13 @@
             <div class="checkbox-item">
                 <input type="checkbox" id="routeAllCheckbox" name="routeAll">
                 <label for="routeAllCheckbox">Route All Traffic Through Config</label>
+            </div>
+            <div class="toggle-switch-container">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dualConfigToggle" name="dualConfig">
+                    <span class="toggle-slider"></span>
+                </label>
+                <label for="dualConfigToggle" class="toggle-label">Generate Dual Configs (All + Custom)</label>
             </div>
             <div class="checkbox-item">
                 <input type="checkbox" id="customNameCheckbox" name="customName">
