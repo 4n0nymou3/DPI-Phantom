@@ -1,11 +1,10 @@
 {
   "__Credits__": {
-    "Anonymous repository": "https://github.com/4n0nymou3/DPI-Phantom",
-    "Patterniha repository": "https://github.com/patterniha/Serverless-for-Iran",
-    "Patterniha telegram": "https://t.me/projectXhttp",
-    "Patterniha donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
+    "repository": "https://github.com/patterniha/Serverless-for-Iran",
+    "telegram": "https://t.me/projectXhttp",
+    "donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
   },
-  "remarks": "Serverless-v17",
+  "remarks": "Serverless-shecan-v17",
   "version": {
     "min": "25.10.15"
   },
@@ -34,13 +33,33 @@
           "domain:ir",
           "geosite:private",
           "geosite:ir",
-          "full:challenges.cloudflare.com"
+          "full:challenges.cloudflare.com",
+          "domain:dynx.pro",
+          "geosite:sanctioned",
+          "geosite:telegram",
+          "geosite:meta",
+          "geosite:youtube",
+          "geosite:twitter",
+          "geosite:reddit",
+          "geosite:twitch",
+          "geosite:tiktok",
+          "geosite:discord"
         ],
         "finalQuery": true
       },
       {
         "tag": "no-filter-dns",
         "address": "https://cloudflare-dns.com/dns-query",
+        "domains": [
+          "geosite:telegram",
+          "geosite:meta",
+          "geosite:youtube",
+          "geosite:twitter",
+          "geosite:reddit",
+          "geosite:twitch",
+          "geosite:tiktok",
+          "geosite:discord"
+        ],
         "timeoutMs": 10000,
         "finalQuery": true
       },
@@ -50,9 +69,26 @@
           "domain:ir",
           "geosite:private",
           "geosite:ir",
-          "full:challenges.cloudflare.com"
+          "full:challenges.cloudflare.com",
+          "domain:dynx.pro"
         ],
         "finalQuery": true
+      },
+      {
+        "tag": "anti-sanction-dns",
+        "address": "https://free.shecan.ir/dns-query",
+        "domains": [
+          "geosite:sanctioned"
+        ],
+        "unexpectedIPs": [
+          "geoip:irgfw-all-injected-ips",
+          "0.0.0.0",
+          "::",
+          "127.0.0.1",
+          "::1"
+        ],
+        "timeoutMs": 2000,
+        "finalQuery": false
       }
     ],
     "queryStrategy": "UseSystem",
@@ -519,6 +555,12 @@
         "port": 53
       },
       {
+        "outboundTag": "direct-out",
+        "inboundTag": [
+          "anti-sanction-dns"
+        ]
+      },
+      {
         "outboundTag": "full-fragment",
         "inboundTag": [
           "no-filter-dns"
@@ -539,7 +581,8 @@
         "domain": [
           "domain:ir",
           "geosite:private",
-          "geosite:ir"
+          "geosite:ir",
+          "domain:dynx.pro"
         ],
         "ip": [
           "0.0.0.0/0",
