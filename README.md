@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# Phantom Universal Chainer v9.0
+# Phantom Universal Chainer v10.0
 
 > ابزاری ساده برای ترکیب (Chain) کانفیگ‌های Xray با موتور ضد DPI فانتوم.
 
@@ -57,10 +57,4 @@
 
 ---
 
-## 🙏 تشکر ویژه
-
-</div>
-
-<p dir="rtl">• با تشکر فراوان از <strong>Patterniha</strong> برای توسعه و به‌روزرسانی مداوم موتور قدرتمند:</p>
-<p dir="ltr">https://github.com/patterniha/Serverless-for-Iran</p>
 <p dir="ltr">• <a href="https://t.me/BXAMbot" target="_blank" rel="noopener noreferrer"><strong>Anonymous</strong></a> ❤️</p>
