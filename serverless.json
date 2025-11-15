@@ -1,681 +1,235 @@
 {
-  "__Credits__": {
-    "repository": "https://github.com/patterniha/Serverless-for-Iran",
-    "telegram": "https://t.me/projectXhttp",
-    "donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
-  },
-  "remarks": "Serverless-shecan-v17",
-  "version": {
-    "min": "25.10.15"
-  },
+  "remarks": "ATOMIC-XhTTP-DOH",
   "log": {
-    "loglevel": "warning",
-    "dnsLog": false,
-    "access": "none"
-  },
-  "policy": {
-    "levels": {
-      "0": {
-        "uplinkOnly": 0,
-        "downlinkOnly": 0
-      }
-    }
+    "loglevel": "none",
+    "access": "",
+    "error": "",
+    "dnsLog": false
   },
   "dns": {
+    "queryStrategy": "UseIPv4",
+    "tag": "dns",
+    "unexpectedIPs": [
+      "10.10.34.34",
+      "10.10.34.35",
+      "10.10.34.36"
+    ],
     "hosts": {
-      "geosite:category-ads-all": "#3",
-      "cloudflare-dns.com": "challenges.cloudflare.com"
+      "www.kirtokhamenei.ir": [
+        "8.8.8.8"
+      ]
     },
     "servers": [
-      {
-        "address": "fakedns",
-        "domains": [
-          "domain:ir",
-          "geosite:private",
-          "geosite:ir",
-          "full:challenges.cloudflare.com",
-          "domain:dynx.pro",
-          "geosite:sanctioned",
-          "geosite:telegram",
-          "geosite:meta",
-          "geosite:youtube",
-          "geosite:twitter",
-          "geosite:reddit",
-          "geosite:twitch",
-          "geosite:tiktok",
-          "geosite:discord"
-        ],
-        "finalQuery": true
-      },
-      {
-        "tag": "no-filter-dns",
-        "address": "https://cloudflare-dns.com/dns-query",
-        "domains": [
-          "geosite:telegram",
-          "geosite:meta",
-          "geosite:youtube",
-          "geosite:twitter",
-          "geosite:reddit",
-          "geosite:twitch",
-          "geosite:tiktok",
-          "geosite:discord"
-        ],
-        "timeoutMs": 10000,
-        "finalQuery": true
-      },
-      {
-        "address": "localhost",
-        "domains": [
-          "domain:ir",
-          "geosite:private",
-          "geosite:ir",
-          "full:challenges.cloudflare.com",
-          "domain:dynx.pro"
-        ],
-        "finalQuery": true
-      },
-      {
-        "tag": "anti-sanction-dns",
-        "address": "https://free.shecan.ir/dns-query",
-        "domains": [
-          "geosite:sanctioned"
-        ],
-        "unexpectedIPs": [
-          "geoip:irgfw-all-injected-ips",
-          "0.0.0.0",
-          "::",
-          "127.0.0.1",
-          "::1"
-        ],
-        "timeoutMs": 2000,
-        "finalQuery": false
-      }
-    ],
-    "queryStrategy": "UseSystem",
-    "useSystemHosts": true
+      "https://1.1.1.1/dns-query",
+      "https://sky.rethinkdns.com/dns-query",
+      "https://sky.rethinkdns.com/dns-query",
+      "https://ada.openbld.net/dns-query",
+      "https://mozilla.cloudflare-dns.com/dns-query",
+      "localhost"
+    ]
   },
   "inbounds": [
     {
-      "tag": "dns-in",
-      "listen": "127.0.0.1",
-      "port": 10853,
-      "protocol": "tunnel",
-      "settings": {
-        "address": "127.0.0.1",
-        "port": 53,
-        "network": "tcp,udp"
-      },
-      "streamSettings": {
-        "sockopt": {
-          "tcpKeepAliveInterval": 1,
-          "tcpKeepAliveIdle": 46
-        }
-      }
-    },
-    {
-      "tag": "socks-in",
       "listen": "127.0.0.1",
       "port": 10808,
-      "protocol": "mixed",
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "fakedns"
-        ],
-        "routeOnly": false
-      },
+      "protocol": "socks",
       "settings": {
+        "auth": "noauth",
         "udp": true,
-        "ip": "127.0.0.1"
+        "userLevel": 8
       },
-      "streamSettings": {
-        "sockopt": {
-          "tcpKeepAliveInterval": 1,
-          "tcpKeepAliveIdle": 46
-        }
-      }
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "enabled": true
+      },
+      "tag": "socks-in"
+    },
+    {
+      "listen": "127.0.0.1",
+      "port": 10809,
+      "protocol": "http",
+      "settings": {
+        "userLevel": 8
+      },
+      "sniffing": {
+        "destOverride": [
+          "http",
+          "tls"
+        ],
+        "enabled": true
+      },
+      "tag": "http-in"
+    },
+    {
+      "port": 10853,
+      "protocol": "dokodemo-door",
+      "settings": {
+        "address": "8.8.8.8",
+        "network": "tcp,udp",
+        "port": 53
+      },
+      "tag": "dns-in"
     }
   ],
   "outbounds": [
     {
-      "tag": "block-out",
-      "protocol": "block"
-    },
-    {
-      "tag": "direct-out",
-      "protocol": "direct",
+      "protocol": "freedom",
+      "settings": {
+        "domainStrategy": "UseIPv4",
+        "fragment": {
+          "packets": "tlshello",
+          "length": "10-80",
+          "interval": "10-40"
+        }
+      },
       "streamSettings": {
         "sockopt": {
-          "domainStrategy": "ForceIP",
-          "happyEyeballs": {
-            "tryDelayMs": 100,
-            "prioritizeIPv6": true,
-            "interleave": 2,
-            "maxConcurrentTry": 16
-          }
+          "tcpNoDelay": true,
+          "tcpKeepAliveIdle": 100,
+          "domainStrategy": "UseIP"
         }
-      }
+      },
+      "tag": "fragment-out"
     },
     {
-      "tag": "dns-out",
-      "protocol": "dns",
+      "protocol": "vless",
+      "tag": "fakeproxy-out",
       "settings": {
-        "nonIPQuery": "reject",
-        "blockTypes": [
-          0,
-          65
+        "vnext": [
+          {
+            "address": "google.com",
+            "port": 443,
+            "users": [
+              {
+                "encryption": "none",
+                "flow": "",
+                "id": "UUID",
+                "level": 8,
+                "security": "auto"
+              }
+            ]
+          }
         ]
-      }
-    },
-    {
-      "tag": "skip-fragment",
-      "protocol": "direct",
-      "settings": {
-        "fragment": {
-          "packets": "1-1",
-          "length": "130",
-          "interval": "560",
-          "maxSplit": "4"
-        }
       },
       "streamSettings": {
-        "sockopt": {
-          "dialerProxy": "_chain-skip"
-        }
-      }
-    },
-    {
-      "tag": "_chain-skip",
-      "protocol": "direct",
-      "settings": {
-        "fragment": {
-          "packets": "2-4",
-          "length": "1",
-          "interval": "4",
-          "maxSplit": "130"
-        }
-      },
-      "streamSettings": {
-        "sockopt": {
-          "domainStrategy": "ForceIP",
-          "happyEyeballs": {
-            "tryDelayMs": 300,
-            "prioritizeIPv6": true,
-            "interleave": 2,
-            "maxConcurrentTry": 16
+        "network": "xhttp",
+        "security": "tls",
+        "tlsSettings": {
+          "allowInsecure": false,
+          "alpn": [
+            "h3,h2,http/1.1"
+          ],
+          "fingerprint": "randomized",
+          "serverName": "www.google.com",
+          "show": false
+        },
+        "xhttpSettings": {
+          "host": "www.google.com",
+          "path": "/",
+          "mode": "auto",
+          "extra": {
+            "xPaddingBytes": "96-254",
+            "noGRPCHeader": false,
+            "noSSEHeader": false,
+            "xmux": {
+              "maxConcurrency": "16-128",
+              "maxConnections": 0,
+              "cMaxReuseTimes": 0,
+              "hMaxRequestTimes": "300-1000",
+              "hMaxReusableSecs": "1200-5000",
+              "hKeepAlivePeriod": 0
+            }
           }
         }
+      },
+      "mux": {
+        "concurrency": 8,
+        "enabled": false
       }
     },
     {
-      "tag": "full-fragment",
-      "protocol": "direct",
+      "protocol": "dns",
+      "tag": "dns-out"
+    },
+    {
+      "protocol": "blackhole",
       "settings": {
-        "fragment": {
-          "packets": "1-1",
-          "length": "1",
-          "interval": "4",
-          "maxSplit": "517"
+        "response": {
+          "type": "http"
         }
       },
-      "streamSettings": {
-        "sockopt": {
-          "domainStrategy": "ForceIP",
-          "happyEyeballs": {
-            "tryDelayMs": 300,
-            "prioritizeIPv6": true,
-            "interleave": 2,
-            "maxConcurrentTry": 16
-          }
-        }
-      }
+      "tag": "block"
     },
     {
-      "tag": "udp-noises",
-      "protocol": "direct",
+      "protocol": "socks",
+      "tag": "dummy",
       "settings": {
-        "targetStrategy": "ForceIP",
-        "noises": [
+        "servers": [
           {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1250",
-            "delay": "10",
-            "applyTo": "ipv4"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
-          },
-          {
-            "type": "rand",
-            "packet": "1230",
-            "delay": "10",
-            "applyTo": "ipv6"
+            "address": "127.0.0.1",
+            "port": 10808
           }
         ]
       }
     }
   ],
+  "policy": {
+    "levels": {
+      "8": {
+        "connIdle": 300,
+        "downlinkOnly": 1,
+        "handshake": 4,
+        "uplinkOnly": 1
+      }
+    },
+    "system": {
+      "statsOutboundUplink": true,
+      "statsOutboundDownlink": true
+    }
+  },
   "routing": {
-    "domainStrategy": "IPOnDemand",
+    "domainStrategy": "IPIfNonMatch",
     "rules": [
       {
-        "outboundTag": "block-out",
-        "port": 0
-      },
-      {
-        "outboundTag": "block-out",
-        "domain": [
-          "geosite:category-ads-all"
-        ]
-      },
-      {
-        "outboundTag": "dns-out",
         "inboundTag": [
           "dns-in"
-        ]
-      },
-      {
+        ],
         "outboundTag": "dns-out",
+        "type": "field"
+      },
+      {
         "inboundTag": [
-          "socks-in"
+          "socks-in",
+          "http-in"
         ],
-        "port": 53
+        "port": 53,
+        "outboundTag": "dns-out",
+        "type": "field"
       },
       {
-        "outboundTag": "direct-out",
         "inboundTag": [
-          "anti-sanction-dns"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "inboundTag": [
-          "no-filter-dns"
-        ]
-      },
-      {
-        "outboundTag": "block-out",
-        "ip": [
-          "geoip:irgfw-block-injected-ips",
-          "0.0.0.0",
-          "::",
-          "198.18.0.0/15",
-          "fc00::/18"
-        ]
-      },
-      {
-        "outboundTag": "direct-out",
-        "domain": [
-          "domain:ir",
-          "geosite:private",
-          "geosite:ir",
-          "domain:dynx.pro"
+          "socks-in",
+          "http-in"
         ],
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
+        "port": "0-65535",
+        "outboundTag": "fragment-out",
+        "type": "field",
+        "enabled": true
       },
       {
-        "outboundTag": "direct-out",
         "ip": [
-          "geoip:private",
-          "geoip:ir"
-        ]
-      },
-      {
-        "outboundTag": "udp-noises",
-        "network": "udp",
-        "protocol": [
-          "quic"
+          "10.10.34.34",
+          "10.10.34.35",
+          "10.10.34.36"
         ],
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "udp-noises",
-        "network": "udp",
-        "port": "443,2053,2083,2087,2096,8443",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "direct-out",
-        "network": "udp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "network": "tcp",
-        "protocol": [
-          "tls"
-        ],
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "network": "tcp",
-        "port": "443,2053,2083,2087,2096,8443",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "network": "tcp",
-        "protocol": [
-          "http"
-        ],
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "network": "tcp",
-        "port": "80,8080,8880,2052,2082,2086,2095",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "full-fragment",
-        "network": "tcp",
-        "ip": [
-          "0.0.0.0/0",
-          "::/0"
-        ]
-      },
-      {
-        "outboundTag": "block-out",
-        "port": "0-65535"
+        "outboundTag": "block",
+        "type": "field"
       }
-    ]
-  }
+    ],
+    "strategy": "rules"
+  },
+  "stats": {}
 }
