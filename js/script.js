@@ -358,6 +358,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         try {
+            function findFragmentOutboundTag(config) {
+                if (!config.outbounds || !Array.isArray(config.outbounds)) return null;
+                
+                const fragmentOutbound = config.outbounds.find(o => {
+                    if (!o.settings) return false;
+                    if (o.settings.fragment) return true;
+                    if (o.streamSettings && o.streamSettings.sockopt && o.streamSettings.sockopt.dialerProxy) return true;
+                    return false;
+                });
+                
+                return fragmentOutbound ? fragmentOutbound.tag : null;
+            }
+
             function createSingleConfig(routeAllTraffic) {
                 let newConfig = JSON.parse(JSON.stringify(baseConfig));
                 const userConfigCopy = JSON.parse(JSON.stringify(userConfig));
@@ -385,6 +398,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (tag) tagMap.set(tag, prefix + tag);
                 });
 
+                const fragmentTag = findFragmentOutboundTag(newConfig);
+
                 if (isLoadBalanced) {
                     const mainBalancerOriginalTag = userBalancer.tag;
                     const userProxySelector = userBalancer.selector[0];
@@ -393,9 +408,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     userConfigCopy.outbounds.forEach(o => {
                         if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
                         if (o.tag && o.tag.startsWith(prefix + userProxySelector)) {
-                            if (!o.streamSettings) o.streamSettings = {};
-                            if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                            o.streamSettings.sockopt.dialerProxy = 'full-fragment';
+                            if (fragmentTag) {
+                                if (!o.streamSettings) o.streamSettings = {};
+                                if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
+                                o.streamSettings.sockopt.dialerProxy = fragmentTag;
+                            }
                         }
                     });
                     userConfigCopy.routing.balancers.forEach(b => {
@@ -407,9 +424,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     userConfigCopy.outbounds.forEach(o => {
                         if (o.tag) o.tag = tagMap.get(o.tag) || o.tag;
                         if (o.tag === mainExitTag) {
-                            if (!o.streamSettings) o.streamSettings = {};
-                            if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
-                            o.streamSettings.sockopt.dialerProxy = 'full-fragment';
+                            if (fragmentTag) {
+                                if (!o.streamSettings) o.streamSettings = {};
+                                if (!o.streamSettings.sockopt) o.streamSettings.sockopt = {};
+                                o.streamSettings.sockopt.dialerProxy = fragmentTag;
+                            }
                         }
                     });
                 }
@@ -419,15 +438,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const ruleAction = isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
-                const insertionIndex = newConfig.routing.rules.findIndex(r =>
-                    r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
-                );
+                
+                let insertionIndex = -1;
+                for (let i = 0; i < newConfig.routing.rules.length; i++) {
+                    const rule = newConfig.routing.rules[i];
+                    if (rule.port === "0-65535" && rule.enabled === true) {
+                        insertionIndex = i;
+                        break;
+                    }
+                }
+
+                if (insertionIndex === -1) {
+                    insertionIndex = newConfig.routing.rules.findIndex(r =>
+                        r.outboundTag === 'direct-out' && Array.isArray(r.ip) && r.ip.includes('geoip:ir')
+                    );
+                }
 
                 if (routeAllTraffic) {
                     const tcpCatchAll = { type: 'field', network: 'tcp', ...ruleAction };
                     const udpCatchAll = { type: 'field', network: 'udp', ...ruleAction };
                     if (insertionIndex > -1) {
-                        newConfig.routing.rules.splice(insertionIndex + 1, 0, tcpCatchAll, udpCatchAll);
+                        newConfig.routing.rules.splice(insertionIndex, 0, tcpCatchAll, udpCatchAll);
                     } else {
                         newConfig.routing.rules.push(tcpCatchAll, udpCatchAll);
                     }
@@ -441,7 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (rulesToAdd.length > 0) {
                         if (insertionIndex > -1) {
-                             newConfig.routing.rules.splice(insertionIndex + 1, 0, ...rulesToAdd);
+                             newConfig.routing.rules.splice(insertionIndex, 0, ...rulesToAdd);
                         } else {
                             const lastDirectRuleIndex = newConfig.routing.rules.map(r => r.outboundTag).lastIndexOf('direct-out');
                             newConfig.routing.rules.splice(lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0, 0, ...rulesToAdd);
