@@ -12,12 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const customNameInput = document.getElementById('customNameInput');
     const customNameInputContainer = document.getElementById('customNameInputContainer');
     const configCounter = document.getElementById('configCounter');
+    const usePublicConfigToggle = document.getElementById('usePublicConfigToggle');
     
     const jsonInputLineNumbers = document.getElementById('jsonInputLineNumbers');
     const ipInputLineNumbers = document.getElementById('ipInputLineNumbers');
     const outputLineNumbers = document.getElementById('outputLineNumbers');
 
     const phantomConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless.json';
+    const publicConfigUrl = 'https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/refs/heads/main/configs/xray_secure_loadbalanced_config.json';
     const defaultForcedRouteIPs = [
         "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
         "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
@@ -173,6 +175,52 @@ document.addEventListener('DOMContentLoaded', () => {
         const withoutComments = jsoncString.replace(/\/\*[\s\S]*?\*\/|(?<=[^:])\/\/.*|\s\/\/.*|^\/\/.*/g, '');
         return JSON.parse(withoutComments);
     }
+
+    async function fetchPublicConfig() {
+        try {
+            const response = await fetch(publicConfigUrl);
+            if (!response.ok) throw new Error(`Failed to fetch public config: ${response.statusText}`);
+            const configText = await response.text();
+            try {
+                return JSON.parse(configText);
+            } catch (jsonError) {
+                try {
+                    return parseJsonc(configText);
+                } catch (jsoncError) {
+                    throw new Error('Failed to parse the public config as JSON or JSONC.');
+                }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    usePublicConfigToggle.addEventListener('change', async () => {
+        if (usePublicConfigToggle.checked) {
+            pasteButton.disabled = true;
+            jsonConfigInput.disabled = true;
+            jsonConfigInput.style.opacity = '0.5';
+            jsonConfigInput.style.cursor = 'not-allowed';
+            
+            try {
+                const publicConfig = await fetchPublicConfig();
+                jsonConfigInput.value = JSON.stringify(publicConfig, null, 2);
+                updateLineNumbers(jsonConfigInput, jsonInputLineNumbers);
+            } catch (error) {
+                alert(`Error loading public config: ${error.message}`);
+                usePublicConfigToggle.checked = false;
+                pasteButton.disabled = false;
+                jsonConfigInput.disabled = false;
+                jsonConfigInput.style.opacity = '1';
+                jsonConfigInput.style.cursor = 'text';
+            }
+        } else {
+            pasteButton.disabled = false;
+            jsonConfigInput.disabled = false;
+            jsonConfigInput.style.opacity = '1';
+            jsonConfigInput.style.cursor = 'text';
+        }
+    });
 
     dualConfigToggle.addEventListener('change', () => {
         if (dualConfigToggle.checked) {
@@ -600,6 +648,11 @@ document.addEventListener('DOMContentLoaded', () => {
         outputJson.dataset.rawjson = '';
         updateOutputLineNumbers('Your combined JSON config will appear here...');
         configCounter.textContent = '';
+        usePublicConfigToggle.checked = false;
+        pasteButton.disabled = false;
+        jsonConfigInput.disabled = false;
+        jsonConfigInput.style.opacity = '1';
+        jsonConfigInput.style.cursor = 'text';
     });
 
     setDefaultIPs();
