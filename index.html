@@ -14,6 +14,20 @@
         <h1>Phantom Universal Chainer <span class="version-tag">v10.0</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
+        <div class="public-config-card">
+            <div class="public-config-info">
+                <i class="fas fa-gift"></i>
+                <p>Don't have a config? Use the free public load-balanced config provided by Anonymous (updated every 12 hours)</p>
+            </div>
+            <div class="public-config-toggle">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="usePublicConfigToggle" name="usePublicConfig">
+                    <span class="toggle-slider"></span>
+                </label>
+                <label for="usePublicConfigToggle" class="toggle-label">Use Public Config</label>
+            </div>
+        </div>
+
         <div class="input-header-buttons">
             <button id="pasteButton"><i class="fas fa-paste"></i> Paste from Clipboard</button>
         </div>
