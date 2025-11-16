@@ -21,6 +21,7 @@
     --shadow-color: rgba(0, 255, 255, 0.2);
     --line-number-bg: rgba(20, 31, 49, 0.9);
     --line-number-color: #666;
+    --card-bg: rgba(255, 255, 255, 0.03);
 }
 
 body {
@@ -93,6 +94,45 @@ p {
     margin-bottom: 30px;
 }
 
+.public-config-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 25px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.public-config-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.public-config-info i {
+    font-size: 24px;
+    color: var(--title-color);
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
+.public-config-info p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+    color: var(--text-color);
+}
+
+.public-config-toggle {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
 .input-header-buttons,
 .output-footer-buttons {
     display: flex;
@@ -125,6 +165,17 @@ p {
 
 #pasteButton:hover {
     background: var(--button-paste-hover-bg);
+}
+
+#pasteButton:disabled {
+    background: #555;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#pasteButton:disabled:hover {
+    transform: none;
 }
 
 .textarea-container {
@@ -175,6 +226,10 @@ textarea {
     outline: none;
     line-height: 1.5;
     overflow-y: auto;
+}
+
+textarea:disabled {
+    cursor: not-allowed;
 }
 
 textarea::-webkit-scrollbar {
@@ -644,5 +699,24 @@ body.loading::before {
     
     .custom-name-input-container input {
         width: 100%;
+    }
+    
+    .public-config-card {
+        padding: 15px;
+    }
+    
+    .public-config-info {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .public-config-info i {
+        font-size: 20px;
+    }
+    
+    .public-config-toggle {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
 }
