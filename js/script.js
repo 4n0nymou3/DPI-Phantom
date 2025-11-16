@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         var configCount = 0;
         var singleProxyOriginalTag = 'proxy';
-        var mainBalancerOriginalTags = ['proxy-round', 'all'];
+        var mainBalancerOriginalTags = ['proxy-round', 'all', 'all-proxies'];
         var isLoadBalanced = Array.isArray(userConfig.routing.balancers) && userConfig.routing.balancers.length > 0;
         
         var userBalancer = null;
