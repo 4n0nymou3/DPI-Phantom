@@ -6,6 +6,73 @@ PhantomChainer.Utils = (function() {
         return domainRegex.test(str);
     }
 
+    function isValidIP(str) {
+        var ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/;
+        var ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
+        
+        if (ipv4Regex.test(str)) {
+            var parts = str.split('.');
+            for (var i = 0; i < parts.length; i++) {
+                var num = parseInt(parts[i], 10);
+                if (num < 0 || num > 255) return false;
+            }
+            return true;
+        }
+        
+        return ipv6Regex.test(str);
+    }
+
+    function isValidCIDR(str) {
+        var parts = str.split('/');
+        if (parts.length !== 2) return false;
+        
+        var ip = parts[0];
+        var prefix = parseInt(parts[1], 10);
+        
+        if (!isValidIP(ip)) return false;
+        
+        if (ip.indexOf(':') !== -1) {
+            return prefix >= 0 && prefix <= 128;
+        } else {
+            return prefix >= 0 && prefix <= 32;
+        }
+    }
+
+    function isValidRouteItem(str) {
+        var firstPart = str.split('/')[0].trim();
+        
+        if (str.indexOf('geoip:') === 0 || str.indexOf('geosite:') === 0) {
+            return true;
+        }
+        
+        if (str.indexOf('ext:') === 0 || str.indexOf('ext-ip:') === 0 || str.indexOf('ext-domain:') === 0) {
+            return true;
+        }
+        
+        if (str.indexOf('domain:') === 0 || str.indexOf('full:') === 0 || str.indexOf('regexp:') === 0 || str.indexOf('keyword:') === 0) {
+            return true;
+        }
+        
+        if (isDomain(firstPart)) {
+            return true;
+        }
+        
+        if (isValidIP(firstPart)) {
+            return true;
+        }
+        
+        if (isValidCIDR(str)) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    function isValidConfigName(name) {
+        var validNameRegex = /^[a-zA-Z0-9\s\-_]+$/;
+        return validNameRegex.test(name);
+    }
+
     function parseJsonc(jsoncString) {
         var lines = jsoncString.split('\n');
         var result = [];
@@ -48,6 +115,8 @@ PhantomChainer.Utils = (function() {
     function fetchConfig(url, callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, true);
+        xhr.timeout = 15000;
+        
         xhr.onload = function() {
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
@@ -62,12 +131,18 @@ PhantomChainer.Utils = (function() {
                     }
                 }
             } else {
-                callback(new Error('Failed to fetch: ' + xhr.statusText));
+                callback(new Error('Server returned status ' + xhr.status));
             }
         };
+        
         xhr.onerror = function() {
-            callback(new Error('Network error'));
+            callback(new Error('Network error occurred'));
         };
+        
+        xhr.ontimeout = function() {
+            callback(new Error('Request timed out'));
+        };
+        
         xhr.send();
     }
 
@@ -76,8 +151,10 @@ PhantomChainer.Utils = (function() {
             navigator.clipboard.writeText(text).then(function() {
                 var originalText = button.innerHTML;
                 button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                button.disabled = true;
                 setTimeout(function() {
                     button.innerHTML = originalText;
+                    button.disabled = false;
                 }, 2000);
             }).catch(function() {
                 fallbackCopy(text, button);
@@ -98,8 +175,10 @@ PhantomChainer.Utils = (function() {
             document.execCommand('copy');
             var originalText = button.innerHTML;
             button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+            button.disabled = true;
             setTimeout(function() {
                 button.innerHTML = originalText;
+                button.disabled = false;
             }, 2000);
         } catch (err) {
             alert('Failed to copy!');
@@ -107,10 +186,28 @@ PhantomChainer.Utils = (function() {
         document.body.removeChild(textArea);
     }
 
+    function downloadJSON(jsonString, filename) {
+        var blob = new Blob([jsonString], { type: 'application/json' });
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+
     return {
         isDomain: isDomain,
+        isValidIP: isValidIP,
+        isValidCIDR: isValidCIDR,
+        isValidRouteItem: isValidRouteItem,
+        isValidConfigName: isValidConfigName,
         parseJsonc: parseJsonc,
         fetchConfig: fetchConfig,
-        copyToClipboard: copyToClipboard
+        copyToClipboard: copyToClipboard,
+        downloadJSON: downloadJSON
     };
 })();
