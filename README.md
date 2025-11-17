@@ -1,6 +1,6 @@
 <div dir="rtl">
 
-# Phantom Universal Chainer v10.0
+# Phantom Universal Chainer v10.1
 
 > ابزاری ساده برای ترکیب (Chain) کانفیگ‌های Xray با موتور ضد DPI فانتوم.
 
