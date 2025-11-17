@@ -1,18 +1,37 @@
 var PhantomChainer = PhantomChainer || {};
 
-PhantomChainer.Config = (function() {
+PhantomChainer.Config = (function () {
     return {
         phantomConfigUrl: 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless.json',
+
         publicConfigUrl: 'https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/refs/heads/main/configs/xray_secure_loadbalanced_config.json',
+
         defaultForcedRouteIPs: [
-            "91.105.192.0/23", "91.108.4.0/22", "91.108.8.0/22", "91.108.12.0/22",
-            "91.108.16.0/22", "91.108.20.0/22", "91.108.56.0/23", "91.108.58.0/23",
-            "95.161.64.0/20", "149.154.160.0/21", "149.154.168.0/22", "149.154.172.0/22",
-            "185.76.151.0/24", "2001:67c:4e8::/48", "2001:b28:f23c::/48", "2001:b28:f23d::/48",
-            "2001:b28:f23f::/48", "2a0a:f280:203::/48"
+            "91.105.192.0/23",
+            "91.108.4.0/22",
+            "91.108.8.0/22",
+            "91.108.12.0/22",
+            "91.108.16.0/22",
+            "91.108.20.0/22",
+            "91.108.56.0/22",
+            "95.161.64.0/20",
+            "149.154.160.0/20",
+            "185.76.151.0/24",
+            "2001:67c:4e8::/48",
+            "2001:b28:f23c::/48",
+            "2001:b28:f23d::/48",
+            "2001:b28:f23f::/48",
+            "2a0a:f280::/32"
         ],
+
         singleProxyOriginalTag: 'proxy',
-        mainBalancerOriginalTags: ['proxy-round', 'all', 'all-proxies'],
+
+        mainBalancerOriginalTags: [
+            'proxy-round',
+            'all',
+            'all-proxies'
+        ],
+
         tagPrefix: 'user-'
     };
 })();
