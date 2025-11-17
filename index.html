@@ -13,7 +13,7 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v10.0</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v10.1</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
         <div class="public-config-card">
@@ -32,11 +32,17 @@
 
         <div class="input-header-buttons">
             <button id="pasteButton"><i class="fas fa-paste"></i> Paste from Clipboard</button>
+            <button id="uploadButton"><i class="fas fa-upload"></i> Upload JSON File</button>
+            <input type="file" id="fileInput" accept=".json" style="display: none;">
         </div>
 
-        <div class="textarea-container">
+        <div class="textarea-container" id="jsonInputContainer">
+            <div class="drag-overlay" id="dragOverlay">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drop JSON file here</p>
+            </div>
             <div class="line-numbers" id="jsonInputLineNumbers">1</div>
-            <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here..." rows="10"></textarea>
+            <textarea id="jsonConfigInput" placeholder="Paste your single or load-balanced JSON config here... Or drag & drop a JSON file" rows="10"></textarea>
         </div>
 
         <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Forced Route IPs & Domains:</h3>
@@ -62,7 +68,8 @@
                 <label for="customNameCheckbox">Use Custom Config Name</label>
             </div>
             <div class="custom-name-input-container" id="customNameInputContainer">
-                <input type="text" id="customNameInput" placeholder="Enter your custom config name here..." disabled>
+                <input type="text" id="customNameInput" placeholder="Enter your custom config name here..." maxlength="50" disabled>
+                <span class="char-counter" id="charCounter">0/50</span>
             </div>
         </div>
 
@@ -71,7 +78,18 @@
             <button id="clearButton"><i class="fas fa-trash-alt"></i> Clear All</button>
         </div>
 
-        <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Result: <span id="configCounter"></span></h3>
+        <div id="alertContainer" class="alert-container"></div>
+
+        <h3 style="margin-top: 30px; margin-bottom: 10px; text-align: center; color: var(--title-color);">
+            Result: <span id="configCounter"></span>
+            <span id="previewLabel" style="display: none; font-size: 0.6em; color: #ffb86c; margin-left: 10px;">(Preview Mode - Copy/Download includes both)</span>
+        </h3>
+        
+        <div id="configTabs" class="config-tabs" style="display: none;">
+            <button class="tab-button active" data-config="0">Preview: Config 1 (All Traffic)</button>
+            <button class="tab-button" data-config="1">Preview: Config 2 (Custom)</button>
+        </div>
+
         <div class="textarea-container">
             <div class="line-numbers" id="outputLineNumbers">1</div>
             <textarea id="outputJson" readonly>Your combined JSON config will appear here...</textarea>
@@ -79,6 +97,7 @@
         
         <div class="output-footer-buttons">
             <button id="copyButton"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+            <button id="downloadButton" style="display: none;"><i class="fas fa-download"></i> Download JSON</button>
         </div>
         
         <footer>
