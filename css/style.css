@@ -656,6 +656,7 @@ footer a:hover {
     opacity: 0.5;
     -webkit-transition: opacity 0.3s ease;
     transition: opacity 0.3s ease;
+    position: relative;
 }
 
 .custom-name-input-container.active {
@@ -664,7 +665,7 @@ footer a:hover {
 
 .custom-name-input-container input {
     width: 100%;
-    padding: 12px 20px;
+    padding: 12px 60px 12px 20px;
     border: 2px solid rgba(0, 255, 255, 0.3);
     border-radius: 10px;
     background: rgba(30, 41, 59, 0.8);
@@ -820,6 +821,175 @@ body.loading::before {
     100% { -webkit-transform: rotate(360deg); transform: rotate(360deg); }
 }
 
+.drag-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 255, 255, 0.1);
+    border: 3px dashed #00ffff;
+    border-radius: 10px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.drag-overlay i {
+    font-size: 48px;
+    color: #00ffff;
+    margin-bottom: 10px;
+}
+
+.drag-overlay p {
+    color: #00ffff;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+#uploadButton {
+    background: #bd93f9;
+    color: #000;
+    margin-left: 10px;
+}
+
+#uploadButton:hover {
+    background: #d5b3ff;
+}
+
+#uploadButton:disabled {
+    background: #555;
+    color: #888;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+#uploadButton:disabled:hover {
+    transform: none;
+}
+
+.char-counter {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #888;
+    pointer-events: none;
+}
+
+.alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.alert {
+    width: 100%;
+    max-width: 100%;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    transform: translateY(-100%);
+    transition: transform 0.4s ease;
+    pointer-events: all;
+    border-bottom: 2px solid;
+}
+
+.alert.show {
+    transform: translateY(0);
+}
+
+.alert i {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.alert span {
+    font-size: 15px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+.alert-success {
+    background: rgba(80, 250, 123, 0.95);
+    border-bottom-color: #50fa7b;
+    color: #000;
+}
+
+.alert-error {
+    background: rgba(255, 85, 85, 0.95);
+    border-bottom-color: #ff5555;
+    color: #fff;
+}
+
+.alert-warning {
+    background: rgba(255, 184, 108, 0.95);
+    border-bottom-color: #ffb86c;
+    color: #000;
+}
+
+.alert-info {
+    background: rgba(0, 255, 255, 0.95);
+    border-bottom-color: #00ffff;
+    color: #000;
+}
+
+.config-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.tab-button:hover {
+    border-color: #00ffff;
+    background: rgba(0, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.tab-button.active {
+    background: #00ffff;
+    color: #000;
+    border-color: #00ffff;
+}
+
+#downloadButton {
+    background: #bd93f9;
+    color: #000;
+    margin-left: 10px;
+}
+
+#downloadButton:hover {
+    background: #d5b3ff;
+}
+
 @media (max-width: 768px) {
     body {
         padding: 20px 10px;
@@ -878,5 +1048,41 @@ body.loading::before {
         -ms-flex-align: start;
         align-items: flex-start;
         gap: 10px;
+    }
+    
+    .alert {
+        padding: 12px 15px;
+    }
+    
+    .alert span {
+        font-size: 14px;
+    }
+    
+    .config-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        width: 100%;
+    }
+    
+    .input-header-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .input-header-buttons button {
+        width: 100%;
+        margin-left: 0 !important;
+    }
+    
+    .output-footer-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .output-footer-buttons button {
+        width: 100%;
+        margin-left: 0 !important;
     }
 }
