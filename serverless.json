@@ -1,5 +1,5 @@
 {
-  "remarks": "ServLess frag tlshello",
+  "remarks": "ServLess frag 1-1",
   "log": {
     "access": "",
     "error": "",
@@ -81,9 +81,9 @@
       },
       "settings": {
         "fragment": {
-          "packets": "tlshello",
-          "length": "10-20",
-          "interval": "10-20"
+          "packets": "1-1",
+          "length": "3-5",
+          "interval": "4-8"
         }
       },
       "streamSettings": {
