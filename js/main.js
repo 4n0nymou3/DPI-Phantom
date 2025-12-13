@@ -30,7 +30,8 @@ document.addEventListener('DOMContentLoaded', function() {
         jsonInputContainer: document.getElementById('jsonInputContainer'),
         dragOverlay: document.getElementById('dragOverlay'),
         configTabs: document.getElementById('configTabs'),
-        alertContainer: document.getElementById('alertContainer')
+        alertContainer: document.getElementById('alertContainer'),
+        serverlessTypeSelect: document.getElementById('serverlessTypeSelect')
     };
 
     var generatedConfigs = [];
@@ -202,6 +203,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var generateDual = elements.dualConfigToggle.checked;
         var useCustomName = elements.customNameCheckbox.checked;
         var customName = elements.customNameInput.value.trim();
+        var serverlessType = elements.serverlessTypeSelect.value;
         var userConfig;
 
         elements.outputJson.value = '';
@@ -307,7 +309,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        Utils.fetchConfig(Config.phantomConfigUrl, function(err, baseConfig) {
+        var phantomConfigUrl = Config.phantomConfigUrls[serverlessType];
+
+        Utils.fetchConfig(phantomConfigUrl, function(err, baseConfig) {
             if (err) {
                 UI.hideLoading();
                 UI.showAlert('Error fetching base config: ' + err.message, 'error');
@@ -453,6 +457,7 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.configTabs.style.display = 'none';
         elements.previewLabel.style.display = 'none';
         elements.downloadButton.style.display = 'none';
+        elements.serverlessTypeSelect.value = 'standard';
         generatedConfigs = [];
         currentConfigIndex = 0;
         isDualMode = false;
