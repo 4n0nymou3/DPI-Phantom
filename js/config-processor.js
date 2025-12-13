@@ -165,7 +165,7 @@ PhantomChainer.ConfigProcessor = (function() {
     function findInsertionIndex(routingRules) {
         for (var i = 0; i < routingRules.length; i++) {
             var rule = routingRules[i];
-            if (rule.port === "0-65535" && rule.enabled === true) {
+            if (rule.port === "0-65535" && (rule.enabled === true || rule.enabled === undefined)) {
                 return i;
             }
         }
@@ -276,11 +276,13 @@ PhantomChainer.ConfigProcessor = (function() {
     function mergePolicy(newConfig, userConfigCopy) {
         if (userConfigCopy.policy) {
             if (userConfigCopy.policy.levels) {
+                if (!newConfig.policy.levels) newConfig.policy.levels = {};
                 for (var key in userConfigCopy.policy.levels) {
                     newConfig.policy.levels[key] = userConfigCopy.policy.levels[key];
                 }
             }
             if (userConfigCopy.policy.system) {
+                if (!newConfig.policy.system) newConfig.policy.system = {};
                 for (var key in userConfigCopy.policy.system) {
                     newConfig.policy.system[key] = userConfigCopy.policy.system[key];
                 }
