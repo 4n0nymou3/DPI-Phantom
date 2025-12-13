@@ -171,6 +171,47 @@ p {
     justify-content: flex-start;
 }
 
+.serverless-select-container {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.serverless-select {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.8);
+    color: #e0e0e0;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    -webkit-transition: border-color 0.3s, -webkit-box-shadow 0.3s;
+    transition: border-color 0.3s, -webkit-box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s, -webkit-box-shadow 0.3s;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 45px;
+}
+
+.serverless-select:focus {
+    border-color: #00ffff;
+    -webkit-box-shadow: 0 0 10px #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.serverless-select option {
+    background: rgba(30, 41, 59, 0.95);
+    color: #e0e0e0;
+    padding: 10px;
+}
+
 .input-header-buttons,
 .output-footer-buttons {
     display: -webkit-box;
@@ -1084,5 +1125,11 @@ body.loading::before {
     .output-footer-buttons button {
         width: 100%;
         margin-left: 0 !important;
+    }
+    
+    .serverless-select {
+        font-size: 14px;
+        padding: 10px 15px;
+        padding-right: 40px;
     }
 }
