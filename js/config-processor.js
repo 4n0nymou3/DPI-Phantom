@@ -181,6 +181,19 @@ PhantomChainer.ConfigProcessor = (function() {
             }
         }
 
+        for (var i = 0; i < routingRules.length; i++) {
+            var rule = routingRules[i];
+            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out') {
+                if (Array.isArray(rule.ip)) {
+                    for (var j = 0; j < rule.ip.length; j++) {
+                        if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
+                            return i;
+                        }
+                    }
+                }
+            }
+        }
+
         return -1;
     }
 
@@ -275,12 +288,21 @@ PhantomChainer.ConfigProcessor = (function() {
 
     function mergePolicy(newConfig, userConfigCopy) {
         if (userConfigCopy.policy) {
+            if (!newConfig.policy) {
+                newConfig.policy = {};
+            }
             if (userConfigCopy.policy.levels) {
+                if (!newConfig.policy.levels) {
+                    newConfig.policy.levels = {};
+                }
                 for (var key in userConfigCopy.policy.levels) {
                     newConfig.policy.levels[key] = userConfigCopy.policy.levels[key];
                 }
             }
             if (userConfigCopy.policy.system) {
+                if (!newConfig.policy.system) {
+                    newConfig.policy.system = {};
+                }
                 for (var key in userConfigCopy.policy.system) {
                     newConfig.policy.system[key] = userConfigCopy.policy.system[key];
                 }
