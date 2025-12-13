@@ -13,7 +13,7 @@
 <body>
     <div id="particles-js" class="particles"></div>
     <div class="container">
-        <h1>Phantom Universal Chainer <span class="version-tag">v10.1</span></h1>
+        <h1>Phantom Universal Chainer <span class="version-tag">v11.0</span></h1>
         <p>Paste your full Xray JSON config below. Supports both single proxy and multi-proxy (load balanced) configs.</p>
         
         <div class="public-config-card">
@@ -49,6 +49,14 @@
         <div class="textarea-container">
             <div class="line-numbers" id="ipInputLineNumbers">1</div>
             <textarea id="ipInput" rows="6"></textarea>
+        </div>
+        
+        <h3 style="margin-top: 20px; margin-bottom: 10px; text-align: center; color: var(--title-color);">Serverless Configuration Type:</h3>
+        <div class="serverless-select-container">
+            <select id="serverlessTypeSelect" class="serverless-select">
+                <option value="standard">Standard Serverless</option>
+                <option value="advanced">Advanced Serverless</option>
+            </select>
         </div>
         
         <div class="checkbox-container-left">
