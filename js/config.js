@@ -2,7 +2,10 @@ var PhantomChainer = PhantomChainer || {};
 
 PhantomChainer.Config = (function () {
     return {
-        phantomConfigUrl: 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless.json',
+        phantomConfigUrls: {
+            standard: 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless1.json',
+            advanced: 'https://raw.githubusercontent.com/4n0nymou3/DPI-Phantom/refs/heads/main/serverless2.json'
+        },
 
         publicConfigUrl: 'https://raw.githubusercontent.com/4n0nymou3/multi-proxy-config-fetcher/refs/heads/main/configs/xray_secure_loadbalanced_config.json',
 
