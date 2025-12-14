@@ -212,6 +212,72 @@ p {
     padding: 10px;
 }
 
+.custom-doh-section {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.custom-doh-input-container {
+    width: 100%;
+    opacity: 0.5;
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
+    margin-top: 10px;
+}
+
+.custom-doh-input-container.active {
+    opacity: 1;
+}
+
+.custom-doh-input-container input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.8);
+    color: #e0e0e0;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 14px;
+    outline: none;
+    -webkit-transition: border-color 0.3s, -webkit-box-shadow 0.3s;
+    transition: border-color 0.3s, -webkit-box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s, -webkit-box-shadow 0.3s;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.custom-doh-input-container input:focus {
+    border-color: #00ffff;
+    -webkit-box-shadow: 0 0 10px #00ffff;
+    box-shadow: 0 0 10px #00ffff;
+}
+
+.custom-doh-input-container input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.custom-doh-input-container input::-webkit-input-placeholder {
+    color: #888;
+}
+
+.custom-doh-input-container input::-moz-placeholder {
+    color: #888;
+}
+
+.custom-doh-input-container input:-ms-input-placeholder {
+    color: #888;
+}
+
+.custom-doh-input-container input::-ms-input-placeholder {
+    color: #888;
+}
+
+.custom-doh-input-container input::placeholder {
+    color: #888;
+}
+
 .input-header-buttons,
 .output-footer-buttons {
     display: -webkit-box;
@@ -1061,6 +1127,10 @@ body.loading::before {
     }
     
     .custom-name-input-container input {
+        width: 100%;
+    }
+    
+    .custom-doh-input-container input {
         width: 100%;
     }
     
