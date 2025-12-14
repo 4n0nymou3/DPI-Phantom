@@ -73,6 +73,12 @@ PhantomChainer.Utils = (function() {
         return validNameRegex.test(name);
     }
 
+    function isValidDohUrl(url) {
+        if (!url || url.trim() === '') return false;
+        var dohRegex = /^https:\/\/[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(:[0-9]+)?(\/[^\s]*)?$/;
+        return dohRegex.test(url.trim());
+    }
+
     function parseJsonc(jsoncString) {
         var lines = jsoncString.split('\n');
         var result = [];
@@ -205,6 +211,7 @@ PhantomChainer.Utils = (function() {
         isValidCIDR: isValidCIDR,
         isValidRouteItem: isValidRouteItem,
         isValidConfigName: isValidConfigName,
+        isValidDohUrl: isValidDohUrl,
         parseJsonc: parseJsonc,
         fetchConfig: fetchConfig,
         copyToClipboard: copyToClipboard,
