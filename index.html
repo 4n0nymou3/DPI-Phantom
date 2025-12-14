@@ -58,6 +58,16 @@
                 <option value="advanced">Advanced Serverless</option>
             </select>
         </div>
+
+        <div class="custom-doh-section">
+            <div class="checkbox-item">
+                <input type="checkbox" id="customDohCheckbox" name="customDoh">
+                <label for="customDohCheckbox">Use Custom DoH Proxy</label>
+            </div>
+            <div class="custom-doh-input-container" id="customDohInputContainer">
+                <input type="text" id="customDohInput" placeholder="https://your-doh-proxy.workers.dev/dns-query" disabled>
+            </div>
+        </div>
         
         <div class="checkbox-container-left">
             <div class="checkbox-item">
