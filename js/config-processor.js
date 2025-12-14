@@ -261,6 +261,82 @@ PhantomChainer.ConfigProcessor = (function() {
         }
     }
 
+    function isProtectedDnsServer(server) {
+        var address = typeof server === 'string' ? server : (server.address || '');
+        var tag = typeof server === 'object' ? server.tag : '';
+        
+        if (!address && !tag) return true;
+        
+        var protectedTags = [
+            'anti-sanction-dns',
+            'no-filter-dns',
+            'fakedns'
+        ];
+        
+        for (var i = 0; i < protectedTags.length; i++) {
+            if (tag === protectedTags[i]) {
+                return true;
+            }
+        }
+        
+        var protectedAddresses = [
+            'localhost',
+            '127.0.0.1',
+            '::1',
+            'fakedns'
+        ];
+        
+        var lowerAddress = address.toLowerCase();
+        for (var i = 0; i < protectedAddresses.length; i++) {
+            if (lowerAddress.indexOf(protectedAddresses[i]) !== -1) {
+                return true;
+            }
+        }
+        
+        if (typeof server === 'object' && server.domains) {
+            var hasProtectedDomain = false;
+            for (var i = 0; i < server.domains.length; i++) {
+                var domain = server.domains[i].toLowerCase();
+                if (domain.indexOf('domain:ir') !== -1 || 
+                    domain.indexOf('geosite:ir') !== -1 || 
+                    domain.indexOf('geosite:private') !== -1 ||
+                    domain.indexOf('geosite:sanctioned') !== -1) {
+                    hasProtectedDomain = true;
+                    break;
+                }
+            }
+            if (hasProtectedDomain) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    function replaceCustomDoh(config, customDohUrl) {
+        if (!customDohUrl || customDohUrl.trim() === '') return;
+        
+        if (config.dns && config.dns.servers) {
+            for (var i = 0; i < config.dns.servers.length; i++) {
+                var server = config.dns.servers[i];
+                
+                if (isProtectedDnsServer(server)) {
+                    continue;
+                }
+                
+                if (typeof server === 'string') {
+                    if (server.indexOf('https://') === 0 || server.indexOf('https+local://') === 0) {
+                        config.dns.servers[i] = customDohUrl;
+                    }
+                } else if (typeof server === 'object' && server.address) {
+                    if (server.address.indexOf('https://') === 0 || server.address.indexOf('https+local://') === 0) {
+                        server.address = customDohUrl;
+                    }
+                }
+            }
+        }
+    }
+
     function mergeDNS(newConfig, userConfigCopy) {
         if (userConfigCopy.dns) {
             if (userConfigCopy.dns.hosts) {
@@ -368,6 +444,10 @@ PhantomChainer.ConfigProcessor = (function() {
         mergeDNS(newConfig, userConfigCopy);
         mergePolicy(newConfig, userConfigCopy);
         mergeOther(newConfig, userConfigCopy);
+
+        if (options.customDohUrl && options.routeAllTraffic) {
+            replaceCustomDoh(newConfig, options.customDohUrl);
+        }
 
         var finalRemarks;
         if (options.useCustomName) {
