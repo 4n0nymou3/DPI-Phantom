@@ -31,7 +31,10 @@ document.addEventListener('DOMContentLoaded', function() {
         dragOverlay: document.getElementById('dragOverlay'),
         configTabs: document.getElementById('configTabs'),
         alertContainer: document.getElementById('alertContainer'),
-        serverlessTypeSelect: document.getElementById('serverlessTypeSelect')
+        serverlessTypeSelect: document.getElementById('serverlessTypeSelect'),
+        customDohCheckbox: document.getElementById('customDohCheckbox'),
+        customDohInput: document.getElementById('customDohInput'),
+        customDohInputContainer: document.getElementById('customDohInputContainer')
     };
 
     var generatedConfigs = [];
@@ -111,6 +114,17 @@ document.addEventListener('DOMContentLoaded', function() {
             elements.charCounter.style.color = '#ff4b4b';
         } else {
             elements.charCounter.style.color = '#888';
+        }
+    });
+
+    elements.customDohCheckbox.addEventListener('change', function() {
+        if (elements.customDohCheckbox.checked) {
+            elements.customDohInput.disabled = false;
+            elements.customDohInputContainer.classList.add('active');
+            elements.customDohInput.focus();
+        } else {
+            elements.customDohInput.disabled = true;
+            elements.customDohInputContainer.classList.remove('active');
         }
     });
 
@@ -204,6 +218,8 @@ document.addEventListener('DOMContentLoaded', function() {
         var useCustomName = elements.customNameCheckbox.checked;
         var customName = elements.customNameInput.value.trim();
         var serverlessType = elements.serverlessTypeSelect.value;
+        var useCustomDoh = elements.customDohCheckbox.checked;
+        var customDohUrl = elements.customDohInput.value.trim();
         var userConfig;
 
         elements.outputJson.value = '';
@@ -237,6 +253,22 @@ document.addEventListener('DOMContentLoaded', function() {
             UI.hideLoading();
             UI.showAlert('Config name contains invalid characters', 'error');
             elements.outputJson.value = 'Error: Invalid config name (use only letters, numbers, spaces, - and _)';
+            UI.updateLineNumbers(elements.outputJson, elements.outputLineNumbers);
+            return;
+        }
+
+        if (useCustomDoh && customDohUrl === '') {
+            UI.hideLoading();
+            UI.showAlert('Please enter a custom DoH URL or uncheck the option', 'error');
+            elements.outputJson.value = 'Error: Custom DoH URL is empty';
+            UI.updateLineNumbers(elements.outputJson, elements.outputLineNumbers);
+            return;
+        }
+
+        if (useCustomDoh && !Utils.isValidDohUrl(customDohUrl)) {
+            UI.hideLoading();
+            UI.showAlert('Invalid DoH URL format. Must start with https://', 'error');
+            elements.outputJson.value = 'Error: Invalid DoH URL format';
             UI.updateLineNumbers(elements.outputJson, elements.outputLineNumbers);
             return;
         }
@@ -325,12 +357,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     var configAll = ConfigProcessor.createCombinedConfig(baseConfig, userConfig, routeItems, {
                         routeAllTraffic: true,
                         useCustomName: useCustomName,
-                        customName: customName
+                        customName: customName,
+                        customDohUrl: useCustomDoh ? customDohUrl : null
                     });
                     var configCustom = ConfigProcessor.createCombinedConfig(baseConfig, userConfig, routeItems, {
                         routeAllTraffic: false,
                         useCustomName: useCustomName,
-                        customName: customName
+                        customName: customName,
+                        customDohUrl: useCustomDoh ? customDohUrl : null
                     });
                     
                     generatedConfigs = [configAll, configCustom];
@@ -343,7 +377,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     var singleConfig = ConfigProcessor.createCombinedConfig(baseConfig, userConfig, routeItems, {
                         routeAllTraffic: routeAll,
                         useCustomName: useCustomName,
-                        customName: customName
+                        customName: customName,
+                        customDohUrl: useCustomDoh ? customDohUrl : null
                     });
                     
                     generatedConfigs = [singleConfig];
@@ -458,6 +493,10 @@ document.addEventListener('DOMContentLoaded', function() {
         elements.previewLabel.style.display = 'none';
         elements.downloadButton.style.display = 'none';
         elements.serverlessTypeSelect.value = 'standard';
+        elements.customDohCheckbox.checked = false;
+        elements.customDohInput.value = '';
+        elements.customDohInput.disabled = true;
+        elements.customDohInputContainer.classList.remove('active');
         generatedConfigs = [];
         currentConfigIndex = 0;
         isDualMode = false;
