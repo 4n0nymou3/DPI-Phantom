@@ -1,0 +1,13 @@
+{
+  "name": "phantom-automation",
+  "version": "1.0.0",
+  "description": "Automated config generation",
+  "type": "module",
+  "main": "generate-configs.js",
+  "scripts": {
+    "generate": "node generate-configs.js"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
