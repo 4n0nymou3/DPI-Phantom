@@ -35,7 +35,6 @@
       ],
       "protocol": "socks",
       "tag": "socks-in",
-      "listen": "127.0.0.1",
       "port": 10808,
       "settings": {
         "auth": "noauth",
@@ -53,7 +52,6 @@
     {
       "protocol": "http",
       "tag": "http-in",
-      "listen": "127.0.0.1",
       "port": 10809,
       "settings": {
         "userLevel": 8
