@@ -1,0 +1,36 @@
+name: Auto Generate Configs
+
+on:
+  schedule:
+    - cron: '0 9 * * *'
+    - cron: '0 21 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        working-directory: ./automation
+        run: npm install
+        
+      - name: Generate configs
+        working-directory: ./automation
+        run: node generate-configs.js
+        
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add configs/
+          git diff --staged --quiet || git commit -m "Auto-generate configs - $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
