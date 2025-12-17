@@ -430,24 +430,21 @@ async function main() {
             customDohUrl: null
         });
         
-        const configsDir = path.join(__dirname, '..', 'configs');
-        if (!fs.existsSync(configsDir)) {
-            console.log('Creating configs directory...');
-            fs.mkdirSync(configsDir, { recursive: true });
+        const dualConfigs = [configAll, configCustom];
+        
+        const configDir = path.join(__dirname, '..', 'config');
+        if (!fs.existsSync(configDir)) {
+            console.log('Creating config directory...');
+            fs.mkdirSync(configDir, { recursive: true });
         }
         
-        const allConfigPath = path.join(configsDir, 'Anonymous_All.json');
-        const customConfigPath = path.join(configsDir, 'Anonymous_Custom.json');
+        const configPath = path.join(configDir, 'Anonymous.json');
         
-        console.log('Writing Anonymous_All.json...');
-        fs.writeFileSync(allConfigPath, JSON.stringify(configAll, null, 2));
-        
-        console.log('Writing Anonymous_Custom.json...');
-        fs.writeFileSync(customConfigPath, JSON.stringify(configCustom, null, 2));
+        console.log('Writing Anonymous.json...');
+        fs.writeFileSync(configPath, JSON.stringify(dualConfigs, null, 2));
         
         console.log('Config generation completed successfully!');
-        console.log(`- ${allConfigPath}`);
-        console.log(`- ${customConfigPath}`);
+        console.log(`- ${configPath}`);
         
     } catch (error) {
         console.error('Error during config generation:', error.message);
