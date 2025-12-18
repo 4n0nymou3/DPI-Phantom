@@ -34,12 +34,53 @@ document.addEventListener('DOMContentLoaded', function() {
         serverlessTypeSelect: document.getElementById('serverlessTypeSelect'),
         customDohCheckbox: document.getElementById('customDohCheckbox'),
         customDohInput: document.getElementById('customDohInput'),
-        customDohInputContainer: document.getElementById('customDohInputContainer')
+        customDohInputContainer: document.getElementById('customDohInputContainer'),
+        subscriptionLink: document.getElementById('subscriptionLink'),
+        copySubscriptionButton: document.getElementById('copySubscriptionButton')
     };
 
     var generatedConfigs = [];
     var currentConfigIndex = 0;
     var isDualMode = false;
+
+    elements.copySubscriptionButton.addEventListener('click', function() {
+        var link = elements.subscriptionLink.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(link).then(function() {
+                var originalHTML = elements.copySubscriptionButton.innerHTML;
+                elements.copySubscriptionButton.innerHTML = '<i class="fas fa-check"></i>';
+                UI.showAlert('Subscription link copied to clipboard', 'success');
+                setTimeout(function() {
+                    elements.copySubscriptionButton.innerHTML = originalHTML;
+                }, 2000);
+            }).catch(function() {
+                fallbackCopySubscription(link);
+            });
+        } else {
+            fallbackCopySubscription(link);
+        }
+    });
+
+    function fallbackCopySubscription(text) {
+        var textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            var originalHTML = elements.copySubscriptionButton.innerHTML;
+            elements.copySubscriptionButton.innerHTML = '<i class="fas fa-check"></i>';
+            UI.showAlert('Subscription link copied to clipboard', 'success');
+            setTimeout(function() {
+                elements.copySubscriptionButton.innerHTML = originalHTML;
+            }, 2000);
+        } catch (err) {
+            UI.showAlert('Failed to copy subscription link', 'error');
+        }
+        document.body.removeChild(textArea);
+    }
 
     function setDefaultIPs() {
         elements.ipInput.value = Config.defaultForcedRouteIPs.join('\n');
