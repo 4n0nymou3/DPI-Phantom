@@ -1,5 +1,5 @@
 {
-  "remarks": "Serverless-dynx-v32",
+  "remarks": "Serverless-dynx-v34",
   "version": {
     "min": "25.12.8"
   },
@@ -37,10 +37,9 @@
         "domains": [
           "domain:ir",
           "geosite:private",
-          "geosite:ir",
+          "geosite:category-ir",
           "full:challenges.cloudflare.com",
           "domain:dynx.pro",
-          "geosite:sanctioned",
           "geosite:category-porn",
           "geosite:telegram",
           "geosite:meta",
@@ -51,6 +50,17 @@
           "geosite:tiktok",
           "geosite:discord"
         ]
+      },
+      {
+        "tag": "anti-sanction-dns",
+        "address": "h2c://anti-ban.dynx.pro/dns-query",
+        "expectedIPs": [
+          "10.139.177.16",
+          "10.139.177.17",
+          "10.139.177.18"
+        ],
+        "timeoutMs": 5000,
+        "finalQuery": false
       },
       {
         "tag": "no-filter-dns",
@@ -74,27 +84,11 @@
         "domains": [
           "domain:ir",
           "geosite:private",
-          "geosite:ir",
+          "geosite:category-ir",
           "full:challenges.cloudflare.com",
           "domain:dynx.pro"
         ],
         "finalQuery": true
-      },
-      {
-        "tag": "anti-sanction-dns",
-        "address": "https://anti-ban.dynx.pro/dns-query",
-        "domains": [
-          "geosite:sanctioned"
-        ],
-        "unexpectedIPs": [
-          "geoip:irgfw-all-injected-ips",
-          "0.0.0.0",
-          "::",
-          "127.0.0.1",
-          "::1"
-        ],
-        "timeoutMs": 4000,
-        "finalQuery": false
       }
     ],
     "queryStrategy": "UseSystem",
@@ -157,7 +151,7 @@
             "tryDelayMs": 300,
             "prioritizeIPv6": true,
             "interleave": 2,
-            "maxConcurrentTry": 16
+            "maxConcurrentTry": 20
           }
         }
       }
@@ -167,6 +161,19 @@
       "protocol": "direct",
       "settings": {
         "targetStrategy": "ForceIPv6v4"
+      }
+    },
+    {
+      "tag": "onlyv4-direct-out",
+      "protocol": "direct",
+      "streamSettings": {
+        "sockopt": {
+          "domainStrategy": "ForceIPv4",
+          "happyEyeballs": {
+            "tryDelayMs": 300,
+            "maxConcurrentTry": 20
+          }
+        }
       }
     },
     {
@@ -232,7 +239,7 @@
             "tryDelayMs": 300,
             "prioritizeIPv6": true,
             "interleave": 2,
-            "maxConcurrentTry": 16
+            "maxConcurrentTry": 20
           }
         }
       }
@@ -255,7 +262,7 @@
             "tryDelayMs": 300,
             "prioritizeIPv6": true,
             "interleave": 2,
-            "maxConcurrentTry": 16
+            "maxConcurrentTry": 20
           }
         }
       }
@@ -556,6 +563,26 @@
           }
         ]
       }
+    },
+    {
+      "tag": "tls-repack-dns",
+      "protocol": "direct",
+      "streamSettings": {
+        "security": "tls",
+        "tlsSettings": {
+          "serverName": "anti-ban.dynx.pro",
+          "fingerprint": "chrome"
+        },
+        "sockopt": {
+          "domainStrategy": "ForceIP",
+          "happyEyeballs": {
+            "tryDelayMs": 300,
+            "prioritizeIPv6": true,
+            "interleave": 2,
+            "maxConcurrentTry": 20
+          }
+        }
+      }
     }
   ],
   "routing": {
@@ -585,7 +612,7 @@
         "port": 53
       },
       {
-        "outboundTag": "tcp-direct-out",
+        "outboundTag": "tls-repack-dns",
         "network": "tcp",
         "inboundTag": [
           "anti-sanction-dns"
@@ -607,7 +634,8 @@
       {
         "outboundTag": "block-out",
         "ip": [
-          "geoip:irgfw-block-injected-ips",
+          "10.10.34.0/24",
+          "2001:4188:2:600::/64",
           "0.0.0.0",
           "::",
           "198.19.0.0/16",
@@ -620,7 +648,7 @@
         "domain": [
           "domain:ir",
           "geosite:private",
-          "geosite:ir"
+          "geosite:category-ir"
         ],
         "ip": [
           "0.0.0.0/0",
@@ -633,11 +661,19 @@
         "domain": [
           "domain:ir",
           "geosite:private",
-          "geosite:ir"
+          "geosite:category-ir"
         ],
         "ip": [
           "0.0.0.0/0",
           "::/0"
+        ]
+      },
+      {
+        "outboundTag": "onlyv4-direct-out",
+        "ip": [
+          "10.139.177.16",
+          "10.139.177.17",
+          "10.139.177.18"
         ]
       },
       {
