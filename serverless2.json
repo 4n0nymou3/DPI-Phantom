@@ -1,5 +1,5 @@
 {
-  "remarks": "Serverless-dynx-v34",
+  "remarks": "Serverless-dynx-v37",
   "version": {
     "min": "25.12.8"
   },
@@ -22,7 +22,7 @@
       "poolSize": 65535
     },
     {
-      "ipPool": "fc80::/9",
+      "ipPool": "fc00:2000::/19",
       "poolSize": 65535
     }
   ],
@@ -114,7 +114,7 @@
       }
     },
     {
-      "tag": "socks-in",
+      "tag": "mixed-in",
       "port": 10808,
       "protocol": "mixed",
       "sniffing": {
@@ -211,7 +211,7 @@
         "fragment": {
           "packets": "1-1",
           "length": "130",
-          "interval": "260",
+          "interval": "560",
           "maxSplit": "4"
         }
       },
@@ -228,7 +228,7 @@
         "fragment": {
           "packets": "2-4",
           "length": "1",
-          "interval": "2",
+          "interval": "4",
           "maxSplit": "130"
         }
       },
@@ -251,7 +251,7 @@
         "fragment": {
           "packets": "1-1",
           "length": "1",
-          "interval": "2",
+          "interval": "4",
           "maxSplit": "517"
         }
       },
@@ -607,7 +607,7 @@
       {
         "outboundTag": "dns-out",
         "inboundTag": [
-          "socks-in"
+          "mixed-in"
         ],
         "port": 53
       },
@@ -639,7 +639,7 @@
           "0.0.0.0",
           "::",
           "198.19.0.0/16",
-          "fc80::/9"
+          "fc00:2000::/19"
         ]
       },
       {
