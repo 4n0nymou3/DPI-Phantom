@@ -42,19 +42,4 @@
 
 ---
 
-## ✨ سازگاری با کانفیگ‌های BPB
-
-از این پس، کاربران پنل **BPB** می‌توانند کدهای کامل پیکربندی Xray (فرمت JSON) برای موارد زیر را مستقیما کپی کرده و داخل Phantom وارد کنند تا یک پیکربندی فول‌پاور ضد DPI تحویل بگیرن:
-
-* 💦 BPB - Best Ping 💥
-* 💦 BPB F - Best Ping 💥
-* 💦 BPB F - Best Fragment 😎
-* 💦 BPB F - WorkerLess - 1 ⭐
-* 💦 BPB F - WorkerLess - 2 ⭐
-
-⚠️ **نکته‌ی مهم:**
-ابزار Phantom قابلیت شناسایی و Chain کردن پیکربندی‌های WorkerLess را هم دارد، اما از نظر فنی، ترکیب این نوع کانفیگ‌ها با تانل Phantom چندان منطقی نیست و توصیه نمی‌شود.
-
----
-
 <p dir="ltr">• <a href="https://t.me/BXAMbot" target="_blank" rel="noopener noreferrer"><strong>Anonymous</strong></a> ❤️</p>
