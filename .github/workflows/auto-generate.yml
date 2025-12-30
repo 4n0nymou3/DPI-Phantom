@@ -2,8 +2,8 @@ name: Auto Generate Configs
 
 on:
   schedule:
-    - cron: '0 9 * * *'
-    - cron: '0 21 * * *'
+    - cron: '0 10 * * *'
+    - cron: '0 22 * * *'
   workflow_dispatch:
 
 permissions:
