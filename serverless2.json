@@ -1,5 +1,5 @@
 {
-  "remarks": "👽 Anonymous War Mode",
+  "remarks": "Serverless-vanilla-v41",
   "version": {
     "min": "25.12.8"
   },
@@ -627,7 +627,7 @@
         ]
       },
       {
-        "outboundTag": "skip-fragment",
+        "outboundTag": "full-fragment",
         "inboundTag": [
           "no-filter-dns"
         ]
@@ -721,7 +721,7 @@
         ]
       },
       {
-        "outboundTag": "skip-fragment",
+        "outboundTag": "full-fragment",
         "network": "tcp",
         "protocol": [
           "tls"
@@ -732,7 +732,7 @@
         ]
       },
       {
-        "outboundTag": "skip-fragment",
+        "outboundTag": "full-fragment",
         "network": "tcp",
         "port": "443",
         "ip": [
@@ -741,7 +741,7 @@
         ]
       },
       {
-        "outboundTag": "skip-fragment",
+        "outboundTag": "full-fragment",
         "network": "tcp",
         "ip": [
           "0.0.0.0/0",
