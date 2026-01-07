@@ -183,35 +183,19 @@ const ConfigProcessor = {
     findInsertionIndex: function(routingRules) {
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.port === "0-65535" && rule.enabled === true) {
-                return i;
-            }
-        }
-
-        for (let i = 0; i < routingRules.length; i++) {
-            const r = routingRules[i];
-            if (r.outboundTag === 'direct-out' && Array.isArray(r.ip)) {
-                for (let j = 0; j < r.ip.length; j++) {
-                    if (r.ip[j] === 'geoip:ir') {
-                        return i;
+            if (rule.outboundTag === 'block-out' && Array.isArray(rule.ip)) {
+                let hasZeroIP = false;
+                for (let j = 0; j < rule.ip.length; j++) {
+                    if (rule.ip[j] === '0.0.0.0' || rule.ip[j] === '::') {
+                        hasZeroIP = true;
+                        break;
                     }
+                }
+                if (hasZeroIP) {
+                    return i + 1;
                 }
             }
         }
-
-        for (let i = 0; i < routingRules.length; i++) {
-            const rule = routingRules[i];
-            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out') {
-                if (Array.isArray(rule.ip)) {
-                    for (let j = 0; j < rule.ip.length; j++) {
-                        if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
-                            return i;
-                        }
-                    }
-                }
-            }
-        }
-
         return -1;
     },
 
@@ -232,48 +216,24 @@ const ConfigProcessor = {
                 newConfig.routing.rules.push(udpCatchAll);
             }
         } else {
-            const rulesToAdd = [];
             const ipList = [];
-            const domainList = [];
-
             for (let i = 0; i < routeItems.length; i++) {
-                const item = routeItems[i];
-                const firstPart = item.split('/')[0].trim();
-                if (Utils.isDomain(firstPart)) {
-                    domainList.push(item);
-                } else {
-                    ipList.push(item);
-                }
+                ipList.push(routeItems[i]);
             }
 
-            if (domainList.length > 0) {
-                const domainRule = { type: 'field', domain: domainList };
-                for (const key in ruleAction) domainRule[key] = ruleAction[key];
-                rulesToAdd.push(domainRule);
-            }
             if (ipList.length > 0) {
-                const ipRule = { type: 'field', ip: ipList };
-                for (const key in ruleAction) ipRule[key] = ruleAction[key];
-                rulesToAdd.push(ipRule);
-            }
+                const ipRule = {
+                    type: 'field',
+                    ip: ipList
+                };
+                for (const key in ruleAction) {
+                    ipRule[key] = ruleAction[key];
+                }
 
-            if (rulesToAdd.length > 0) {
                 if (insertionIndex > -1) {
-                    for (let i = rulesToAdd.length - 1; i >= 0; i--) {
-                        newConfig.routing.rules.splice(insertionIndex, 0, rulesToAdd[i]);
-                    }
+                    newConfig.routing.rules.splice(insertionIndex, 0, ipRule);
                 } else {
-                    let lastDirectRuleIndex = -1;
-                    for (let i = newConfig.routing.rules.length - 1; i >= 0; i--) {
-                        if (newConfig.routing.rules[i].outboundTag === 'direct-out') {
-                            lastDirectRuleIndex = i;
-                            break;
-                        }
-                    }
-                    const spliceIndex = lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0;
-                    for (let i = 0; i < rulesToAdd.length; i++) {
-                        newConfig.routing.rules.splice(spliceIndex + i, 0, rulesToAdd[i]);
-                    }
+                    newConfig.routing.rules.push(ipRule);
                 }
             }
         }
