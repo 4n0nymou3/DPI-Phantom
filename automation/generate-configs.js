@@ -243,18 +243,49 @@ const ConfigProcessor = {
                 newConfig.routing.rules.push(udpCatchAll);
             }
         } else {
-            const newRule = {
-                type: 'field',
-                ip: routeItems
-            };
-            for (const key in ruleAction) {
-                newRule[key] = ruleAction[key];
+            const rulesToAdd = [];
+            const ipList = [];
+            const domainList = [];
+
+            for (let i = 0; i < routeItems.length; i++) {
+                const item = routeItems[i];
+                const firstPart = item.split('/')[0].trim();
+                if (Utils.isDomain(firstPart)) {
+                    domainList.push(item);
+                } else {
+                    ipList.push(item);
+                }
             }
 
-            if (insertionIndex > -1) {
-                newConfig.routing.rules.splice(insertionIndex, 0, newRule);
-            } else {
-                newConfig.routing.rules.push(newRule);
+            if (domainList.length > 0) {
+                const domainRule = { type: 'field', domain: domainList };
+                for (const key in ruleAction) domainRule[key] = ruleAction[key];
+                rulesToAdd.push(domainRule);
+            }
+            if (ipList.length > 0) {
+                const ipRule = { type: 'field', ip: ipList };
+                for (const key in ruleAction) ipRule[key] = ruleAction[key];
+                rulesToAdd.push(ipRule);
+            }
+
+            if (rulesToAdd.length > 0) {
+                if (insertionIndex > -1) {
+                    for (let i = rulesToAdd.length - 1; i >= 0; i--) {
+                        newConfig.routing.rules.splice(insertionIndex, 0, rulesToAdd[i]);
+                    }
+                } else {
+                    let lastDirectRuleIndex = -1;
+                    for (let i = newConfig.routing.rules.length - 1; i >= 0; i--) {
+                        if (newConfig.routing.rules[i].outboundTag === 'direct-out') {
+                            lastDirectRuleIndex = i;
+                            break;
+                        }
+                    }
+                    const spliceIndex = lastDirectRuleIndex > -1 ? lastDirectRuleIndex + 1 : 0;
+                    for (let i = 0; i < rulesToAdd.length; i++) {
+                        newConfig.routing.rules.splice(spliceIndex + i, 0, rulesToAdd[i]);
+                    }
+                }
             }
         }
     },
