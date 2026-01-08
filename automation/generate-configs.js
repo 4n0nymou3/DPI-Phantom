@@ -183,17 +183,6 @@ const ConfigProcessor = {
     findInsertionIndex: function(routingRules) {
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.outboundTag === 'block-out' && Array.isArray(rule.ip)) {
-                for (let j = 0; j < rule.ip.length; j++) {
-                    if (rule.ip[j] === '198.19.0.0/16' || rule.ip[j] === 'fc00:2000::/19') {
-                        return i + 1;
-                    }
-                }
-            }
-        }
-
-        for (let i = 0; i < routingRules.length; i++) {
-            const rule = routingRules[i];
             if (rule.port === "0-65535" && rule.enabled === true) {
                 return i;
             }
