@@ -181,34 +181,40 @@ const ConfigProcessor = {
     },
 
     findInsertionIndex: function(routingRules) {
+        // Priority 1: Insert before geoip:ir rules (domestic traffic)
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.port === "0-65535" && rule.outboundTag === 'block-out') {
-                return i;
-            }
-        }
-
-        for (let i = 0; i < routingRules.length; i++) {
-            const r = routingRules[i];
-            if ((r.outboundTag === 'direct-out' || r.outboundTag === 'tcp-direct-out') && Array.isArray(r.ip)) {
-                for (let j = 0; j < r.ip.length; j++) {
-                    if (r.ip[j] === 'geoip:ir') {
+            if (rule.outboundTag === 'block-out') continue;
+            
+            if (Array.isArray(rule.ip)) {
+                for (let j = 0; j < rule.ip.length; j++) {
+                    if (rule.ip[j] === 'geoip:ir') {
                         return i;
                     }
                 }
             }
         }
 
+        // Priority 2: Insert before any catch-all IP rule (0.0.0.0/0 or ::/0) regardless of tag
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out' || rule.outboundTag === 'direct-out') {
-                if (Array.isArray(rule.ip)) {
-                    for (let j = 0; j < rule.ip.length; j++) {
-                        if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
-                            return i;
-                        }
+            if (rule.outboundTag === 'block-out') continue;
+
+            if (Array.isArray(rule.ip)) {
+                for (let j = 0; j < rule.ip.length; j++) {
+                    if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
+                        return i;
                     }
                 }
+            }
+        }
+
+        // Priority 3: Insert before port catch-all
+        for (let i = 0; i < routingRules.length; i++) {
+            const rule = routingRules[i];
+            if (rule.outboundTag === 'block-out') continue;
+            if (rule.port === "0-65535") {
+                return i;
             }
         }
 
@@ -262,9 +268,11 @@ const ConfigProcessor = {
                         newConfig.routing.rules.splice(insertionIndex, 0, rulesToAdd[i]);
                     }
                 } else {
+                    // Fallback logic if no index found, try to find the last direct rule or append
                     let lastDirectRuleIndex = -1;
                     for (let i = newConfig.routing.rules.length - 1; i >= 0; i--) {
-                        if (newConfig.routing.rules[i].outboundTag === 'direct-out' || newConfig.routing.rules[i].outboundTag === 'tcp-direct-out') {
+                        const r = newConfig.routing.rules[i];
+                        if (r.outboundTag && (r.outboundTag.indexOf('direct') !== -1 || r.outboundTag === 'full-fragment')) {
                             lastDirectRuleIndex = i;
                             break;
                         }
