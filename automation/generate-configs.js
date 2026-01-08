@@ -184,18 +184,45 @@ const ConfigProcessor = {
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
             if (rule.outboundTag === 'block-out' && Array.isArray(rule.ip)) {
-                let hasZeroIP = false;
                 for (let j = 0; j < rule.ip.length; j++) {
-                    if (rule.ip[j] === '0.0.0.0' || rule.ip[j] === '::') {
-                        hasZeroIP = true;
-                        break;
+                    if (rule.ip[j] === '198.19.0.0/16' || rule.ip[j] === 'fc00:2000::/19') {
+                        return i + 1;
                     }
-                }
-                if (hasZeroIP) {
-                    return i + 1;
                 }
             }
         }
+
+        for (let i = 0; i < routingRules.length; i++) {
+            const rule = routingRules[i];
+            if (rule.port === "0-65535" && rule.enabled === true) {
+                return i;
+            }
+        }
+
+        for (let i = 0; i < routingRules.length; i++) {
+            const r = routingRules[i];
+            if (r.outboundTag === 'direct-out' && Array.isArray(r.ip)) {
+                for (let j = 0; j < r.ip.length; j++) {
+                    if (r.ip[j] === 'geoip:ir') {
+                        return i;
+                    }
+                }
+            }
+        }
+
+        for (let i = 0; i < routingRules.length; i++) {
+            const rule = routingRules[i];
+            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out') {
+                if (Array.isArray(rule.ip)) {
+                    for (let j = 0; j < rule.ip.length; j++) {
+                        if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
+                            return i;
+                        }
+                    }
+                }
+            }
+        }
+
         return -1;
     },
 
@@ -216,25 +243,18 @@ const ConfigProcessor = {
                 newConfig.routing.rules.push(udpCatchAll);
             }
         } else {
-            const ipList = [];
-            for (let i = 0; i < routeItems.length; i++) {
-                ipList.push(routeItems[i]);
+            const newRule = {
+                type: 'field',
+                ip: routeItems
+            };
+            for (const key in ruleAction) {
+                newRule[key] = ruleAction[key];
             }
 
-            if (ipList.length > 0) {
-                const ipRule = {
-                    type: 'field',
-                    ip: ipList
-                };
-                for (const key in ruleAction) {
-                    ipRule[key] = ruleAction[key];
-                }
-
-                if (insertionIndex > -1) {
-                    newConfig.routing.rules.splice(insertionIndex, 0, ipRule);
-                } else {
-                    newConfig.routing.rules.push(ipRule);
-                }
+            if (insertionIndex > -1) {
+                newConfig.routing.rules.splice(insertionIndex, 0, newRule);
+            } else {
+                newConfig.routing.rules.push(newRule);
             }
         }
     },
