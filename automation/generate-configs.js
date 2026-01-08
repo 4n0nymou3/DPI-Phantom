@@ -183,14 +183,14 @@ const ConfigProcessor = {
     findInsertionIndex: function(routingRules) {
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.port === "0-65535" && rule.enabled === true) {
+            if (rule.port === "0-65535" && rule.outboundTag === 'block-out') {
                 return i;
             }
         }
 
         for (let i = 0; i < routingRules.length; i++) {
             const r = routingRules[i];
-            if (r.outboundTag === 'direct-out' && Array.isArray(r.ip)) {
+            if ((r.outboundTag === 'direct-out' || r.outboundTag === 'tcp-direct-out') && Array.isArray(r.ip)) {
                 for (let j = 0; j < r.ip.length; j++) {
                     if (r.ip[j] === 'geoip:ir') {
                         return i;
@@ -201,7 +201,7 @@ const ConfigProcessor = {
 
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
-            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out') {
+            if (rule.outboundTag === 'tcp-direct-out' || rule.outboundTag === 'udp-direct-out' || rule.outboundTag === 'direct-out') {
                 if (Array.isArray(rule.ip)) {
                     for (let j = 0; j < rule.ip.length; j++) {
                         if (rule.ip[j] === '0.0.0.0/0' || rule.ip[j] === '::/0') {
@@ -217,7 +217,6 @@ const ConfigProcessor = {
 
     addRoutingRules: function(newConfig, routeItems, ruleAction, routeAllTraffic) {
         const insertionIndex = this.findInsertionIndex(newConfig.routing.rules);
-
         if (routeAllTraffic) {
             const tcpCatchAll = { type: 'field', network: 'tcp' };
             const udpCatchAll = { type: 'field', network: 'udp' };
@@ -265,7 +264,7 @@ const ConfigProcessor = {
                 } else {
                     let lastDirectRuleIndex = -1;
                     for (let i = newConfig.routing.rules.length - 1; i >= 0; i--) {
-                        if (newConfig.routing.rules[i].outboundTag === 'direct-out') {
+                        if (newConfig.routing.rules[i].outboundTag === 'direct-out' || newConfig.routing.rules[i].outboundTag === 'tcp-direct-out') {
                             lastDirectRuleIndex = i;
                             break;
                         }
@@ -360,7 +359,6 @@ const ConfigProcessor = {
 
         const tagMap = this.createTagMap(userConfigCopy, detectionResult.isLoadBalanced);
         const fragmentTag = this.findFragmentOutboundTag(newConfig);
-
         this.applyFragmentToOutbounds(userConfigCopy, tagMap, fragmentTag, detectionResult.isLoadBalanced, detectionResult.userBalancer);
 
         if (detectionResult.isLoadBalanced) {
@@ -373,7 +371,6 @@ const ConfigProcessor = {
         const ruleAction = detectionResult.isLoadBalanced ? { balancerTag: mainExitTag } : { outboundTag: mainExitTag };
 
         this.addRoutingRules(newConfig, routeItems, ruleAction, options.routeAllTraffic);
-
         for (let i = 0; i < userConfigCopy.outbounds.length; i++) {
             newConfig.outbounds.push(userConfigCopy.outbounds[i]);
         }
@@ -405,13 +402,11 @@ async function fetchConfig(url) {
 async function main() {
     try {
         console.log('Starting automatic config generation...');
-        
         console.log('Fetching public config...');
         const userConfig = await fetchConfig(Config.publicConfigUrl);
         
         console.log('Fetching advanced serverless config...');
         const baseConfig = await fetchConfig(Config.advancedServerlessUrl);
-        
         const routeItems = Config.defaultForcedRouteIPs;
         
         console.log('Generating All config...');
@@ -421,7 +416,6 @@ async function main() {
             customName: '',
             customDohUrl: null
         });
-        
         console.log('Generating Custom config...');
         const configCustom = ConfigProcessor.createCombinedConfig(baseConfig, userConfig, routeItems, {
             routeAllTraffic: false,
@@ -429,7 +423,6 @@ async function main() {
             customName: '',
             customDohUrl: null
         });
-        
         const dualConfigs = [configAll, configCustom];
         
         const configDir = path.join(__dirname, '..', 'config');
@@ -439,13 +432,11 @@ async function main() {
         }
         
         const configPath = path.join(configDir, 'Anonymous.json');
-        
         console.log('Writing Anonymous.json...');
         fs.writeFileSync(configPath, JSON.stringify(dualConfigs, null, 2));
         
         console.log('Config generation completed successfully!');
         console.log(`- ${configPath}`);
-        
     } catch (error) {
         console.error('Error during config generation:', error.message);
         process.exit(1);
