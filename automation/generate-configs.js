@@ -181,7 +181,6 @@ const ConfigProcessor = {
     },
 
     findInsertionIndex: function(routingRules) {
-        // Priority 1: Insert before geoip:ir rules (domestic traffic)
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
             if (rule.outboundTag === 'block-out') continue;
@@ -195,7 +194,6 @@ const ConfigProcessor = {
             }
         }
 
-        // Priority 2: Insert before any catch-all IP rule (0.0.0.0/0 or ::/0) regardless of tag
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
             if (rule.outboundTag === 'block-out') continue;
@@ -209,7 +207,6 @@ const ConfigProcessor = {
             }
         }
 
-        // Priority 3: Insert before port catch-all
         for (let i = 0; i < routingRules.length; i++) {
             const rule = routingRules[i];
             if (rule.outboundTag === 'block-out') continue;
@@ -268,7 +265,6 @@ const ConfigProcessor = {
                         newConfig.routing.rules.splice(insertionIndex, 0, rulesToAdd[i]);
                     }
                 } else {
-                    // Fallback logic if no index found, try to find the last direct rule or append
                     let lastDirectRuleIndex = -1;
                     for (let i = newConfig.routing.rules.length - 1; i >= 0; i--) {
                         const r = newConfig.routing.rules[i];
