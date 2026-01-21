@@ -1,5 +1,10 @@
 {
-  "remarks": "Serverless-vanilla-v41",
+  "__Credits__": {
+    "repository": "https://github.com/patterniha/Serverless-for-Iran",
+    "telegram": "https://t.me/projectXhttp",
+    "donate": "USDT (TRC20): TU5gKvKqcXPn8itp1DouBCwcqGHMemBm8o"
+  },
+  "remarks": "Serverless-v41",
   "version": {
     "min": "25.12.8"
   },
@@ -38,46 +43,12 @@
           "domain:ir",
           "geosite:private",
           "geosite:category-ir",
-          "full:challenges.cloudflare.com",
-          "geosite:category-porn",
-          "geosite:telegram",
-          "geosite:meta",
-          "geosite:youtube",
-          "geosite:twitter",
-          "geosite:reddit",
-          "geosite:twitch",
-          "geosite:tiktok",
-          "geosite:discord",
-          "domain:workers.dev",
-          "domain:pages.dev"
+          "full:challenges.cloudflare.com"
         ]
-      },
-      {
-        "tag": "anti-sanction-dns",
-        "address": "tcp://dns.vanillapp.ir:853",
-        "expectedIPs": [
-          "5.239.245.250",
-          "78.158.166.180"
-        ],
-        "timeoutMs": 5000,
-        "finalQuery": false
       },
       {
         "tag": "no-filter-dns",
         "address": "https://cloudflare-dns.com/dns-query",
-        "domains": [
-          "geosite:category-porn",
-          "geosite:telegram",
-          "geosite:meta",
-          "geosite:youtube",
-          "geosite:twitter",
-          "geosite:reddit",
-          "geosite:twitch",
-          "geosite:tiktok",
-          "geosite:discord",
-          "domain:workers.dev",
-          "domain:pages.dev"
-        ],
         "timeoutMs": 10000,
         "finalQuery": true
       },
@@ -162,19 +133,6 @@
       "protocol": "direct",
       "settings": {
         "targetStrategy": "ForceIPv6v4"
-      }
-    },
-    {
-      "tag": "onlyv4-direct-out",
-      "protocol": "direct",
-      "streamSettings": {
-        "sockopt": {
-          "domainStrategy": "ForceIPv4",
-          "happyEyeballs": {
-            "tryDelayMs": 300,
-            "maxConcurrentTry": 20
-          }
-        }
       }
     },
     {
@@ -564,26 +522,6 @@
           }
         ]
       }
-    },
-    {
-      "tag": "tls-repack-anti-sanction-dns",
-      "protocol": "direct",
-      "streamSettings": {
-        "security": "tls",
-        "tlsSettings": {
-          "serverName": "dns.vanillapp.ir",
-          "fingerprint": "chrome"
-        },
-        "sockopt": {
-          "domainStrategy": "ForceIP",
-          "happyEyeballs": {
-            "tryDelayMs": 300,
-            "prioritizeIPv6": true,
-            "interleave": 2,
-            "maxConcurrentTry": 20
-          }
-        }
-      }
     }
   ],
   "routing": {
@@ -611,20 +549,6 @@
           "mixed-in"
         ],
         "port": 53
-      },
-      {
-        "outboundTag": "tls-repack-anti-sanction-dns",
-        "network": "tcp",
-        "inboundTag": [
-          "anti-sanction-dns"
-        ]
-      },
-      {
-        "outboundTag": "udp-direct-out",
-        "network": "udp",
-        "inboundTag": [
-          "anti-sanction-dns"
-        ]
       },
       {
         "outboundTag": "full-fragment",
@@ -667,13 +591,6 @@
         "ip": [
           "0.0.0.0/0",
           "::/0"
-        ]
-      },
-      {
-        "outboundTag": "onlyv4-direct-out",
-        "ip": [
-          "5.239.245.250",
-          "78.158.166.180"
         ]
       },
       {
