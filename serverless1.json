@@ -79,9 +79,9 @@
       },
       "settings": {
         "fragment": {
-          "packets": "1-1",
-          "length": "3-5",
-          "interval": "4-8"
+          "packets": "1-2",
+          "length": "1-5",
+          "interval": "1-5"
         }
       },
       "streamSettings": {
