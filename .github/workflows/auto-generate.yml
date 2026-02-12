@@ -3,9 +3,13 @@ name: Auto Generate Configs
 on:
   schedule:
     - cron: '30 21 * * *'  # 01:00 تهران
+    - cron: '30 0 * * *'   # 04:00 تهران
     - cron: '30 3 * * *'   # 07:00 تهران
+    - cron: '30 6 * * *'   # 10:00 تهران
     - cron: '30 9 * * *'   # 13:00 تهران
+    - cron: '30 12 * * *'  # 16:00 تهران
     - cron: '30 15 * * *'  # 19:00 تهران
+    - cron: '30 18 * * *'  # 22:00 تهران
   workflow_dispatch:
 
 permissions:
